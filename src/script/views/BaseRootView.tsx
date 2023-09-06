@@ -2,6 +2,7 @@ import {SafeAreaView, StatusBar, StyleSheet, Text, useColorScheme, View} from "r
 import React from "react";
 import {MainAppViewProps, PossibleRoutePropNames} from "./RootRoute";
 import {Colors} from "react-native/Libraries/NewAppScreen";
+import {useTheme} from "@react-navigation/native";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -81,10 +82,13 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
      * In reality however this could be condensed, but I wanted to present a more accurate view of how the class might look
      */
     render() {
+
         return (
-            <View>
-                {this.renderView()}
-            </View>
+            <SafeAreaView>
+                <View >
+                    {this.renderView()}
+                </View>
+            </SafeAreaView>
         );
     }
 }

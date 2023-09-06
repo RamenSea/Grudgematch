@@ -1,8 +1,11 @@
 import {Game} from "../models/Game";
 import {User} from "../models/User";
+import {injectable} from "inversify";
+import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
 
 //todo figure out a good error system
 
+@injectable()
 export class Aoe4WorldApiService {
 
     getApiUrl(): string {
@@ -37,14 +40,27 @@ export class Aoe4WorldApiService {
         return games;
     }
 
-    async getUsersByUsername(username: string, exact: boolean = false, limit: number| null = null): Promise<Array<User>> {
-        let apiUrl = `https://aoe4world.com/api/v0/players/search?query=${username}`;
+    getUserQuery(username: string, limit: number = 10): AOE4WorldUserQuery {
+        return new AOE4WorldUserQuery(
+            username,
+            this,
+            limit,
+        );
+    }
+    async getUsersByUsername(username: string, exact: boolean = false, limit: number| null = null, page: number| null = null): Promise<Array<User>> {
+        const searchParams = new URLSearchParams();
+        searchParams.set("query", username);
         if (exact) {
-            apiUrl += `&exact=true`;
+            searchParams.set("exact", "true");
         }
         if (limit && limit > 0) {
-            apiUrl += `&limit=${limit}`;
+            searchParams.set("limit", limit.toString());
         }
+        if (page && page > 0) {
+            searchParams.set("page", page.toString());
+        }
+
+        const apiUrl = `https://aoe4world.com/api/v0/players/search?${searchParams.toString()}`;
         const results = await fetch(apiUrl);
         const responseJson = await results.json();
         const users = [];

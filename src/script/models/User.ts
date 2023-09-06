@@ -1,15 +1,29 @@
 
 
 export class User {
+    public static MIN_USERNAME_LENGTH = 3;
+    public static NULL_AOE4WORLD_ID = -1;
+    public static NULL_STEAM_ID = "-1";
+    public static NULL_USER = new User(
+        User.NULL_AOE4WORLD_ID,
+        User.NULL_STEAM_ID,
+        "NULL",
+        "",
+        "",
+        "",
+    )
     constructor(
         readonly aoe4WorldId: number,
         readonly steamId: string|null,
         readonly username: string,
-        readonly fullAvatarImageUrl: string | null,
-        readonly mediumAvatarImageUrl: string | null,
-        readonly smallAvatarImageUrl: string | null
+        readonly fullAvatarImageUrl: string,
+        readonly mediumAvatarImageUrl: string,
+        readonly smallAvatarImageUrl: string,
     ) { }
 
+    isNull(): boolean {
+        return this.aoe4WorldId == User.NULL_AOE4WORLD_ID;
+    }
 
     //TODO figure out a good JSON deserialization library
     toJson(): any {
