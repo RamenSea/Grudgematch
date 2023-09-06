@@ -26,7 +26,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
     }
 
     isUsernameValid(username: string|null): boolean {
-        return username != null && username.length <= User.MIN_USERNAME_LENGTH;
+        return username != null && username.length >= User.MIN_USERNAME_LENGTH;
     }
     onChangeUsernameText(text: string) {
         this.setState((state) => ({
@@ -34,14 +34,15 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         }));
     }
     onClickNext() {
-        if (this.isUsernameValid(this.state.username) == false) {
+        console.log(this.state);
+        const usernameToSearch = this.state.username;
+        if (this.isUsernameValid(usernameToSearch) == false) {
             return;
         }
-        const usernameToSearch = this.state.username;
         this.setState((state) => ({
             isLoading: true,
         }), () => {
-            this.handleFindingUser(this.state.username);
+            this.handleFindingUser(usernameToSearch);
         });
     }
     async handleFindingUser(username: string) {
@@ -111,7 +112,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                 />
                 <Button
                     disabled={this.isUsernameValid(this.state.username) == false || this.state.isLoading}
-                    onPress={this.onClickNext}
+                    onPress={event => this.onClickNext()}
                     title={"Next"}
                 />
             </View>

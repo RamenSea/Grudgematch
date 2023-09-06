@@ -5,6 +5,7 @@ import {SetUpView} from "./SetUpView";
 import {useColorScheme} from "react-native";
 import {BootView} from "./BootView";
 import {AssignUserView, AssignUserViewProps} from "./AssignUserView";
+import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 
 
 /**
@@ -14,6 +15,7 @@ export type RootRouteProps = {
     BootView: undefined,
     SetUpView: undefined,
     AssignUserView: AssignUserViewProps,
+    UserOverviewView: UserOverviewViewProps,
 };
 
 /**
@@ -21,7 +23,7 @@ export type RootRouteProps = {
  * This is overkill for this project, but if the app was to have 10-30 root views like most apps.
  * Having a routing system that enabled TypeScript's type checking system would eliminate a lot of bugs and help facilitate co-working
  */
-export type PossibleRoutePropNames = "BootView" | "SetUpView" | "AssignUserView";
+export type PossibleRoutePropNames = "BootView" | "SetUpView" | "AssignUserView" | "UserOverviewView";
 
 /**
  * A required step to enable RootRouteProps
@@ -62,6 +64,17 @@ export function RootRoute() {
                         return "NONE";
                     }}
                     options={{title: 'Select'}}
+                />
+                <Stack.Screen
+                    name="UserOverviewView"
+                    component={UserOverviewView}
+                    getId={(params) => {
+                        if (params.params?.selectedUser != null) {
+                            return "s_" + params.params.selectedUser.aoe4WorldId.toString();
+                        }
+                        return "ME";
+                    }}
+                    options={{title: 'User'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>

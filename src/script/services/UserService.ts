@@ -20,6 +20,10 @@ export class UserService {
 
 
 
+    async setUser(user: User) {
+        this._user = user;
+        await AsyncStorage.setItem("user", JSON.stringify(user.toJson()));
+    }
     async boot() {
         const userString = await AsyncStorage.getItem("user");
 

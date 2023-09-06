@@ -17,13 +17,13 @@ export class Aoe4WorldApiService {
         let queryParams: URLSearchParams| null = null;
         if (limit > 0) {
             queryParams = new URLSearchParams();
-            queryParams.set("limit", limit.toString());
+            queryParams.append("limit", limit.toString());
         }
         if (opponentId > 0) {
             if (queryParams === null) {
                 queryParams = new URLSearchParams();
             }
-            queryParams.set("opponent_profile_id", opponentId.toString());
+            queryParams.append("opponent_profile_id", opponentId.toString());
         }
         if (queryParams !== null) {
             apiUrl += `?${queryParams.toString()}`;
@@ -49,15 +49,15 @@ export class Aoe4WorldApiService {
     }
     async getUsersByUsername(username: string, exact: boolean = false, limit: number| null = null, page: number| null = null): Promise<Array<User>> {
         const searchParams = new URLSearchParams();
-        searchParams.set("query", username);
+        searchParams.append("query", username);
         if (exact) {
-            searchParams.set("exact", "true");
+            searchParams.append("exact", "true");
         }
         if (limit && limit > 0) {
-            searchParams.set("limit", limit.toString());
+            searchParams.append("limit", limit.toString());
         }
         if (page && page > 0) {
-            searchParams.set("page", page.toString());
+            searchParams.append("page", page.toString());
         }
 
         const apiUrl = `https://aoe4world.com/api/v0/players/search?${searchParams.toString()}`;
