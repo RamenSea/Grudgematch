@@ -20,8 +20,10 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
     @resolve(SERVICE_TYPES.GameApiService)
     private readonly aoe4WorldApiService!: Aoe4WorldApiService;
 
-    constructor(props: MainAppViewProps<"SetUpView">) {
-        super(props);
+    constructor(props: MainAppViewProps<"SetUpView">, context: {}) {
+        super(props, context);
+        console.log("HI");
+        console.log(this.aoe4WorldApiService.getApiUrl());
         this.state = new SetUpViewState();
     }
 
@@ -46,29 +48,36 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         });
     }
     async handleFindingUser(username: string) {
-        const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(username, true, 1);
+        const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(username, true);
         let exactUser: User|null = null;
-        let query: AOE4WorldUserQuery|null = null;
+        let startingUsersToSelect: User[]|null = null;
         if (exactMatches != null && exactMatches.length > 0) {
             exactUser = exactMatches[0];
         } else {
-            query = this.aoe4WorldApiService.getUserQuery(username);
+            const query = this.aoe4WorldApiService.getUserQuery(username);
             await query.next();
             if (query.users.length == 0) {
                 //throw issue here
             } else if (query.users.length == 1) {
                 exactUser = query.users[0];
+            } else {
+                startingUsersToSelect = query.users;
             }
         }
 
         this.setState((state) => ({
             isLoading: false,
         }), () => {
-            this.props.navigation.push("AssignUserView", {
-                exactUser: exactUser,
-                username: username,
-                query:query,
-            });
+            if (exactUser != null) {
+                this.props.navigation.push("AssignUserView", {
+                    user: exactUser,
+                });
+            } else {
+                this.props.navigation.push("SelectUserView", {
+                    username: username,
+                    startingUsersToSelect: startingUsersToSelect,
+                });
+            }
         });
 
     }

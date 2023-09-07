@@ -40,28 +40,28 @@ export class Aoe4WorldApiService {
         return games;
     }
 
-    getUserQuery(username: string, limit: number = 10): AOE4WorldUserQuery {
+    getUserQuery(username: string, startingUsers: User[]|null = null): AOE4WorldUserQuery {
         return new AOE4WorldUserQuery(
             username,
             this,
-            limit,
+            startingUsers,
         );
     }
-    async getUsersByUsername(username: string, exact: boolean = false, limit: number| null = null, page: number| null = null): Promise<Array<User>> {
+    async getUsersByUsername(username: string, exact: boolean = false, page: number| null = null): Promise<Array<User>> { //limit is hard coded to be 50
         const searchParams = new URLSearchParams();
         searchParams.append("query", username);
         if (exact) {
             searchParams.append("exact", "true");
         }
-        if (limit && limit > 0) {
-            searchParams.append("limit", limit.toString());
-        }
-        if (page && page > 0) {
+        if (page && page > 1) { // indexing starts at 1
             searchParams.append("page", page.toString());
         }
 
         const apiUrl = `https://aoe4world.com/api/v0/players/search?${searchParams.toString()}`;
         const results = await fetch(apiUrl);
+        if (results.status == 500) {
+            return []; // it looks like if you over page the results with the server it throws a 500
+        }
         const responseJson = await results.json();
         const users = [];
         for (let i = 0; i < responseJson.players.length; i++) {

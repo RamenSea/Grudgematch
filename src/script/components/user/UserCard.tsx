@@ -1,5 +1,5 @@
 import {Pressable, Text, useColorScheme, View} from "react-native";
-import {User} from "../models/User";
+import {User} from "../../models/User";
 
 
 export function UserCard({user, onClick}: {user: User, onClick: ((user: User) => void)|null}) {

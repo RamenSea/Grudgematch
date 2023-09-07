@@ -6,6 +6,7 @@ import {useColorScheme} from "react-native";
 import {BootView} from "./BootView";
 import {AssignUserView, AssignUserViewProps} from "./AssignUserView";
 import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
+import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
 
 
 /**
@@ -14,6 +15,7 @@ import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 export type RootRouteProps = {
     BootView: undefined,
     SetUpView: undefined,
+    SelectUserView: SelectUserViewProps,
     AssignUserView: AssignUserViewProps,
     UserOverviewView: UserOverviewViewProps,
 };
@@ -23,7 +25,12 @@ export type RootRouteProps = {
  * This is overkill for this project, but if the app was to have 10-30 root views like most apps.
  * Having a routing system that enabled TypeScript's type checking system would eliminate a lot of bugs and help facilitate co-working
  */
-export type PossibleRoutePropNames = "BootView" | "SetUpView" | "AssignUserView" | "UserOverviewView";
+export type PossibleRoutePropNames =
+    "BootView" |
+    "SetUpView" |
+    "SelectUserView" |
+    "AssignUserView" |
+    "UserOverviewView";
 
 /**
  * A required step to enable RootRouteProps
@@ -53,16 +60,15 @@ export function RootRoute() {
                     options={{title: 'Set up'}}
                 />
                 <Stack.Screen
+                    name="SelectUserView"
+                    component={SelectUserView}
+                    getId={(params) => params.params.username }
+                    options={{title: 'Select'}}
+                />
+                <Stack.Screen
                     name="AssignUserView"
                     component={AssignUserView}
-                    getId={(params) => {
-                        if (params.params?.exactUser != null) {
-                            return "exact_" + params.params.exactUser.username;
-                        } else if (params.params.username != null) {
-                            return params.params.username;
-                        }
-                        return "NONE";
-                    }}
+                    getId={(params) => params.params.user.aoe4WorldId.toString() }
                     options={{title: 'Select'}}
                 />
                 <Stack.Screen

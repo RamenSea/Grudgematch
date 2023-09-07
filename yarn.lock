@@ -110,7 +110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-create-class-features-plugin@npm:^7.18.6, @babel/helper-create-class-features-plugin@npm:^7.22.15":
+"@babel/helper-create-class-features-plugin@npm:^7.18.6, @babel/helper-create-class-features-plugin@npm:^7.22.11, @babel/helper-create-class-features-plugin@npm:^7.22.15":
   version: 7.22.15
   resolution: "@babel/helper-create-class-features-plugin@npm:7.22.15"
   dependencies:
@@ -465,6 +465,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-proposal-private-methods@npm:^7.18.6":
+  version: 7.18.6
+  resolution: "@babel/plugin-proposal-private-methods@npm:7.18.6"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": ^7.18.6
+    "@babel/helper-plugin-utils": ^7.18.6
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 22d8502ee96bca99ad2c8393e8493e2b8d4507576dd054490fd8201a36824373440106f5b098b6d821b026c7e72b0424ff4aeca69ed5f42e48f029d3a156d5ad
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-syntax-async-generators@npm:^7.8.4":
   version: 7.8.4
   resolution: "@babel/plugin-syntax-async-generators@npm:7.8.4"
@@ -638,6 +650,17 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: eef94d53a1453361553c1f98b68d17782861a04a392840341bc91780838dd4e695209c783631cf0de14c635758beafb6a3a65399846ffa4386bff90639347f30
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-syntax-private-property-in-object@npm:^7.14.5":
+  version: 7.14.5
+  resolution: "@babel/plugin-syntax-private-property-in-object@npm:7.14.5"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: b317174783e6e96029b743ccff2a67d63d38756876e7e5d0ba53a322e38d9ca452c13354a57de1ad476b4c066dbae699e0ca157441da611117a47af88985ecda
   languageName: node
   linkType: hard
 
@@ -854,6 +877,20 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 541188bb7d1876cad87687b5c7daf90f63d8208ae83df24acb1e2b05020ad1c78786b2723ca4054a83fcb74fb6509f30c4cacc5b538ee684224261ad5fb047c1
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-transform-private-property-in-object@npm:^7.22.11":
+  version: 7.22.11
+  resolution: "@babel/plugin-transform-private-property-in-object@npm:7.22.11"
+  dependencies:
+    "@babel/helper-annotate-as-pure": ^7.22.5
+    "@babel/helper-create-class-features-plugin": ^7.22.11
+    "@babel/helper-plugin-utils": ^7.22.5
+    "@babel/plugin-syntax-private-property-in-object": ^7.14.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 4d029d84901e53c46dead7a46e2990a7bc62470f4e4ca58a0d063394f86652fd58fe4eea1eb941da3669cd536b559b9d058b342b59300026346b7a2a51badac8
   languageName: node
   linkType: hard
 
@@ -4741,6 +4778,9 @@ __metadata:
     "@babel/core": ^7.22.15
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/plugin-proposal-decorators": ^7.22.15
+    "@babel/plugin-proposal-private-methods": ^7.18.6
+    "@babel/plugin-transform-flow-strip-types": ^7.22.5
+    "@babel/plugin-transform-private-property-in-object": ^7.22.11
     "@babel/runtime": ^7.20.0
     "@react-native-async-storage/async-storage": ^1.19.3
     "@react-native/eslint-config": ^0.72.2

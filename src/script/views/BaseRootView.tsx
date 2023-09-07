@@ -38,8 +38,10 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
      * Because of TypeScript's typing system and two generic fields on this view, we easily limit subclasses' `props` and
      * `state` to the right type. Making it easier to update a subclass
      */
-    constructor(props: MainAppViewProps<T>) {
-        super(props);
+
+    // Deprecated constructor needs to be used to because we access "context"
+    constructor(props: MainAppViewProps<T>, context: {}) {
+        super(props, context);
     }
 
     componentDidMount() {
