@@ -39,9 +39,7 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
 
     onWillAppear() {
         super.onWillAppear();
-        this.setState((state) => ({
-            usersToSelect: [...this.userQuery.users]
-        }));
+        this.updateState({usersToSelect: [...this.userQuery.users]});
         this.querySubscription = this.userQuery.onNextBatch.subscribe(value => this.nextPageReceived(value));
         this.onRequestNextPage();
     }
@@ -56,7 +54,7 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
 
     nextPageReceived(users: User[]) {
         this.setState((state) => ({
-           usersToSelect: [...this.state.usersToSelect, ...users]
+           usersToSelect: [...state.usersToSelect, ...users]
         }));
         this.onRequestNextPage();
 

@@ -22,7 +22,7 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
     }
     didSelectAssignUser() {
         const user = this.props.route.params.user;
-        this.userService.setUser(user);
+        void this.userService.setUser(user);
         this.props.navigation.reset({index: 0, routes: [{name: "UserOverviewView"}]});
     }
     renderView(): React.JSX.Element {

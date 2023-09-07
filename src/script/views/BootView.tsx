@@ -23,11 +23,9 @@ export class BootView extends BaseRootView<"BootView", BootViewState> {
     async bootOperation() {
         await this.startUpService.bootPromise;
 
-        console.log("Booted")
         if (this.userService.user == null) {
             this.props.navigation.replace("SetUpView");
         } else {
-
             this.props.navigation.replace("SetUpView");
         }
     }

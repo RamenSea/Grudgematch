@@ -22,8 +22,6 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
 
     constructor(props: MainAppViewProps<"SetUpView">, context: {}) {
         super(props, context);
-        console.log("HI");
-        console.log(this.aoe4WorldApiService.getApiUrl());
         this.state = new SetUpViewState();
     }
 
@@ -31,30 +29,25 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         return username != null && username.length >= User.MIN_USERNAME_LENGTH;
     }
     onChangeUsernameText(text: string) {
+        this.updateState({username: text});
         this.setState((state) => ({
             username: text,
         }));
     }
-    onClickNext() {
-        console.log(this.state);
+    async onClickNext() {
         const usernameToSearch = this.state.username;
         if (this.isUsernameValid(usernameToSearch) == false) {
             return;
         }
-        this.setState((state) => ({
-            isLoading: true,
-        }), () => {
-            this.handleFindingUser(usernameToSearch);
-        });
-    }
-    async handleFindingUser(username: string) {
-        const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(username, true);
+        await this.asyncUpdateState({isLoading: true});
+
+        const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(usernameToSearch, true);
         let exactUser: User|null = null;
         let startingUsersToSelect: User[]|null = null;
         if (exactMatches != null && exactMatches.length > 0) {
             exactUser = exactMatches[0];
         } else {
-            const query = this.aoe4WorldApiService.getUserQuery(username);
+            const query = this.aoe4WorldApiService.getUserQuery(usernameToSearch);
             await query.next();
             if (query.users.length == 0) {
                 //throw issue here
@@ -64,22 +57,18 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                 startingUsersToSelect = query.users;
             }
         }
+        await this.asyncUpdateState({isLoading: false});
 
-        this.setState((state) => ({
-            isLoading: false,
-        }), () => {
-            if (exactUser != null) {
-                this.props.navigation.push("AssignUserView", {
-                    user: exactUser,
-                });
-            } else {
-                this.props.navigation.push("SelectUserView", {
-                    username: username,
-                    startingUsersToSelect: startingUsersToSelect,
-                });
-            }
-        });
-
+        if (exactUser != null) {
+            this.props.navigation.push("AssignUserView", {
+                user: exactUser,
+            });
+        } else {
+            this.props.navigation.push("SelectUserView", {
+                username: usernameToSearch,
+                startingUsersToSelect: startingUsersToSelect,
+            });
+        }
     }
     renderView(): React.JSX.Element {
         return (
