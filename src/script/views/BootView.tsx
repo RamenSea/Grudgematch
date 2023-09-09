@@ -26,7 +26,7 @@ export class BootView extends BaseRootView<"BootView", BootViewState> {
         if (this.userService.user == null) {
             this.props.navigation.replace("SetUpView");
         } else {
-            this.props.navigation.replace("SetUpView");
+            this.props.navigation.replace("UserOverviewView", {selectedUser: null});
         }
     }
     renderView(): React.JSX.Element {

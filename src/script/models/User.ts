@@ -1,6 +1,7 @@
+import {ICacheable} from "../caches/SimpleCache";
 
 
-export class User {
+export class User implements ICacheable<number>{
     public static MIN_USERNAME_LENGTH = 3;
     public static NULL_AOE4WORLD_ID = -1;
     public static NULL_STEAM_ID = "-1";
@@ -12,6 +13,10 @@ export class User {
         "",
         "",
     )
+
+    get cacheKey(): number {
+        return this.aoe4WorldId;
+    }
     constructor(
         readonly aoe4WorldId: number,
         readonly steamId: string|null,

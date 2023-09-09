@@ -4,7 +4,7 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {MainAppViewProps} from "./RootRoute";
 import React from "react";
-import {Text, View} from "react-native";
+import {Button, Text, View} from "react-native";
 import {User} from "../models/User";
 import {UserService} from "../services/UserService";
 import {UserCard} from "../components/user/UserCard";
@@ -14,7 +14,10 @@ export type UserOverviewViewProps = {
 }
 class UserOverviewViewState {
     constructor(
-        public user: User,
+        public user: User|null,
+
+        public getCurrentGameButtonActive: boolean = true,
+        public listenForNewGameButtonActive: boolean = true,
     ) { }
 }
 export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverviewViewState> {
@@ -36,7 +39,19 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
         }
     }
 
+    private async didPressCheckCurrentGame() {
+
+    }
     renderView(): React.JSX.Element {
+        if (this.state.user === null) {
+            return (
+                <View>
+                    <Text>
+                        LOADING
+                    </Text>
+                </View>
+            )
+        }
         return (
             <View>
                 <Text>
@@ -45,6 +60,13 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
                 <UserCard
                     user={this.state.user}
                     onClick={null}
+                />
+                <Button
+                    title={"Check current game"}
+                    onPress={event => this.didPressCheckCurrentGame()}
+                />
+                <Button
+                    title={"Listen for upcoming game"}
                 />
             </View>
         );

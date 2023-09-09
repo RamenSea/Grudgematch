@@ -46,6 +46,17 @@ export class Game {
     ) {
     }
 
+    get teams(): Array<Array<Player>> {
+        const t = new Array<Array<Player>>();
+        for (let i = 0; i < this.players.length; i++) {
+            const p = this.players[i];
+            while (t.length < p.teamId) {
+                t.push([])
+            }
+            t[p.teamId].push(p);
+        }
+        return t;
+    }
     static FromJson(jsonObject: any): Game {
         let winningTeam = NULL_TEAM_ID;
 

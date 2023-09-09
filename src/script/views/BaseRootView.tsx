@@ -43,26 +43,14 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
     constructor(props: MainAppViewProps<T>, context: {}) {
         super(props, context);
     }
-    // setState<K extends keyof S>(
-    //     state: ((prevState: Readonly<S>, props: Readonly<P>) => (Pick<S, K> | S | null)) | (Pick<S, K> | S | null),
-    //     callback?: () => void
-    // ): void;
-
-    protected updateState<K extends keyof S>(updateState: (Pick<S, K> | S )) {
-        this.setState(() => updateState);
-    }
-    protected async asyncLambdaUpdateState<K extends keyof S>(updateState: (prevState: Readonly<S>) => (Pick<S, K> | S )) {
+    protected async asyncLambdaSetState<K extends keyof S>(updateState: (prevState: Readonly<S>) => (Pick<S, K> | S )) {
         return new Promise<void> (resolve => {
-            this.setState(updateState, () => {
-                resolve();
-            });
+            this.setState(updateState, resolve);
         });
     }
-    protected async asyncUpdateState<K extends keyof S>(updateState: (Pick<S, K> | S )) {
+    protected async asyncSetState<K extends keyof S>(updateState: (Pick<S, K> | S )) {
         return new Promise<void> (resolve => {
-           this.setState(() => updateState, () => {
-               resolve();
-           });
+           this.setState(() => updateState, resolve);
         });
     }
     componentDidMount() {

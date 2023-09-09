@@ -63,6 +63,7 @@ export function RootRoute() {
                     name="SelectUserView"
                     component={SelectUserView}
                     getId={(params) => params.params.username }
+                    initialParams={{startingUsersToSelect: null}}
                     options={{title: 'Select'}}
                 />
                 <Stack.Screen
@@ -80,6 +81,7 @@ export function RootRoute() {
                         }
                         return "ME";
                     }}
+                    initialParams={{selectedUser: null}}
                     options={{title: 'User'}}
                 />
             </Stack.Navigator>

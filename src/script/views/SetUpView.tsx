@@ -29,7 +29,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         return username != null && username.length >= User.MIN_USERNAME_LENGTH;
     }
     onChangeUsernameText(text: string) {
-        this.updateState({username: text});
+        this.setState({username: text});
         this.setState((state) => ({
             username: text,
         }));
@@ -39,7 +39,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         if (this.isUsernameValid(usernameToSearch) == false) {
             return;
         }
-        await this.asyncUpdateState({isLoading: true});
+        await this.asyncSetState({isLoading: true});
 
         const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(usernameToSearch, true);
         let exactUser: User|null = null;
@@ -57,7 +57,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                 startingUsersToSelect = query.users;
             }
         }
-        await this.asyncUpdateState({isLoading: false});
+        await this.asyncSetState({isLoading: false});
 
         if (exactUser != null) {
             this.props.navigation.push("AssignUserView", {
