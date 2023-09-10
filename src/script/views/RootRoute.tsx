@@ -7,6 +7,7 @@ import {BootView} from "./BootView";
 import {AssignUserView, AssignUserViewProps} from "./AssignUserView";
 import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
+import {SettingsView} from "./SettingsView";
 
 
 /**
@@ -18,6 +19,7 @@ export type RootRouteProps = {
     SelectUserView: SelectUserViewProps,
     AssignUserView: AssignUserViewProps,
     UserOverviewView: UserOverviewViewProps,
+    SettingsView: undefined,
 };
 
 /**
@@ -30,7 +32,8 @@ export type PossibleRoutePropNames =
     "SetUpView" |
     "SelectUserView" |
     "AssignUserView" |
-    "UserOverviewView";
+    "UserOverviewView" |
+    "SettingsView";
 
 /**
  * A required step to enable RootRouteProps
@@ -83,6 +86,11 @@ export function RootRoute() {
                     }}
                     initialParams={{selectedUser: null}}
                     options={{title: 'User'}}
+                />
+                <Stack.Screen
+                    name="SettingsView"
+                    component={SettingsView}
+                    options={{title: 'Settings'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>

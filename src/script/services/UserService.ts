@@ -6,13 +6,6 @@ import {Aoe4WorldApiService} from "./Aoe4WorldApiService";
 import {CacheableKeys, IFetchCachedObject, MemoryCacheStorage, SimpleCache} from "../caches/SimpleCache";
 
 
-class FetchUserForCache implements IFetchCachedObject<User, number> {
-    constructor(private gameApiService: Aoe4WorldApiService) {
-    }
-    get(key: number): Promise<User | null> {
-        return this.gameApiService.getUsersById(key);
-    }
-}
 @injectable()
 export class UserService {
 
@@ -20,24 +13,15 @@ export class UserService {
     get user() { return this._user };
 
     private gameApiService: Aoe4WorldApiService;
-    private userCache: SimpleCache<User, number>;
 
     constructor(
         @inject(SERVICE_TYPES.GameApiService) gameApiService: Aoe4WorldApiService,
     ) {
         this.gameApiService = gameApiService;
 
-        this.userCache = new SimpleCache<User, number>(
-            new MemoryCacheStorage<User, number>(),
-            new FetchUserForCache(gameApiService),
-        )
-    }
-    async getUserById(id: number): Promise<User| null> {
-        return this.userCache.get(id);
     }
     async setUser(user: User) {
         this._user = user;
-        await this.userCache.set(user);
         await AsyncStorage.setItem("user", JSON.stringify(user.toJson()));
     }
     async boot() {
@@ -48,6 +32,7 @@ export class UserService {
                 const userJson = JSON.parse(userString);
                 const parsedUser = User.FromJson(userJson);
                 this._user = parsedUser;
+                await this.gameApiService.userCache.set(this._user);
             } catch (e) { }
         }
 

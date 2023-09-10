@@ -1,4 +1,5 @@
 import {UnwrappedPromise} from "../general/UnwrappedPromise";
+import {resolve} from "inversify-react";
 
 
 export type CacheableKeys = string | number | object; //TypeScript requires you to a more explicit type if you want toString to work on generics in case the type is Void
@@ -11,7 +12,7 @@ export interface ICacheStorage<T extends ICacheable<KEY>, KEY extends CacheableK
     setCachedObject(t: T): Promise<void>;
 }
 export interface IFetchCachedObject<T extends ICacheable<KEY>, KEY extends CacheableKeys> {
-    get(key: KEY): Promise<T|null>;
+    getCacheableObject(key: KEY): Promise<T|null>; // give this a less general name
 }
 export class MemoryCacheStorage<T extends ICacheable<KEY>, KEY extends CacheableKeys> implements ICacheStorage<T, KEY> {
     private dictionary = new Map<KEY, T>();
@@ -52,6 +53,11 @@ export class SimpleCache<T extends ICacheable<KEY>, KEY extends CacheableKeys> i
         resolve(value);
         this.pooledPromises.delete(value.cacheKey);
     }
+
+    getCacheableObject(key: KEY): Promise<T | null> {
+        return this.get(key);
+    }
+
     get(key: KEY): Promise<T | null> {
         const previousPromise = this.pooledPromises.get(key);
         if (previousPromise !== undefined) {
@@ -69,7 +75,7 @@ export class SimpleCache<T extends ICacheable<KEY>, KEY extends CacheableKeys> i
             resolve(fromCache);
             return;
         }
-        const fromFetch = await this.objectFetcher.get(key);
+        const fromFetch = await this.objectFetcher.getCacheableObject(key);
         if (fromFetch == null) {
             return null;
         }

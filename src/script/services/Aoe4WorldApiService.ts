@@ -2,18 +2,57 @@ import {Game} from "../models/Game";
 import {User} from "../models/User";
 import {injectable} from "inversify";
 import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
+import {IFetchCachedObject, MemoryCacheStorage, SimpleCache} from "../caches/SimpleCache";
+import {MatchUp} from "../models/MatchUp";
 
 //todo figure out a good error system
 
 @injectable()
-export class Aoe4WorldApiService {
+export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
+
+    userCache: SimpleCache<User, number>;
+
+    constructor() {
+        this.userCache = new SimpleCache<User, number>(
+            new MemoryCacheStorage<User, number>(),
+            this,
+        )
+    }
 
     getApiUrl(): string {
         return "https://aoe4world.com/api/v0/"
     }
+    async getMatchUps(playerId: number, opponentIds: number[]): Promise<MatchUp[]> {
+        const matchUpPromises: Promise<MatchUp|null>[] = [];
+        for (let i = 0; i < opponentIds.length; i++) {
+            matchUpPromises.push(this.getMatchUp(playerId, opponentIds[i]));
+        }
+        const matchUps: MatchUp[] = []
+        const results = await Promise.all(matchUpPromises);
+        for (let i = 0; i < results.length; i++) {
+            const m = results[i];
+            if (m !== null) {
+                matchUps.push(m);
+            }
+        }
 
+        return matchUps;
+    }
+    async getMatchUp(playerId: number, opponentId: number): Promise<MatchUp|null> {
+        const opponentUserRequest = this.getUsersById(opponentId);
+        const gamesRequest = this.getGames(playerId, opponentId);
+
+        const opponent = await opponentUserRequest;
+        const games = await gamesRequest;
+
+        if (opponent == null) {
+            return null;
+        }
+
+        return new MatchUp(opponent, games);
+    }
     async getGames(playerId: number, opponentId: number = -1, limit: number = -1): Promise<Array<Game>> {
-        let apiUrl = `${this.getApiUrl()}${playerId}/games`;
+        let apiUrl = `${this.getApiUrl()}players/${playerId}/games`;
         let queryParams: URLSearchParams| null = null;
         if (limit > 0) {
             queryParams = new URLSearchParams();
@@ -28,6 +67,7 @@ export class Aoe4WorldApiService {
         if (queryParams !== null) {
             apiUrl += `?${queryParams.toString()}`;
         }
+
         const results = await fetch(apiUrl);
         const responseJson = await results.json();
 
@@ -70,13 +110,17 @@ export class Aoe4WorldApiService {
         }
         return users;
     }
-    async getUsersById(userId: number): Promise<User|null> {
-        const apiUrl = `https://aoe4world.com/api/v0/players/${userId}`;
+    // Never check the cache with this method
+    async getCacheableObject(key: number): Promise<User | null> {
+        const apiUrl = `https://aoe4world.com/api/v0/players/${key}`;
         const results = await fetch(apiUrl);
         if (results.status == 404) {
             return null;
         }
         const responseJson = await results.json();
         return User.FromJson(responseJson);
+    }
+    async getUsersById(userId: number): Promise<User|null> {
+        return this.userCache.get(userId);
     }
 }

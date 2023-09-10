@@ -46,15 +46,20 @@ export class Game {
     ) {
     }
 
-    get teams(): Array<Array<Player>> {
-        const t = new Array<Array<Player>>();
+    private cachedTeamValue: Player[][]|null = null;
+    get teams():  Player[][] {
+        if (this.cachedTeamValue !== null) {
+            return this.cachedTeamValue;
+        }
+        const t:  Player[][] = [];
         for (let i = 0; i < this.players.length; i++) {
             const p = this.players[i];
-            while (t.length < p.teamId) {
+            while (t.length <= p.teamId) {
                 t.push([])
             }
             t[p.teamId].push(p);
         }
+        this.cachedTeamValue = t;
         return t;
     }
     static FromJson(jsonObject: any): Game {
@@ -63,9 +68,9 @@ export class Game {
         const players = new Array<Player>();
         for (let i = 0; i < jsonObject.teams.length; i++) {
             const team = jsonObject.teams[i];
-            for (let playerIndex = 0; i < team.length; playerIndex++) {
-                const playerJson = team[playerIndex];
-                if (playerJson.result === "win") {
+            for (let playerIndex = 0; playerIndex < team.length; playerIndex++) {
+                const playerJson = team[playerIndex].player;
+                if (playerJson.result !== undefined && playerJson.result === "win") {
                     winningTeam = i;
                 }
                 const player = Player.FromJson(i, playerJson);
