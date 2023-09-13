@@ -38,10 +38,10 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
         super(props, context);
         if (this.props.route.params.selectedUser != null) {
             this.state = new UserOverviewViewState(this.props.route.params.selectedUser);
-        } else if (this.userService.user != null) {
+        } else if (this.userService.user.isNull() == false) {
             this.state = new UserOverviewViewState(this.userService.user);
         } else {
-            throw new Error("You opened `UserOverviewView` without a user set in UserService or a user specified");
+            console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
         }
 
         this.props.navigation.setOptions({

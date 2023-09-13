@@ -3,7 +3,6 @@ import {User} from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {SERVICE_TYPES} from "./ServiceTypes";
 import {Aoe4WorldApiService} from "./Aoe4WorldApiService";
-import {CacheableKeys, IFetchCachedObject, MemoryCacheStorage, SimpleCache} from "../caches/SimpleCache";
 
 
 @injectable()

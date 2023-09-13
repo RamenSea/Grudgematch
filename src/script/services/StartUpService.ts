@@ -7,15 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const CURRENT_COMPATABILITY_VERSION: number = 1;
 export const FIRST_BOOT_COMPATABILITY_VERSION: number = -1;
 
-export interface IStartUpService {
-    readonly lastCompatibilityVersion: number;
-    readonly booted: boolean;
-    readonly isFirstBoot: boolean;
-    readonly bootPromise: Promise<void>;
-    boot(): void;
-}
 @injectable()
-export class StartUpService implements IStartUpService {
+export class StartUpService  {
 
     readonly bootPromise:Promise<void>
     private resolver: ((value?: void | PromiseLike<void>) => void)|null = null;
