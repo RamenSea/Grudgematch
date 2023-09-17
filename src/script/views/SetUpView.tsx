@@ -152,7 +152,6 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         }}
                         titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
                         containerStyle={{
-                            flex: 1,
                             maxHeight: 160,
                             width: "100%",
                         }}

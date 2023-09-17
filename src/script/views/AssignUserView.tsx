@@ -7,7 +7,8 @@ import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
-import * as console from "console";
+import { Button as StyleButton } from '@rneui/themed';
+
 
 export type AssignUserViewProps = {
     user: User;
@@ -39,21 +40,54 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
     }
     renderView(): React.JSX.Element {
         return (
-            <View>
-                <Text>
-                    Is this the correct account?
+            <View
+                style={{
+                    flex: 1,
+                }}
+            >
+                <Text
+                    style={{
+                        marginTop: 32,
+                        marginRight: 32,
+                        marginLeft: 32,
+                        marginBottom: 24,
+                        textAlign: "center",
+                        fontSize: 24,
+                    }}
+                >
+                    Do you want to use this account?
                 </Text>
                 <UserCard
                     user={this.state.user}
                     onClick={null}
                 />
-                <Button
-                    title={"That's the one!"}
-                    onPress={event => this.didSelectAssignUser()}
+                <View
+                    style={{
+                        flex: 1,
+                    }}
                 />
                 <Button
-                    title={"Nope"}
+                    title={"Wrong account"}
                     onPress={event => this.didSelectNotToAssign()}
+                />
+                <View
+                    style={{
+                        height: 8,
+                    }}
+                />
+                <StyleButton
+                    title="ASSIGN"
+                    loadingProps={{ size: 'large', color: 'white' }}
+                    buttonStyle={{
+                        height: "100%",
+                        backgroundColor: 'rgba(111, 202, 186, 1)',
+                    }}
+                    titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                    containerStyle={{
+                        maxHeight: 160,
+                        width: "100%",
+                    }}
+                    onPress={event => this.didSelectAssignUser()}
                 />
             </View>
         );
