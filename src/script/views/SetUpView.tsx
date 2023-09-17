@@ -1,6 +1,6 @@
 import {BaseRootView} from "./BaseRootView";
 import React from "react";
-import {Button, StyleSheet, Text, TextInput, View} from "react-native";
+import {StyleSheet, Text, TextInput, View} from "react-native";
 import {MainAppViewProps} from "./RootRoute";
 import {useTheme} from "@react-navigation/native";
 import {resolve} from "inversify-react";
@@ -9,6 +9,7 @@ import {UserService} from "../services/UserService";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {User} from "../models/User";
 import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
+import { Button } from '@rneui/themed';
 
 
 class SetUpViewState {
@@ -79,39 +80,59 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         color: "#000",
                         width: "100%",
                         textAlign: "center",
+                        marginTop: 16,
+                        fontSize: 32,
+                        fontWeight: "800",
                     }}
                 >
                     Welcome{'\n'}
-                    To Grudge Match!
                 </Text>
                 <Text
                     style={{
+                        marginTop: -16,
+                        paddingLeft: 24,
+                        paddingRight: 24,
                         color: "#000",
                         width: "100%",
-                        textAlign: "center",
+                        textAlign: "left",
                     }}
                 >
-                    Grudge match helps you find if you have played against your opponents before
+                    Grudge Match helps you get some quick info about your opponent
                 </Text>
                 <Text
                     style={{
+                        marginTop: 24,
+                        paddingLeft: 24,
+                        paddingRight: 24,
                         color: "#000",
                         width: "100%",
-                        textAlign: "center",
+                        textAlign: "left",
                     }}
                 >
-                    To get started we'll need to know your Age of Empires 4 account
+                    To get started please enter your Age of Empire's 4 username
                 </Text>
                 <TextInput
                     editable={this.state.isLoading == false}
                     style={styles.input}
                     onChangeText={text => this.onChangeUsernameText(text)}
                     value={this.state.username}
+                    placeholder={"Username"}
                 />
                 <Button
-                    disabled={this.isUsernameValid(this.state.username) == false || this.state.isLoading}
+                    title="NEXT"
+                    disabled={this.isUsernameValid(this.state.username) == false}
+                    loading={this.state.isLoading}
+                    loadingProps={{ size: 'small', color: 'white' }}
+                    buttonStyle={{
+                        height: "100%",
+                        backgroundColor: 'rgba(111, 202, 186, 1)',
+                    }}
+                    titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                    containerStyle={{
+                        height: 120,
+                        width: "100%",
+                    }}
                     onPress={event => this.onClickNext()}
-                    title={"Next"}
                 />
             </View>
         );
@@ -123,8 +144,8 @@ const styles = StyleSheet.create({
     },
     input: {
         color: "#000",
-        height: 100,
-        margin: 12,
+        height: 70,
+        margin: 32,
         borderWidth: 1,
         padding: 10,
     },

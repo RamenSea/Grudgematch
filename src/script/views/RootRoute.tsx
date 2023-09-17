@@ -60,7 +60,7 @@ export function RootRoute() {
                 <Stack.Screen
                     name="SetUpView"
                     component={SetUpView}
-                    options={{title: 'Set up'}}
+                    options={{title: 'Set up', headerShown: false}}
                 />
                 <Stack.Screen
                     name="SelectUserView"

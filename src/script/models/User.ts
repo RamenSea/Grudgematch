@@ -15,6 +15,16 @@ export enum GameModeType {
     RANKED_MATCH_TEAM_3_V_3_ELO = "rm_3v3_elo",
     RANKED_MATCH_TEAM_4_V_4_ELO = "rm_4v4_elo",
 }
+export function GameModeTypeIsQM(mode: GameModeType): boolean {
+    switch (mode) {
+        case GameModeType.QUICK_MATCH_1_V_1:
+        case GameModeType.QUICK_MATCH_2_V_2:
+        case GameModeType.QUICK_MATCH_3_V_3:
+        case GameModeType.QUICK_MATCH_4_V_4:
+            return true;
+    }
+    return false;
+}
 export enum Rank {
     NONE = "none",
     UNRANKED = "unranked",
@@ -173,6 +183,9 @@ export class User implements ICacheable<number>{
         null,
     )
 
+
+    readonly modes: Map<GameModeType, GameMode>| null
+    readonly simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null
     get cacheKey(): number {
         return this.aoe4WorldId;
     }
@@ -183,9 +196,25 @@ export class User implements ICacheable<number>{
         readonly fullAvatarImageUrl: string,
         readonly mediumAvatarImageUrl: string,
         readonly smallAvatarImageUrl: string,
-        readonly modes: Map<GameModeType, GameMode>| null,
-        readonly simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null,
-    ) { }
+        readonly modeList: GameMode[]| null,
+        readonly simplifiedModeList: SimplifiedGameMode[]| null,
+    ) {
+
+        if (modeList != null) {
+            this.modes = new Map<GameModeType, GameMode>();
+            for (let i = 0; i < modeList.length; i++) {
+                const mode = modeList[i];
+                this.modes.set(mode.mode, mode);
+            }
+        }
+        if (simplifiedModeList != null) {
+            this.simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
+            for (let i = 0; i < simplifiedModeList.length; i++) {
+                const mode = simplifiedModeList[i];
+                this.simplifiedModes.set(mode.mode, mode);
+            }
+        }
+    }
 
     isNull(): boolean {
         return this.aoe4WorldId == User.NULL_AOE4WORLD_ID;
@@ -231,26 +260,83 @@ export class User implements ICacheable<number>{
         }
         return Rank.NONE;
     }
+    averageRecentQMRating(autoRound: boolean = false): number {
+        let qmRatingsMax: Number = 0
+        let qmRatingsCount: Number = 0
+
+        if (this.modes != null) {
+            this.modes.forEach((value, key) => {
+                if (GameModeTypeIsQM(value.mode)) {
+                    qmRatingsMax += value.current.maxRating;
+                    qmRatingsCount += 1;
+                }
+            })
+        } else if (this.simplifiedModes != null) {
+            this.simplifiedModes.forEach((value, key) => {
+                if (GameModeTypeIsQM(value.mode)) {
+                    qmRatingsMax += value.current.maxRating;
+                    qmRatingsCount += 1;
+                }
+            })
+        }
+
+        if (qmRatingsCount == 0) {
+            return 0;
+        }
+        const avg = qmRatingsMax / qmRatingsCount;
+        if (autoRound) {
+            return Math.round(avg);
+        }
+        return avg;
+    }
+    recentRating(isSolo: boolean): number {
+        if (this.modes != null) {
+            let mode: GameMode| null = null;
+            if (isSolo) {
+                mode = this.modes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
+            } else {
+                mode = this.modes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
+            }
+            if (mode == null) {
+                return 0;
+            }
+            return mode.current.maxRating;
+        }
+        if (this.simplifiedModes != null) {
+            let mode: SimplifiedGameMode| null = null;
+            if (isSolo) {
+                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
+            } else {
+                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
+            }
+            if (mode == null) {
+                return 0;
+            }
+            return mode.current.maxRating;
+        }
+        return 0;
+    }
     static FromJson(jsonObject: any): User {
-        let modes: Map<GameModeType, GameMode>| null = null;
-        let simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null = null;
+        let modes: GameMode[]| null = null;
+        let simplifiedModes: SimplifiedGameMode[]| null = null;
+
         if (jsonObject.mode !== undefined && jsonObject.mode !== null) {
-            modes = new Map<GameModeType, GameMode>();
+            modes = [];
             for (const key in jsonObject.mode) {
                 const mode = key as GameModeType ?? GameModeType.NONE;
                 if (mode == GameModeType.NONE) {
                     continue;
                 }
-                modes.set(mode, GameMode.FromJson(mode, jsonObject.mode[mode]));
+                modes.push(GameMode.FromJson(mode, jsonObject.mode[mode]));
             }
         } else if (jsonObject.leaderboards !== undefined && jsonObject.leaderboards !== null) {
-            simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
+            simplifiedModes = [];
             for (const key in jsonObject.leaderboards) {
                 const mode = key as GameModeType ?? GameModeType.NONE;
                 if (mode == GameModeType.NONE) {
                     continue;
                 }
-                simplifiedModes.set(mode, SimplifiedGameMode.FromJson(mode, jsonObject.leaderboards[mode]));
+                simplifiedModes.push(SimplifiedGameMode.FromJson(mode, jsonObject.leaderboards[mode]));
             }
         }
         return new User(
@@ -262,6 +348,6 @@ export class User implements ICacheable<number>{
             jsonObject.avatars.small,
             modes,
             simplifiedModes,
-        )
+        );
     }
 }

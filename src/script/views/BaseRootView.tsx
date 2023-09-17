@@ -96,7 +96,7 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
 
         return (
             <SafeAreaView>
-                <View >
+                <View>
                     {this.renderView()}
                 </View>
             </SafeAreaView>

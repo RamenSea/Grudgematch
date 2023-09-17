@@ -50,13 +50,18 @@ export function RankIcon({
                             isSolo,
                              width,
                              height,
+                            collapseIfNone
                                  }: {
     rank: Rank
     isSolo: boolean
     width?: NumberProp;
     height?: NumberProp;
+    collapseIfNone?: boolean;
 }) {
     if (rank == Rank.NONE) {
+        if (collapseIfNone) {
+            return (<View/>);
+        }
         return (
             <View
                 style={{
