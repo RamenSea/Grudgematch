@@ -74,6 +74,9 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
     renderView(): React.JSX.Element {
         return (
             <View
+                style={{
+                    flex: 1,
+                }}
             >
                 <Text
                     style={{
@@ -111,42 +114,52 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                 >
                     To get started please enter your Age of Empire's 4 username
                 </Text>
-                <TextInput
-                    editable={this.state.isLoading == false}
-                    style={styles.input}
-                    onChangeText={text => this.onChangeUsernameText(text)}
-                    value={this.state.username}
-                    placeholder={"Username"}
-                />
-                <Button
-                    title="NEXT"
-                    disabled={this.isUsernameValid(this.state.username) == false}
-                    loading={this.state.isLoading}
-                    loadingProps={{ size: 'small', color: 'white' }}
-                    buttonStyle={{
-                        height: "100%",
-                        backgroundColor: 'rgba(111, 202, 186, 1)',
+
+                <View
+                    style={{
+                        flex: 1,
                     }}
-                    titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                    containerStyle={{
-                        height: 120,
-                        width: "100%",
-                    }}
-                    onPress={event => this.onClickNext()}
-                />
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                        }}
+                    >
+                        <TextInput
+                            editable={this.state.isLoading == false}
+                            onChangeText={text => this.onChangeUsernameText(text)}
+                            value={this.state.username}
+                            placeholder={"Username"}
+                            style={{
+                                color: "#000",
+                                height: 70,
+                                marginLeft: 32,
+                                marginRight: 32,
+                                borderWidth: 1,
+                                padding: 10,
+                            }}
+                        />
+                    </View>
+                    <Button
+                        title="NEXT"
+                        disabled={this.isUsernameValid(this.state.username) == false}
+                        loading={this.state.isLoading}
+                        loadingProps={{ size: 'small', color: 'white' }}
+                        buttonStyle={{
+                            height: "100%",
+                            backgroundColor: 'rgba(111, 202, 186, 1)',
+                        }}
+                        titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                        containerStyle={{
+                            flex: 1,
+                            maxHeight: 160,
+                            width: "100%",
+                        }}
+                        onPress={event => this.onClickNext()}
+                    />
+                </View>
             </View>
         );
     }
 }
-const styles = StyleSheet.create({
-    body: {
-        color: "#000",
-    },
-    input: {
-        color: "#000",
-        height: 70,
-        margin: 32,
-        borderWidth: 1,
-        padding: 10,
-    },
-});

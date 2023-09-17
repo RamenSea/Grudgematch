@@ -95,10 +95,13 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
     render() {
 
         return (
-            <SafeAreaView>
-                <View>
-                    {this.renderView()}
-                </View>
+            <SafeAreaView
+                style={{
+                    width: "100%",
+                    height: "100%",
+                }}
+            >
+                {this.renderView()}
             </SafeAreaView>
         );
     }
