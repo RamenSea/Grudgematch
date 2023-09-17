@@ -4,9 +4,10 @@ import {PlayerCard} from "./PlayerCard";
 
 
 export function GameCard({
-                             game,}: {
-    game: Game
-}) {
+                             game,
+                         }: {
+                            game: Game
+                        }) {
 
     const teams = game.teams;
     return (
