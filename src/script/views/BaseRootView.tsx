@@ -1,4 +1,14 @@
-import {SafeAreaView, StatusBar, StyleSheet, Text, useColorScheme, View} from "react-native";
+import {
+    Dimensions,
+    Platform,
+    SafeAreaView,
+    StatusBar,
+    StyleProp,
+    StyleSheet,
+    Text,
+    useColorScheme,
+    View, ViewStyle
+} from "react-native";
 import React from "react";
 import {MainAppViewProps, PossibleRoutePropNames} from "./RootRoute";
 import {Colors} from "react-native/Libraries/NewAppScreen";
@@ -53,6 +63,10 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
            this.setState(() => updateState, resolve);
         });
     }
+
+    protected webMaxHeight(windowHeight: number): number {
+        return -1;
+    }
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener("focus", () => this.onWillAppear());
         this.blurListener = this.props.navigation.addListener("blur", () => this.onWillDisappear());
@@ -93,7 +107,39 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
      * In reality however this could be condensed, but I wanted to present a more accurate view of how the class might look
      */
     render() {
+        if (Platform.OS == "web") {
+            const windowWidth = Dimensions.get('window').width;
+            const windowHeight = Dimensions.get('window').height;
+            const webMaxHeight = this.webMaxHeight(windowHeight);
+            const webWidth = Math.min(windowWidth, 600);
 
+            const innerViewStyle: StyleProp<ViewStyle> = {
+                flex: 1,
+                height: windowHeight,
+                width: webWidth,
+            }
+            if (webMaxHeight > 0) {
+                innerViewStyle.maxHeight = webMaxHeight;
+            }
+            return (
+                <View
+                    style={{
+                        flex: 1,
+                        alignItems: "center",
+                        height: windowHeight,
+                        minHeight:windowHeight,
+                        width: windowWidth,
+                        minWidth: windowWidth,
+                    }}
+                >
+                    <View
+                        style={innerViewStyle}
+                    >
+                        {this.renderView()}
+                    </View>
+                </View>
+            );
+        }
         return (
             <SafeAreaView
                 style={{

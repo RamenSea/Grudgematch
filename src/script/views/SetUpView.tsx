@@ -26,6 +26,13 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         this.state = new SetUpViewState();
     }
 
+    protected webMaxHeight(windowHeight: number): number {
+        if (windowHeight > 768) {
+            return 450;
+        }
+        return super.webMaxHeight(windowHeight);
+    }
+
     isUsernameValid(username: string|null): boolean {
         return username != null && username.length >= User.MIN_USERNAME_LENGTH;
     }
@@ -75,7 +82,10 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
         return (
             <View
                 style={{
+                    width: "100%",
+                    height: "100%",
                     flex: 1,
+                    flexDirection: "column",
                 }}
             >
                 <Text
@@ -88,11 +98,11 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         fontWeight: "800",
                     }}
                 >
-                    Welcome{'\n'}
+                    Welcome
                 </Text>
                 <Text
                     style={{
-                        marginTop: -16,
+                        marginTop: 16,
                         paddingLeft: 24,
                         paddingRight: 24,
                         color: "#000",
@@ -145,14 +155,14 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         title="NEXT"
                         disabled={this.isUsernameValid(this.state.username) == false}
                         loading={this.state.isLoading}
-                        loadingProps={{ size: 'small', color: 'white' }}
+                        loadingProps={{ size: 'large', color: 'white' }}
                         buttonStyle={{
-                            height: "100%",
+                            height: 160,
                             backgroundColor: 'rgba(111, 202, 186, 1)',
                         }}
                         titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
                         containerStyle={{
-                            maxHeight: 160,
+                            height: 160,
                             width: "100%",
                         }}
                         onPress={event => this.onClickNext()}

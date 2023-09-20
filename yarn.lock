@@ -1752,7 +1752,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.12.5, @babel/preset-react@npm:^7.16.0":
+"@babel/preset-react@npm:^7.12.5, @babel/preset-react@npm:^7.16.0, @babel/preset-react@npm:^7.22.15":
   version: 7.22.15
   resolution: "@babel/preset-react@npm:7.22.15"
   dependencies:
@@ -8846,8 +8846,10 @@ __metadata:
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/plugin-proposal-decorators": ^7.22.15
     "@babel/plugin-proposal-private-methods": ^7.18.6
+    "@babel/plugin-syntax-jsx": ^7.22.5
     "@babel/plugin-transform-flow-strip-types": ^7.22.5
     "@babel/plugin-transform-private-property-in-object": ^7.22.11
+    "@babel/preset-react": ^7.22.15
     "@babel/preset-typescript": ^7.22.15
     "@babel/runtime": ^7.22.15
     "@react-native-async-storage/async-storage": ^1.19.3
@@ -8883,7 +8885,7 @@ __metadata:
     react-native-svg: ^13.13.0
     react-native-svg-transformer: ^1.1.0
     react-native-vector-icons: ^10.0.0
-    react-native-web: ^0.19.8
+    react-native-web: ^0.19.9
     react-scripts: ^5.0.1
     react-test-renderer: 18.2.0
     recyclerlistview: ^4.2.0
@@ -14790,9 +14792,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-web@npm:^0.19.8":
-  version: 0.19.8
-  resolution: "react-native-web@npm:0.19.8"
+"react-native-web@npm:^0.19.9":
+  version: 0.19.9
+  resolution: "react-native-web@npm:0.19.9"
   dependencies:
     "@babel/runtime": ^7.18.6
     "@react-native/normalize-color": ^2.1.0
@@ -14805,7 +14807,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: b10bb37730d9d991b3b12c7cc408a6db62b7a7cd14e4f9f44d1128de2ffb2d8fc2cf2122d5c608d320239d342bfe07f1eb75dccdec2ae2ee93078eb879c5ef03
+  checksum: 79fe259a9fc0168c1cd12e72011a5e21cf2493a6b1a92334c3b5cf73ce2219fbf2adb79bca528d02b9643ff4a027e18e4988bc9d50e924be6e9d658c97a7e5ec
   languageName: node
   linkType: hard
 

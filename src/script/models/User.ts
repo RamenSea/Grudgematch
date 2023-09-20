@@ -206,13 +206,18 @@ export class User implements ICacheable<number>{
                 const mode = modeList[i];
                 this.modes.set(mode.mode, mode);
             }
+        } else {
+            this.modes = null;
         }
+
         if (simplifiedModeList != null) {
             this.simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
             for (let i = 0; i < simplifiedModeList.length; i++) {
                 const mode = simplifiedModeList[i];
                 this.simplifiedModes.set(mode.mode, mode);
             }
+        } else {
+            this.simplifiedModes = null;
         }
     }
 
@@ -261,8 +266,8 @@ export class User implements ICacheable<number>{
         return Rank.NONE;
     }
     averageRecentQMRating(autoRound: boolean = false): number {
-        let qmRatingsMax: Number = 0
-        let qmRatingsCount: Number = 0
+        let qmRatingsMax: number = 0
+        let qmRatingsCount: number = 0
 
         if (this.modes != null) {
             this.modes.forEach((value, key) => {

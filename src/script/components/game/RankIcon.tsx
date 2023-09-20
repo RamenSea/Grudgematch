@@ -54,8 +54,8 @@ export function RankIcon({
                                  }: {
     rank: Rank
     isSolo: boolean
-    width?: NumberProp;
-    height?: NumberProp;
+    width?: number;
+    height?: number;
     collapseIfNone?: boolean;
 }) {
     if (rank == Rank.NONE) {
@@ -72,7 +72,7 @@ export function RankIcon({
         )
     }
 
-    let SvgIcon!: React.FC<SvgProps> = TeamConqueror1;
+    let SvgIcon: React.FC<SvgProps> = TeamConqueror1;
     switch (rank) {
         case Rank.UNRANKED:
             SvgIcon = isSolo ? SoloUnranked : TeamUnranked;
