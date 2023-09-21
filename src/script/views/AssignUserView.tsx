@@ -14,7 +14,6 @@ export type AssignUserViewProps = {
     user: User;
 }
 class AssignUserViewState {
-
     constructor(
         public user: User) {
     }
@@ -24,13 +23,18 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
     @resolve(SERVICE_TYPES.UserService)
     private readonly userService!: UserService;
 
-
     constructor(props: MainAppViewProps<"AssignUserView">, context: {}) {
         super(props, context);
 
         this.state = new AssignUserViewState(props.route.params.user);
     }
 
+    protected webMaxHeight(windowHeight: number): number {
+        if (windowHeight > 768) {
+            return 450;
+        }
+        return super.webMaxHeight(windowHeight);
+    }
     didSelectNotToAssign() {
         this.props.navigation.pop();
     }
@@ -59,7 +63,6 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
                 </Text>
                 <UserCard
                     user={this.state.user}
-                    onClick={null}
                 />
                 <View
                     style={{
@@ -79,12 +82,12 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
                     title="ASSIGN"
                     loadingProps={{ size: 'large', color: 'white' }}
                     buttonStyle={{
-                        height: "100%",
+                        height: 160,
                         backgroundColor: 'rgba(111, 202, 186, 1)',
                     }}
                     titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
                     containerStyle={{
-                        maxHeight: 160,
+                        height: 160,
                         width: "100%",
                     }}
                     onPress={event => this.didSelectAssignUser()}

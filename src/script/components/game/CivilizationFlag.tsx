@@ -1,54 +1,65 @@
-import {Image as ImageView, View} from "react-native";
+import {Image as ImageView, ImageRequireSource, View} from "react-native";
 import {Civilization} from "../../models/Game";
-
 
 export function CivilizationFlag({
                                      civilization,
+                                     width,
+                                     height,
                                  }: {
                                     civilization: Civilization
+                                    width?: number
+                                    height?: number
                                 }) {
     if (civilization == Civilization.NONE) {
         return (<View/>); //todo
     }
+    width = width ?? 24;
+    height = height ?? 24;
 
-    let imageName = "";
-    let relativePathToImages = "./assets/images/flags/"
+    let imageRequire!: ImageRequireSource;
     switch (civilization) {
         case Civilization.ABBASID_DYNASTY:
-            imageName = "Abbasid.png"
+            imageRequire = require("../../../assets/images/flags/Abbasid.png");
             break;
         case Civilization.CHINESE:
-            imageName = "Chinese.png"
+            imageRequire = require("../../../assets/images/flags/Chinese.png");
             break;
         case Civilization.DELHI_SULTANATE:
-            imageName = "Delhi.png"
+            imageRequire = require("../../../assets/images/flags/Delhi.png");
             break;
         case Civilization.ENGLISH:
-            imageName = "English.png"
+            imageRequire = require("../../../assets/images/flags/English.png");
             break;
-        case Civilization.FRANCE:
-            imageName = "France.png"
+        case Civilization.FRENCH:
+            imageRequire = require("../../../assets/images/flags/French.png");
             break;
         case Civilization.HOLY_ROMAN_EMPIRE:
-            imageName = "HRE.png"
+            imageRequire = require("../../../assets/images/flags/HRE.png");
             break;
         case Civilization.MALIANS:
-            imageName = "Mali.png"
+            imageRequire = require("../../../assets/images/flags/Mali.png");
             break;
         case Civilization.MONGOLS:
-            imageName = "Mongols.png"
+            imageRequire = require("../../../assets/images/flags/Mongols.png");
             break;
         case Civilization.OTTOMANS:
-            imageName = "Ottoman.png"
+            imageRequire = require("../../../assets/images/flags/Ottoman.png");
             break;
         case Civilization.RUS:
-            imageName = "RUS.png"
+            imageRequire = require("../../../assets/images/flags/RUS.png");
             break;
+        default:
+            return(<View/>);
     }
 
     return (
         <ImageView
-            source={{uri: relativePathToImages + imageName}}
+            style={{
+                width: width,
+                height: height,
+                }}
+            resizeMode={"contain"}
+            source={imageRequire}
         />
     )
 }

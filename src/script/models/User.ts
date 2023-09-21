@@ -325,14 +325,14 @@ export class User implements ICacheable<number>{
         let modes: GameMode[]| null = null;
         let simplifiedModes: SimplifiedGameMode[]| null = null;
 
-        if (jsonObject.mode !== undefined && jsonObject.mode !== null) {
+        if (jsonObject.modes !== undefined && jsonObject.modes !== null) {
             modes = [];
-            for (const key in jsonObject.mode) {
+            for (const key in jsonObject.modes) {
                 const mode = key as GameModeType ?? GameModeType.NONE;
                 if (mode == GameModeType.NONE) {
                     continue;
                 }
-                modes.push(GameMode.FromJson(mode, jsonObject.mode[mode]));
+                modes.push(GameMode.FromJson(mode, jsonObject.modes[mode]));
             }
         } else if (jsonObject.leaderboards !== undefined && jsonObject.leaderboards !== null) {
             simplifiedModes = [];

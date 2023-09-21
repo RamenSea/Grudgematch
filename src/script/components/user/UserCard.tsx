@@ -5,7 +5,7 @@ import {Card} from "@rneui/base";
 import React from "react";
 
 
-export function UserCard({user, onClick}: {user: User, onClick: ((user: User) => void)|null}) {
+export function UserCard({user, onClick}: {user: User, onClick?: ((user: User) => void)}) {
     const rankedRowHeight = 42;
     const iconSize = 32;
     const ratingLineHeight = 22;
@@ -80,7 +80,9 @@ export function UserCard({user, onClick}: {user: User, onClick: ((user: User) =>
         <Card
         >
             <Card.Title
-
+                style={{
+                    textAlign: "left",
+                }}
             >
                 <View
                     style={{
@@ -143,7 +145,7 @@ export function UserCard({user, onClick}: {user: User, onClick: ((user: User) =>
             </View>
         </Card>
     );
-    if (onClick != null) {
+    if (onClick) {
         return (
             <Pressable
                 // style={{width: "100%", height: "100%"}}

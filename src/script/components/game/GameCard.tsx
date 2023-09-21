@@ -1,53 +1,86 @@
 import {Game, Player} from "../../models/Game";
-import {FlatList, Text, View} from "react-native";
+import {FlatList, Pressable, Text, View} from "react-native";
 import {PlayerCard} from "./PlayerCard";
+import {CivilizationFlag} from "./CivilizationFlag";
+import {Card} from "@rneui/base";
 
 
 export function GameCard({
                              game,
+                             onClick,
                          }: {
                             game: Game
+                            onClick?: (game: Game) => void,
                         }) {
 
     const teams = game.teams;
-    return (
-        <View>
+
+    const inner = (
+        <Card
+        >
             <Text>
-                {game.isPlaying ? "still going": "done"}
+                Game is: {game.isPlaying ? "still going": "complete"}
             </Text>
 
             <FlatList
                 data={teams}
+                horizontal={true}
+                keyExtractor={item => item.teamNumber.toString()}
                 renderItem={info => {
                     return (
                         <GameCardPlayerList
-                            players={info.item}
+                            teamNumber={info.item.teamNumber}
+                            players={info.item.players}
                         />
                     )
                 }}
             />
-        </View>
-    )
+        </Card>
+    );
+    if (onClick) {
+        return (
+            <Pressable
+                style={{
+                }}
+                onPress={event => onClick(game)}
+            >
+                {inner}
+            </Pressable>
+        )
+    }
+    return inner;
 }
 
 
 export function GameCardPlayerList({
+    teamNumber,
     players,
                                    }:{
+    teamNumber: number,
     players: Player[],
 }) {
 
+    const playerList = players.map(player => {
+        return (
+            <View
+                key={player.aoe4WorldId}
+                style={{
+                    flexDirection: "row",
+                }}
+            >
+                <CivilizationFlag width={24} height={24} civilization={player.civilization}/>
+                <Text>
+                     {player.username}
+                </Text>
+            </View>
+        )
+    });
     return (
-        <FlatList
-            data={players}
-            keyExtractor={item => item.aoe4WorldId.toString()}
-            renderItem={info => {
-                return (
-                    <PlayerCard
-                        player={info.item}
-                    />
-                )
-            }}
-        />
+        <View>
+            <Text>
+                Team {teamNumber}:
+            </Text>
+            {playerList}
+        </View>
     )
 }

@@ -41,8 +41,6 @@ import TeamDiamond3 from "../../../assets/images/ranks/team_diamond_3.svg";
 import TeamConqueror1 from "../../../assets/images/ranks/team_conqueror_1.svg";
 import TeamConqueror2 from "../../../assets/images/ranks/team_conqueror_2.svg";
 import TeamConqueror3 from "../../../assets/images/ranks/team_conqueror_3.svg";
-import {ReactNode} from "react";
-import {NumberProp} from "react-native-svg/src/lib/extract/types";
 
 
 export function RankIcon({
@@ -137,6 +135,7 @@ export function RankIcon({
         <SvgIcon
             width={width}
             height={height}
+            viewBox={"0 0 160 240"}
         />
     )
 }

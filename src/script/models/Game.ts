@@ -6,7 +6,7 @@ export enum Civilization {
     CHINESE = "chinese",
     DELHI_SULTANATE = "delhi_sultanate",
     ENGLISH = "english",
-    FRANCE = "france",
+    FRENCH = "french",
     HOLY_ROMAN_EMPIRE = "holy_roman_empire",
     MALIANS = "malians",
     MONGOLS = "mongols",
@@ -36,6 +36,13 @@ export class Player {
     }
 }
 
+export class Team {
+    constructor(
+        readonly teamNumber: number,
+        public players: Array<Player>,
+    ) {
+    }
+}
 
 export class Game {
     constructor(
@@ -46,21 +53,29 @@ export class Game {
     ) {
     }
 
-    private cachedTeamValue: Player[][]|null = null;
-    get teams():  Player[][] {
+    private cachedTeamValue: Team[]|null = null;
+    get teams():  Team[] {
         if (this.cachedTeamValue !== null) {
             return this.cachedTeamValue;
         }
-        const t:  Player[][] = [];
+        const t:  Team[] = [];
         for (let i = 0; i < this.players.length; i++) {
             const p = this.players[i];
             while (t.length <= p.teamId) {
-                t.push([])
+                t.push(new Team(t.length, []))
             }
-            t[p.teamId].push(p);
+            t[p.teamId].players.push(p);
         }
         this.cachedTeamValue = t;
         return t;
+    }
+    getPlayerById(aoe4Id: number): Player|null {
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].aoe4WorldId == aoe4Id) {
+                return this.players[i];
+            }
+        }
+        return null;
     }
     static FromJson(jsonObject: any): Game {
         let winningTeam = NULL_TEAM_ID;

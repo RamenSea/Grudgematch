@@ -8,7 +8,7 @@ export function UserList({
                              onSelect}: {
     users: User[],
     onRequestNextPage: (() => void)|null,
-    onSelect: ((user: User) => void)|null
+    onSelect?: ((user: User) => void)
 }) {
     return (
         <FlatList

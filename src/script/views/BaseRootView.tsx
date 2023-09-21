@@ -13,6 +13,7 @@ import React from "react";
 import {MainAppViewProps, PossibleRoutePropNames} from "./RootRoute";
 import {Colors} from "react-native/Libraries/NewAppScreen";
 import {useTheme} from "@react-navigation/native";
+import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -43,6 +44,7 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
 
     private focusListener:(() => void)|null = null;
     private blurListener:(() => void)|null = null;
+    private subscriptions: Subscription[] = [];
 
     /**
      * Because of TypeScript's typing system and two generic fields on this view, we easily limit subclasses' `props` and
@@ -80,8 +82,17 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
             this.blurListener();
             this.blurListener = null;
         }
+        this.unsubscribeAll();
     }
 
+    protected subscribe<T>(subject: Subject<T>, on: (t:T) => void) {
+        const subscription = subject.subscribe(on);
+        this.subscriptions.push(subscription);
+    }
+    protected unsubscribeAll() {
+        this.subscriptions.forEach(value => value.unsubscribe());
+        this.subscriptions = [];
+    }
     /**
      * Mirror's UIViewControllers own `onWillAppear`
      * This is a good time to start subscribing to events.
