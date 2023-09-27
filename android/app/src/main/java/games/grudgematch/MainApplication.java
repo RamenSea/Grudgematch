@@ -1,4 +1,4 @@
-package com.grudgematch;
+package games.grudgematch;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

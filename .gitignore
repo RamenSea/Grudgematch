@@ -754,3 +754,7 @@ google-services.json
 # Android Profiling
 *.hprof
 
+
+android/app/release/*.aab
+android/app/release/*.apk
+

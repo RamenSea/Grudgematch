@@ -1,4 +1,4 @@
-package com.grudgematch;
+package games.grudgematch;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
