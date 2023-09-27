@@ -27,7 +27,7 @@ export function MatchUpCard({   against,
         }
     })
 
-    let games
+    // let games
     return (
         <View>
             <UserCard
