@@ -90,6 +90,9 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
             }
         });
     }
+    private openMoreGamesSection(matchup: MatchUp) {
+        this.props.navigation.push("GameListView", { games: matchup.games});
+    }
     private async didPressCheckCurrentGame() {
         if (this.state.isFindingGame ||
             this.state.user == null) {
@@ -157,6 +160,7 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
                                             matchUp={info.item}
                                             onUserClick={user => this.openLinkToUser(user.aoe4WorldId)}
                                             onGameClick={game => this.openLinkToGame(game.id)}
+                                            onShowMoreGamesClicked={matchUp => this.openMoreGamesSection(matchUp)}
                                         />
                                     )
                                 }}

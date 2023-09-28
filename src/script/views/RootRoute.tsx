@@ -8,6 +8,7 @@ import {AssignUserView, AssignUserViewProps} from "./AssignUserView";
 import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
 import {SettingsView} from "./SettingsView";
+import {GameListView, GameListViewProps} from "./GameListView";
 
 
 /**
@@ -19,6 +20,7 @@ export type RootRouteProps = {
     SelectUserView: SelectUserViewProps,
     AssignUserView: AssignUserViewProps,
     UserOverviewView: UserOverviewViewProps,
+    GameListView: GameListViewProps,
     SettingsView: undefined,
 };
 
@@ -33,6 +35,7 @@ export type PossibleRoutePropNames =
     "SelectUserView" |
     "AssignUserView" |
     "UserOverviewView" |
+    "GameListView" |
     "SettingsView";
 
 /**
@@ -86,6 +89,14 @@ export function RootRoute() {
                     }}
                     initialParams={{selectedUser: null}}
                     options={{title: 'User'}}
+                />
+                <Stack.Screen
+                    name="GameListView"
+                    component={GameListView}
+                    getId={(params) => {
+                        return "TODO";
+                    }}
+                    options={{title: 'Games'}}
                 />
                 <Stack.Screen
                     name="SettingsView"
