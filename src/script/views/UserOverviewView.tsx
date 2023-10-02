@@ -15,7 +15,7 @@ import {MatchUpCard} from "../components/game/MatchUpCard";
 import {Button} from "@rneui/themed";
 
 export type UserOverviewViewProps = {
-    selectedUser: User|null;
+    username?: string
 }
 class UserOverviewViewState {
     constructor(
@@ -36,16 +36,20 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
     @resolve(SERVICE_TYPES.GameApiService)
     private readonly aoe4WorldApiService!: Aoe4WorldApiService;
 
+    private isTryingToFindUser = false;
     constructor(props: MainAppViewProps<"UserOverviewView">, context: {}) {
         super(props, context);
-        if (this.props.route.params.selectedUser != null) {
-            this.state = new UserOverviewViewState(this.props.route.params.selectedUser);
-        } else if (this.userService.user.isNull() == false) {
+
+        if ((props.route.params.username === undefined && !this.userService.user.isNull()) ||
+            (this.userService.user.username === props.route.params.username)) {
+            this.isTryingToFindUser = true;
             this.state = new UserOverviewViewState(this.userService.user);
+        } else if (props.route.params.username) {
+            this.state = new UserOverviewViewState(null);
+            this.findUser();
         } else {
             console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
         }
-
         this.props.navigation.setOptions({
             headerRight: () => {
                 return (
@@ -58,11 +62,28 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
         })
     }
 
+    private async findUser() {
+        if (this.isTryingToFindUser) {
+            return;
+        }
+        this.isTryingToFindUser = true;
+        if (this.props.route.params.username) {
+            const uWithoutDetails = await this.aoe4WorldApiService.getSingleUserByUsername(this.props.route.params.username);
+            if (uWithoutDetails !== null) {
+                const u = await this.aoe4WorldApiService.getUsersById(uWithoutDetails.aoe4WorldId);
+                this.setState({user: u});
+            }
+        } else {
+            console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
+        }
+    }
     onWillAppear() {
         super.onWillAppear();
-        this.subscribe(this.userService.onUserUpdate, (user) => {
-            this.setState({user: user});
-        });
+        if (this.props.route.params.username === undefined) {
+            this.subscribe(this.userService.onUserUpdate, (user) => {
+                this.setState({user: user});
+            });
+        }
     }
 
     didPressingSettingsButton() {
@@ -129,7 +150,7 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
     }
     renderView(): React.JSX.Element {
         const user = this.state.user;
-        if (user === null) {
+        if (user === null || user.isNull()) {
             return (
                 <View>
                     <Text>

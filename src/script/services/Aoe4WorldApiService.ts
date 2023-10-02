@@ -87,6 +87,19 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
             startingUsers,
         );
     }
+    async getSingleUserByUsername(username: string): Promise<User|null> {
+        const exactMatches = await this.getUsersByUsername(username, true);
+        if (exactMatches != null && exactMatches.length > 0) {
+            return exactMatches[0];
+        }
+
+        const nearestMatch = await this.getUsersByUsername(username, false);
+        if (nearestMatch != null && nearestMatch.length > 0) {
+            return nearestMatch[0];
+        }
+
+        return null;
+    }
     async getUsersByUsername(username: string, exact: boolean = false, page: number| null = null): Promise<Array<User>> { //limit is hard coded to be 50
         const searchParams = new URLSearchParams();
         searchParams.append("query", username);

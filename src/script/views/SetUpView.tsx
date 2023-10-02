@@ -69,7 +69,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
 
         if (exactUser != null) {
             this.props.navigation.push("AssignUserView", {
-                user: exactUser,
+                userId: exactUser.aoe4WorldId
             });
         } else {
             this.props.navigation.push("SelectUserView", {

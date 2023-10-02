@@ -39,7 +39,8 @@ export function MatchUpCard({   against,
         ));
     }
     return (
-        <View>
+        <View
+        >
             <UserCard
                 user={matchUp.opponent}
                 onClick={onUserClick}

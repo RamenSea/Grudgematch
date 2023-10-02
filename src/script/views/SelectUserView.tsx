@@ -60,7 +60,7 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
 
     }
     selectUser(user: User) {
-        this.props.navigation.push("AssignUserView", {user: user});
+        this.props.navigation.push("AssignUserView", {userId: user.aoe4WorldId});
     }
     onRequestNextPage() {
         this.userQuery.next();
