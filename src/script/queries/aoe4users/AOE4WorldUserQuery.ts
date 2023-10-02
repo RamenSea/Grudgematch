@@ -17,12 +17,12 @@ export class AOE4WorldUserQuery {
     constructor(
         public username: string,
         private aoe4WorldApiService: Aoe4WorldApiService,
-        startingUsers: User[]|null = null,
+        startingUsers: User[]|undefined = undefined,
     ) {
 
         this.users = [];
         this.onNextBatch = new Subject<Array<User>>();
-        if (startingUsers != null) {
+        if (startingUsers && startingUsers.length > 0) {
             this.users.push(...startingUsers);
             this.currentPage++;
         }

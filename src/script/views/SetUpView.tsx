@@ -51,7 +51,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
 
         const exactMatches = await this.aoe4WorldApiService.getUsersByUsername(usernameToSearch, true);
         let exactUser: User|null = null;
-        let startingUsersToSelect: User[]|null = null;
+        let startingUsersToSelect: User[]|undefined = undefined;
         if (exactMatches != null && exactMatches.length > 0) {
             exactUser = exactMatches[0];
         } else {
@@ -72,6 +72,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                 userId: exactUser.aoe4WorldId
             });
         } else {
+            console.log(startingUsersToSelect);
             this.props.navigation.push("SelectUserView", {
                 username: usernameToSearch,
                 startingUsersToSelect: startingUsersToSelect,

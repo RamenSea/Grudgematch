@@ -14,7 +14,7 @@ import {Subscription} from "@reactivex/rxjs/dist/package";
 
 export type SelectUserViewProps = {
     username: string;
-    startingUsersToSelect: User[]|null;
+    startingUsersToSelect?: User[];
 }
 class SelectUserViewState {
     constructor(public usersToSelect: User[]) { }
@@ -33,6 +33,7 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
 
     constructor(props: MainAppViewProps<"SelectUserView">, context: {}) {
         super(props, context);
+        console.log(this.props.route.params);
         this.userQuery = this.gameApiService.getUserQuery(this.props.route.params.username, this.props.route.params.startingUsersToSelect);
         this.state = new SelectUserViewState(this.userQuery.users.slice());
     }
@@ -56,8 +57,6 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
         this.setState((state) => ({
            usersToSelect: [...state.usersToSelect, ...users]
         }));
-        this.onRequestNextPage();
-
     }
     selectUser(user: User) {
         this.props.navigation.push("AssignUserView", {userId: user.aoe4WorldId});

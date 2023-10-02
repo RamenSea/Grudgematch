@@ -80,7 +80,7 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         return games;
     }
 
-    getUserQuery(username: string, startingUsers: User[]|null = null): AOE4WorldUserQuery {
+    getUserQuery(username: string, startingUsers: User[]|undefined = undefined): AOE4WorldUserQuery {
         return new AOE4WorldUserQuery(
             username,
             this,

@@ -1,6 +1,6 @@
 import React from "react";
 import {createNativeStackNavigator, NativeStackScreenProps} from "@react-navigation/native-stack";
-import {DarkTheme, DefaultTheme, NavigationContainer} from "@react-navigation/native";
+import {DarkTheme, DefaultTheme, getPathFromState, NavigationContainer} from "@react-navigation/native";
 import {SetUpView} from "./SetUpView";
 import {useColorScheme} from "react-native";
 import {AssignUserView, AssignUserViewProps} from "./AssignUserView";
@@ -29,12 +29,6 @@ export type RootRouteProps = {
  * Having a routing system that enabled TypeScript's type checking system would eliminate a lot of bugs and help facilitate co-working
  */
 export type PossibleRoutePropNames = keyof RootRouteProps;
-    // "SetUpView" |
-    // "SelectUserView" |
-    // "AssignUserView" |
-    // "UserOverviewView" |
-    // "GameListView" |
-    // "SettingsView";
 
 /**
  * A required step to enable RootRouteProps
@@ -58,12 +52,43 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                 config: {
                     screens: {
                         SetUpView: "setup",
-                        SelectUserView: "select",
+                        SelectUserView: {
+                            path: "select",
+                            //
+                            // stringify: {
+                            //     startingUsersToSelect: (id) => undefined,
+                            // }
+                        },
                         AssignUserView: "assign",
                         UserOverviewView: "overview/:username?",
                         SettingsView: "settings",
                     },
-                }
+                },
+                getPathFromState: (state, options) => {
+                    const cleanState = {
+                        ...state,
+                        routes: state.routes.map(route => {
+                            if(!route.params) {
+                                return route
+                            }
+
+                            const cleanParams: any = {}
+                            for(const param in route.params) {
+                                // @ts-ignore
+                                const value: any = route.params[param]
+                                if(value && typeof value !== "object" && typeof value !== "function") {
+                                    cleanParams[param] = value
+                                }
+                            }
+                            return {
+                                ...route,
+                                params: cleanParams,
+                            }
+                        }),
+                    }
+                    // @ts-ignore
+                    return getPathFromState(cleanState, options) //imported from @react-navigation/native
+                },
             }}
             theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
             <Stack.Navigator
@@ -79,7 +104,6 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                     name="SelectUserView"
                     component={SelectUserView}
                     getId={(params) => params.params.username }
-                    initialParams={{startingUsersToSelect: null}}
                     options={{title: 'Select'}}
                 />
                 <Stack.Screen
