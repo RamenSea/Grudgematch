@@ -5,12 +5,42 @@ import {Card} from "@rneui/base";
 import React from "react";
 
 
-export function UserCard({user, onClick}: {user: User, onClick?: ((user: User) => void)}) {
+export function UserCard(
+    {
+        user,
+        onClick
+    }: {
+        user: User,
+        onClick?: ((user: User) => void)
+    }) {
     const rankedRowHeight = 42;
     const iconSize = 32;
     const ratingLineHeight = 22;
+    const profileImageSize = 42;
     const qmRating = user.averageRecentQMRating(true);
 
+    let quickMatchView: React.JSX.Element;
+    if (qmRating <= 0) {
+        quickMatchView = (<View/>);
+    } else {
+        quickMatchView = (
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    height: rankedRowHeight,
+                }}
+            >
+                <Text
+                    style={{
+                        textAlign: "left",
+                    }}
+                >
+                    QM: {qmRating}
+                </Text>
+            </View>
+        );
+    }
     let soloRankView: React.JSX.Element;
     const soloRank = user.recentRank(true);
     if (soloRank == Rank.NONE) {
@@ -79,43 +109,38 @@ export function UserCard({user, onClick}: {user: User, onClick?: ((user: User) =
     const inner = (
         <Card
         >
-            <Card.Title
+            <View
                 style={{
-                    textAlign: "left",
-                }}
-            >
+                    alignContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                }}>
+                <Image
+                    source={{
+                        uri: user.mediumAvatarImageUrl,
+                    }}
+                    style={{
+                        width: profileImageSize,
+                        height: profileImageSize,
+                        backgroundColor: "rgba(131,131,131,0.38)",
+                    }}
+                />
                 <View
                     style={{
-                        alignContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                    }}>
-                    <Image
-                        source={{
-                            uri: user.smallAvatarImageUrl,
-                        }}
-                        style={{
-                            width: 24,
-                            height: 24,
-                            backgroundColor: "rgba(131,131,131,0.38)",
-                        }}
-                    />
-                    <View
-                        style={{
-                            width: 8,
-                            height: 1,
-                        }}
-                    />
-                    <Text
-                        style={{
-                            textAlign: "left",
-                        }}
-                    >
-                        {user.username}
-                    </Text>
+                        width: 8,
+                        height: 1,
+                    }}
+                />
+                <Text
+                    style={{
+                        textAlign: "left",
+                        fontSize: 18,
+                    }}
+                >
+                    {user.username}
+                </Text>
 
-                </View>
-            </Card.Title>
+            </View>
             <View
                 style={{
                     flex: 1,
@@ -124,27 +149,13 @@ export function UserCard({user, onClick}: {user: User, onClick?: ((user: User) =
                     height: rankedRowHeight,
                 }}
             >
-
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        height: rankedRowHeight,
-                    }}
-                >
-                    <Text
-                        style={{
-                            textAlign: "left",
-                        }}
-                    >
-                        QM: {qmRating}
-                    </Text>
-                </View>
+                {quickMatchView}
                 {soloRankView}
                 {teamRankView}
             </View>
         </Card>
     );
+
     if (onClick) {
         return (
             <Pressable
@@ -155,12 +166,6 @@ export function UserCard({user, onClick}: {user: User, onClick?: ((user: User) =
             </Pressable>
         )
     } else {
-        return (
-            <View
-                // style={{width: "100%", height: "100%"}}
-            >
-                {inner}
-            </View>
-        )
+        return inner;
     }
 }

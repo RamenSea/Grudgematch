@@ -92,7 +92,7 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
                         fontSize: 24,
                     }}
                 >
-                    Do you want to use this account?
+                    Are you sure this is the correct user?
                 </Text>
                 <UserCard
                     user={this.state.user}
@@ -100,6 +100,7 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
                 <View
                     style={{
                         flex: 1,
+                        minHeight: 50,
                     }}
                 />
                 <Button

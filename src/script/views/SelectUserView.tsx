@@ -67,6 +67,18 @@ export class SelectUserView extends BaseRootView<"SelectUserView", SelectUserVie
     renderView(): React.JSX.Element {
         return (
             <View>
+                <Text
+                    style={{
+                        marginTop: 32,
+                        marginRight: 32,
+                        marginLeft: 32,
+                        marginBottom: 24,
+                        textAlign: "center",
+                        fontSize: 24,
+                    }}
+                >
+                    Select the user you want to use:
+                </Text>
                 <UserList
                     users={this.state.usersToSelect}
                     onRequestNextPage={() => this.onRequestNextPage()}

@@ -37,19 +37,25 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
     private readonly aoe4WorldApiService!: Aoe4WorldApiService;
 
     private isTryingToFindUser = false;
+    private usernameFromParams: string|null;
     constructor(props: MainAppViewProps<"UserOverviewView">, context: {}) {
         super(props, context);
 
-        if ((props.route.params.username === undefined && !this.userService.user.isNull()) ||
-            (this.userService.user.username === props.route.params.username)) {
+        this.usernameFromParams = null;
+        if (props.route.params && props.route.params.username) {
+            this.usernameFromParams = props.route.params.username;
+        }
+
+        if (this.usernameFromParams === null || this.usernameFromParams === this.userService.user.username) {
             this.isTryingToFindUser = true;
             this.state = new UserOverviewViewState(this.userService.user);
-        } else if (props.route.params.username) {
+        } else if (this.usernameFromParams) {
             this.state = new UserOverviewViewState(null);
             this.findUser();
         } else {
             console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
         }
+
         this.props.navigation.setOptions({
             headerRight: () => {
                 return (
@@ -67,8 +73,8 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
             return;
         }
         this.isTryingToFindUser = true;
-        if (this.props.route.params.username) {
-            const uWithoutDetails = await this.aoe4WorldApiService.getSingleUserByUsername(this.props.route.params.username);
+        if (this.usernameFromParams) {
+            const uWithoutDetails = await this.aoe4WorldApiService.getSingleUserByUsername(this.usernameFromParams);
             if (uWithoutDetails !== null) {
                 const u = await this.aoe4WorldApiService.getUsersById(uWithoutDetails.aoe4WorldId);
                 this.setState({user: u});
@@ -79,7 +85,7 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
     }
     onWillAppear() {
         super.onWillAppear();
-        if (this.props.route.params.username === undefined) {
+        if (this.usernameFromParams === null || this.usernameFromParams === this.userService.user.username) {
             this.subscribe(this.userService.onUserUpdate, (user) => {
                 this.setState({user: user});
             });

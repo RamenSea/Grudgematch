@@ -52,13 +52,7 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                 config: {
                     screens: {
                         SetUpView: "setup",
-                        SelectUserView: {
-                            path: "select",
-                            //
-                            // stringify: {
-                            //     startingUsersToSelect: (id) => undefined,
-                            // }
-                        },
+                        SelectUserView: "select",
                         AssignUserView: "assign",
                         UserOverviewView: "overview/:username?",
                         SettingsView: "settings",
