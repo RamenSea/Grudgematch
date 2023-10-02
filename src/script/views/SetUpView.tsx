@@ -107,32 +107,33 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         paddingRight: 24,
                         color: "#000",
                         width: "100%",
+                        fontSize: 24,
                         textAlign: "left",
                     }}
                 >
-                    Grudge Match helps you get some quick info about your opponent
+                    Grudge Match is a tool for Age of Empire 4 players to get some quick info about their opponent
                 </Text>
-                <Text
-                    style={{
-                        marginTop: 24,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        color: "#000",
-                        width: "100%",
-                        textAlign: "left",
-                    }}
-                >
-                    To get started please enter your Age of Empire's 4 username
-                </Text>
-
                 <View
                     style={{
                         flex: 1,
+                        justifyContent: "center",
                     }}
                 >
+                    <Text
+                        style={{
+                            paddingLeft: 24,
+                            paddingRight: 24,
+                            marginBottom: 16,
+                            fontSize: 18,
+                            color: "#000",
+                            width: "100%",
+                            textAlign: "left",
+                        }}
+                    >
+                        To get started please enter your Age of Empire 4's username
+                    </Text>
                     <View
                         style={{
-                            flex: 1,
                             justifyContent: "center",
                         }}
                     >
@@ -148,9 +149,15 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                                 marginRight: 32,
                                 borderWidth: 1,
                                 padding: 10,
+                                borderRadius: 4,
                             }}
                         />
                     </View>
+                </View>
+
+
+                <View
+                >
                     <Button
                         title="NEXT"
                         disabled={this.isUsernameValid(this.state.username) == false}
