@@ -1,13 +1,11 @@
-import {BaseRootView} from "./BaseRootView";
+import {BaseView} from "./BaseView";
 import React from "react";
-import {Button} from "react-native";
-import {resolve} from "inversify-react";
-import {SERVICE_TYPES} from "../services/ServiceTypes";
-import {UserService} from "../services/UserService";
+import {MainAppViewProps} from "./RootRoute";
+import {Button} from "../components/scaffolding/Button";
 
 class SettingsViewState {
 }
-export class SettingsView extends BaseRootView<"SettingsView", SettingsViewState> {
+export class SettingsView extends BaseView<MainAppViewProps<"SettingsView">, SettingsViewState> {
 
     didPressSetUser() {
         this.props.navigation.reset({index: 0, routes: [{name: "SetUpView"}]});

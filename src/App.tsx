@@ -4,20 +4,16 @@ import React from 'react';
 import {StartUpService} from "./script/services/StartUpService";
 import {SERVICE_TYPES} from "./script/services/ServiceTypes";
 import {container} from "./inversify.config";
-import {RootRoute} from "./script/views/RootRoute";
-import {Provider} from "inversify-react";
+import {RootRoute, RootRouteProps} from "./script/views/RootRoute";
 import {ActivityIndicator} from "react-native";
+import {UserService} from "./script/services/UserService";
+import {AppScaffolding} from "./script/components/scaffolding/AppScaffolding";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);
+const userService = container.get<UserService>(SERVICE_TYPES.UserService);
+
 startUpService.boot();
 
-
-//   // const isDarkMode = useColorScheme() === 'dark';
-//   //
-//   // const backgroundStyle = {
-//   //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-//   // };
-//     //
 type AppProps = {};
 class AppState {
     constructor(
@@ -53,17 +49,18 @@ class App extends React.Component<AppProps, AppState> {
             );
         }
 
-        // if (this.userService.user.isNull()) {
-        //     this.props.navigation.replace("SetUpView");
-        // } else {
-        //     this.props.navigation.replace("UserOverviewView", {selectedUser: null});
-        // }
+
+        let initialRouteName: keyof RootRouteProps = "SetUpView";
+        if (!userService.user.isNull()) {
+            initialRouteName = "UserOverviewView";
+        }
+
         return (
-          <Provider container={container}>
-              <RootRoute
-                initialRouteName={"SetUpView"}
-              />
-          </Provider>
+            <AppScaffolding>
+                <RootRoute
+                    initialRouteName={initialRouteName}
+                />
+            </AppScaffolding>
         );
     }
 }

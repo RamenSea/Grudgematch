@@ -1,5 +1,5 @@
 import {Rank} from "../../models/User";
-import {StyleProp, View, ViewStyle} from "react-native";
+import {View} from "react-native";
 import {SvgProps} from "react-native-svg";
 
 import SoloUnranked from "../../../assets/images/ranks/solo_unranked.svg";

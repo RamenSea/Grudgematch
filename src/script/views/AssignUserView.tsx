@@ -1,14 +1,15 @@
-import {BaseRootView} from "./BaseRootView";
+import {BaseView} from "./BaseView";
 import React from "react";
 import {User} from "../models/User";
-import {ActivityIndicator, Button, Text, View} from "react-native";
+import {ActivityIndicator, View} from "react-native";
 import {UserCard} from "../components/user/UserCard";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
-import { Button as StyleButton } from '@rneui/themed';
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
+import {Text} from "tamagui";
+import {Button} from "../components/scaffolding/Button";
 
 
 export type AssignUserViewProps = {
@@ -20,7 +21,7 @@ class AssignUserViewState {
         public user?: User) {
     }
 }
-export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserViewState> {
+export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">, AssignUserViewState> {
 
     @resolve(SERVICE_TYPES.UserService)
     private readonly userService!: UserService;
@@ -112,19 +113,19 @@ export class AssignUserView extends BaseRootView<"AssignUserView", AssignUserVie
                         height: 8,
                     }}
                 />
-                <StyleButton
+                <Button
                     title="ASSIGN"
-                    loadingProps={{ size: 'large', color: 'white' }}
+                    // loadingProps={{ size: 'large', color: 'white' }}
                     loading={this.state.user === undefined}
-                    buttonStyle={{
-                        height: 160,
-                        backgroundColor: 'rgba(111, 202, 186, 1)',
-                    }}
-                    titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                    containerStyle={{
-                        height: 160,
-                        width: "100%",
-                    }}
+                    // buttonStyle={{
+                    //     height: 160,
+                    //     backgroundColor: 'rgba(111, 202, 186, 1)',
+                    // }}
+                    // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                    // containerStyle={{
+                    //     height: 160,
+                    //     width: "100%",
+                    // }}
                     onPress={event => this.didSelectAssignUser()}
                 />
             </View>

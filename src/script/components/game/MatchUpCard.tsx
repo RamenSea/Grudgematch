@@ -1,12 +1,12 @@
-import {Game, Player} from "../../models/Game";
-import {FlatList, Text, View} from "react-native";
-import {PlayerCard} from "./PlayerCard";
+import {Game} from "../../models/Game";
+import {View} from "react-native";
 import {MatchUp} from "../../models/MatchUp";
 import {UserCard} from "../user/UserCard";
 import {User} from "../../models/User";
 import {GameCard} from "./GameCard";
 import React from "react";
-import {Button} from "@rneui/themed";
+import {Button} from "../scaffolding/Button";
+import {Text} from "tamagui";
 
 export function MatchUpCard({   against,
                                 matchUp,
@@ -48,9 +48,8 @@ export function MatchUpCard({   against,
             { showMoreButton &&
                 <Button
                     onPress={() => onShowMoreGamesClicked && onShowMoreGamesClicked(matchUp)}
-                >
-                    Show more {">"}
-                </Button>
+                    title={"Show more >"}
+                />
             }
 
             <Text>

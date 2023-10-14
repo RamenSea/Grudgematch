@@ -1,8 +1,8 @@
-import {Image, Pressable, Text, View} from "react-native";
+import {Pressable, View} from "react-native";
 import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
-import {Card} from "@rneui/base";
 import React from "react";
+import {Image, Card, Text} from "tamagui";
 
 
 export function UserCard(

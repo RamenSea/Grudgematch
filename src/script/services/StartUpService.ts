@@ -1,7 +1,7 @@
 import {inject, injectable} from "inversify";
 import {SERVICE_TYPES} from "./ServiceTypes";
 import {UserService} from "./UserService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {KeyStoreService} from "./KeyStoreService";
 
 
 export const CURRENT_COMPATABILITY_VERSION: number = 1;
@@ -16,6 +16,7 @@ export class StartUpService  {
     private _lastCompatibilityVersion: number = FIRST_BOOT_COMPATABILITY_VERSION;
 
     public userService: UserService;
+    public keystoreService: KeyStoreService;
     get booted(): boolean {
         return this._booted;
     }
@@ -27,22 +28,19 @@ export class StartUpService  {
     }
     constructor(
         @inject(SERVICE_TYPES.UserService) userService: UserService,
+        @inject(SERVICE_TYPES.KeyStoreService) keystoreService: KeyStoreService,
     ) {
         this.userService = userService;
+        this.keystoreService = keystoreService;
         this.bootPromise = new Promise<void>((resolve, reject) => {
             this.resolver = resolve;
         });
     }
 
     async boot() {
-        const lcv = await AsyncStorage.getItem("last_compat_ver");
-        if (lcv != null) {
-            try {
-                const parsedLCV = parseInt(lcv);
-                if (isNaN(parsedLCV) == false) {
-                    this._lastCompatibilityVersion = parsedLCV;
-                }
-            } catch (e) { }
+        const lcv = this.keystoreService.getNumber("last_compat_ver");
+        if (lcv) {
+            this._lastCompatibilityVersion = lcv;
         }
 
         const bootPromise = [
@@ -50,7 +48,7 @@ export class StartUpService  {
         ]
         await Promise.all(bootPromise);
 
-        await AsyncStorage.setItem("last_compat_ver", CURRENT_COMPATABILITY_VERSION.toString());
+        this.keystoreService.set("last_compat_ver", CURRENT_COMPATABILITY_VERSION);
 
         this._booted = false;
         if (this.resolver) {

@@ -15,11 +15,12 @@ export function GameList({
             style={{width: "100%", height: "100%"}}
             data={games}
             keyExtractor={item => item.id.toString()}
-            onEndReached={info => onRequestNextPage ? onRequestNextPage() : null}
-            onEndReachedThreshold={2}
+            // onEndReached={info => console.log(info.distanceFromEnd)}
+            // onEndReachedThreshold={0.3}
             renderItem={({item, index, separators}) => {
                 return (
                     <GameCard
+                        key={item.id}
                         game={item}
                         onClick={onSelect}
                     />

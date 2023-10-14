@@ -1,9 +1,9 @@
 {
-
   "jsx": "react",
   "compilerOptions": {
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "strict": true
   },
   "extends": "@tsconfig/react-native/tsconfig.json",
 }

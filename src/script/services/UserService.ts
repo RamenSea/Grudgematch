@@ -1,9 +1,9 @@
 import {inject, injectable} from "inversify";
 import {User} from "../models/User";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {SERVICE_TYPES} from "./ServiceTypes";
 import {Aoe4WorldApiService} from "./Aoe4WorldApiService";
 import {Subject} from "@reactivex/rxjs/dist/package";
+import {KeyStoreService} from "./KeyStoreService";
 
 
 @injectable()
@@ -15,22 +15,25 @@ export class UserService {
     public onUserUpdate: Subject<User>;
 
     private gameApiService: Aoe4WorldApiService;
+    private keystoreService: KeyStoreService;
 
     constructor(
         @inject(SERVICE_TYPES.GameApiService) gameApiService: Aoe4WorldApiService,
+        @inject(SERVICE_TYPES.KeyStoreService) keystoreService: KeyStoreService,
     ) {
         this.gameApiService = gameApiService;
+        this.keystoreService = keystoreService;
         this.onUserUpdate = new Subject<User>();
 
     }
     async setUser(user: User) {
         this._user = user;
-        await AsyncStorage.setItem("user", JSON.stringify(user.toJson()));
+        this.keystoreService.set("user", JSON.stringify(user.toJson()));
     }
     async boot() {
-        const userString = await AsyncStorage.getItem("user");
+        const userString = this.keystoreService.getString("user");
 
-        if (userString != null) {
+        if (userString) {
             try {
                 const userJson = JSON.parse(userString);
                 const parsedUser = User.FromJson(userJson);

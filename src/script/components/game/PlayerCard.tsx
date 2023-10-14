@@ -1,5 +1,6 @@
-import {Game, Player} from "../../models/Game";
-import {Text, View} from "react-native";
+import {Player} from "../../models/Game";
+import {View} from "react-native";
+import {Text} from "tamagui";
 
 export function PlayerCard({
                              player,}: {

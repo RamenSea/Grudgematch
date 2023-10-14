@@ -1,10 +1,10 @@
-import {BaseRootView} from "./BaseRootView";
+import {BaseView} from "./BaseView";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {MainAppViewProps} from "./RootRoute";
 import React from "react";
-import {FlatList, Linking, Text, View} from "react-native";
+import {FlatList, Linking, View} from "react-native";
 import {User} from "../models/User";
 import {UserService} from "../services/UserService";
 import {UserCard} from "../components/user/UserCard";
@@ -12,7 +12,9 @@ import {MatchUp} from "../models/MatchUp";
 import {Game, NULL_TEAM_ID} from "../models/Game";
 import {GameCard} from "../components/game/GameCard";
 import {MatchUpCard} from "../components/game/MatchUpCard";
-import {Button} from "@rneui/themed";
+import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
+import {Button} from "../components/scaffolding/Button";
+import {Text} from "tamagui";
 
 export type UserOverviewViewProps = {
     username?: string
@@ -28,7 +30,7 @@ class UserOverviewViewState {
         public matchUpsFromGameEnemies: MatchUp[]|null = null,
     ) { }
 }
-export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverviewViewState> {
+export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewView">, UserOverviewViewState> {
 
     @resolve(SERVICE_TYPES.UserService)
     private readonly userService!: UserService;
@@ -118,7 +120,7 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
         });
     }
     private openMoreGamesSection(matchup: MatchUp) {
-        this.props.navigation.push("GameListView", { games: matchup.games});
+        this.props.navigation.push("GameListView", {q: AOE4GameQuery.CreateMatchUpQuery(matchup), games: matchup.games, playerId: this.state.user?.aoe4WorldId});
     }
     private async didPressCheckCurrentGame() {
         if (this.state.isFindingGame ||
@@ -230,17 +232,17 @@ export class UserOverviewView extends BaseRootView<"UserOverviewView", UserOverv
                     title={"Check"}
                     loading={this.state.isFindingGame}
                     onPress={event => this.didPressCheckCurrentGame()}
-                    loadingProps={{ size: 'large', color: 'white' }}
-                    buttonStyle={{
-                        height: 90,
-                        backgroundColor: 'rgba(111, 202, 186, 1)',
-                    }}
-                    titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                    containerStyle={{
-                        height: 90,
-                        marginTop: 16,
-                        width: "100%",
-                    }}
+                    // loadingProps={{ size: 'large', color: 'white' }}
+                    // buttonStyle={{
+                    //     height: 90,
+                    //     backgroundColor: 'rgba(111, 202, 186, 1)',
+                    // }}
+                    // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                    // containerStyle={{
+                    //     height: 90,
+                    //     marginTop: 16,
+                    //     width: "100%",
+                    // }}
                 />
                 {bottomSection}
             </View>

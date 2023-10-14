@@ -1,5 +1,7 @@
-import {Image as ImageView, ImageRequireSource, View} from "react-native";
+import {ImageRequireSource, View} from "react-native";
 import {Civilization} from "../../models/Game";
+import React from "react";
+import {Image} from "tamagui";
 
 export function CivilizationFlag({
                                      civilization,
@@ -53,7 +55,7 @@ export function CivilizationFlag({
     }
 
     return (
-        <ImageView
+        <Image
             style={{
                 width: width,
                 height: height,

@@ -8,7 +8,6 @@ import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
 import {SettingsView} from "./SettingsView";
 import {GameListView, GameListViewProps} from "./GameListView";
-import * as path from "path";
 
 
 /**
@@ -41,21 +40,24 @@ const Stack = createNativeStackNavigator<RootRouteProps>();
  * Our apps main routing system
  * @constructor
  */
-export function RootRoute(initialRouteName: {initialRouteName: keyof RootRouteProps }) {
+export function RootRoute({initialRouteName}: {initialRouteName: PossibleRoutePropNames}) {
     const scheme = useColorScheme();
 
     return (
         <NavigationContainer
+            theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
             linking={{
                 enabled: true,
                 prefixes: [""],
                 config: {
+                    initialRouteName: initialRouteName,
                     screens: {
                         SetUpView: "setup",
                         SelectUserView: "select",
                         AssignUserView: "assign",
-                        UserOverviewView: "overview/:username?",
+                        UserOverviewView: "overview",
                         SettingsView: "settings",
+                        GameListView: "games",
                     },
                 },
                 getPathFromState: (state, options) => {
@@ -84,9 +86,8 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                     return getPathFromState(cleanState, options) //imported from @react-navigation/native
                 },
             }}
-            theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+            >
             <Stack.Navigator
-                // @ts-ignore
                 initialRouteName={initialRouteName}
             >
                 <Stack.Screen
@@ -99,6 +100,17 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                     component={SelectUserView}
                     getId={(params) => params.params.username }
                     options={{title: 'Select'}}
+                />
+                <Stack.Screen
+                    name="UserOverviewView"
+                    component={UserOverviewView}
+                    getId={(params) => {
+                        if (params.params.username) {
+                            return "u_" + params.params.username;
+                        }
+                        return "ME";
+                    }}
+                    options={{title: 'User'}}
                 />
                 <Stack.Screen
                     name="AssignUserView"
@@ -115,21 +127,10 @@ export function RootRoute(initialRouteName: {initialRouteName: keyof RootRoutePr
                     options={{title: 'Select'}}
                 />
                 <Stack.Screen
-                    name="UserOverviewView"
-                    component={UserOverviewView}
-                    getId={(params) => {
-                        if (params.params.username) {
-                            return "u_" + params.params.username;
-                        }
-                        return "ME";
-                    }}
-                    options={{title: 'User'}}
-                />
-                <Stack.Screen
                     name="GameListView"
                     component={GameListView}
                     getId={(params) => {
-                        return "TODO";
+                        return params.params.q;
                     }}
                     options={{title: 'Games'}}
                 />

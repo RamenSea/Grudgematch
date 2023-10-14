@@ -1,22 +1,20 @@
-import {BaseRootView} from "./BaseRootView";
+import {BaseView} from "./BaseView";
 import React from "react";
-import {StyleSheet, Text, TextInput, View} from "react-native";
+import {View} from "react-native";
 import {MainAppViewProps} from "./RootRoute";
-import {useTheme} from "@react-navigation/native";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
-import {UserService} from "../services/UserService";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {User} from "../models/User";
-import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
-import { Button } from '@rneui/themed';
+import {Input, Text} from "tamagui";
+import {Button} from "../components/scaffolding/Button";
 
 
 class SetUpViewState {
     username: string = "";
     isLoading: boolean = false;
 }
-export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
+export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpViewState> {
 
     @resolve(SERVICE_TYPES.GameApiService)
     private readonly aoe4WorldApiService!: Aoe4WorldApiService;
@@ -138,7 +136,7 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                             justifyContent: "center",
                         }}
                     >
-                        <TextInput
+                        <Input
                             editable={this.state.isLoading == false}
                             onChangeText={text => this.onChangeUsernameText(text)}
                             value={this.state.username}
@@ -163,16 +161,16 @@ export class SetUpView extends BaseRootView<"SetUpView", SetUpViewState> {
                         title="NEXT"
                         disabled={this.isUsernameValid(this.state.username) == false}
                         loading={this.state.isLoading}
-                        loadingProps={{ size: 'large', color: 'white' }}
-                        buttonStyle={{
-                            height: 160,
-                            backgroundColor: 'rgba(111, 202, 186, 1)',
-                        }}
-                        titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                        containerStyle={{
-                            height: 160,
-                            width: "100%",
-                        }}
+                        // loadingProps={{ size: 'large', color: 'white' }}
+                        // buttonStyle={{
+                        //     height: 160,
+                        //     backgroundColor: 'rgba(111, 202, 186, 1)',
+                        // }}
+                        // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
+                        // containerStyle={{
+                        //     height: 160,
+                        //     width: "100%",
+                        // }}
                         onPress={event => this.onClickNext()}
                     />
                 </View>

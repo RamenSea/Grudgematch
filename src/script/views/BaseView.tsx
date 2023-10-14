@@ -2,18 +2,12 @@ import {
     Dimensions,
     Platform,
     SafeAreaView,
-    StatusBar,
     StyleProp,
-    StyleSheet,
-    Text,
-    useColorScheme,
     View, ViewStyle
 } from "react-native";
 import React from "react";
-import {MainAppViewProps, PossibleRoutePropNames} from "./RootRoute";
-import {Colors} from "react-native/Libraries/NewAppScreen";
-import {useTheme} from "@react-navigation/native";
 import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
+import {NativeStackScreenProps} from "@react-navigation/native-stack";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -40,7 +34,7 @@ import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
  *
  * S: refers to the view's state object
  */
-export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends React.Component<MainAppViewProps<T>, S>  {
+export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends React.Component<T, S>  {
 
     private focusListener:(() => void)|null = null;
     private blurListener:(() => void)|null = null;
@@ -52,7 +46,7 @@ export abstract class BaseRootView<T extends PossibleRoutePropNames, S> extends 
      */
 
     // Deprecated constructor needs to be used to because we access "context"
-    constructor(props: MainAppViewProps<T>, context: {}) {
+    constructor(props: T, context: {}) {
         super(props, context);
     }
     protected async asyncLambdaSetState<K extends keyof S>(updateState: (prevState: Readonly<S>) => (Pick<S, K> | S )) {

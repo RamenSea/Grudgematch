@@ -1,8 +1,7 @@
 import {Game, Player} from "../../models/Game";
-import {FlatList, Pressable, Text, View} from "react-native";
-import {PlayerCard} from "./PlayerCard";
+import {FlatList, Pressable, View} from "react-native";
 import {CivilizationFlag} from "./CivilizationFlag";
-import {Card} from "@rneui/base";
+import {Card, Text} from "tamagui";
 
 
 export function GameCard({

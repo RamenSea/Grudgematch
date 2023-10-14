@@ -4,6 +4,7 @@ import {injectable} from "inversify";
 import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
 import {IFetchCachedObject, MemoryCacheStorage, SimpleCache} from "../caches/SimpleCache";
 import {MatchUp} from "../models/MatchUp";
+import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 
 //todo figure out a good error system
 
@@ -39,19 +40,28 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         return matchUps;
     }
     async getMatchUp(playerId: number, opponentId: number): Promise<MatchUp|null> {
+        const userRequest = this.getUsersById(playerId);
         const opponentUserRequest = this.getUsersById(opponentId);
         const gamesRequest = this.getGames(playerId, opponentId);
 
+        const user = await userRequest;
         const opponent = await opponentUserRequest;
         const games = await gamesRequest;
 
-        if (opponent == null) {
+        if (opponent == null || user == null) {
             return null;
         }
 
-        return new MatchUp(opponent, games);
+        return new MatchUp(user, opponent, games);
     }
-    async getGames(playerId: number, opponentId: number = -1, limit: number = -1): Promise<Array<Game>> {
+    getGameQuery(query: string, startingGames: Game[]|undefined = undefined): AOE4GameQuery {
+        return new AOE4GameQuery(
+            query,
+            this,
+            startingGames
+        );
+    }
+    async getGames(playerId: number, opponentId: number = -1, limit: number = -1, page: number = -1): Promise<Array<Game>> {
         let apiUrl = `${this.getApiUrl()}players/${playerId}/games`;
         let queryParams: URLSearchParams| null = null;
         if (limit > 0) {
@@ -63,6 +73,12 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
                 queryParams = new URLSearchParams();
             }
             queryParams.append("opponent_profile_id", opponentId.toString());
+        }
+        if (page > 0) {
+            if (queryParams === null) {
+                queryParams = new URLSearchParams();
+            }
+            queryParams.append("page", page.toString());
         }
         if (queryParams !== null) {
             apiUrl += `?${queryParams.toString()}`;
