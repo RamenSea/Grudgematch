@@ -18,6 +18,7 @@
     "@reactivex/rxjs": "^6.6.7",
     "@tamagui/config": "^1.74.15",
     "@tamagui/lucide-icons": "^1.74.15",
+    "@tamagui/react-native-media-driver": "^1.74.15",
     "@tamagui/themes": "^1.74.15",
     "@tamagui/toast": "^1.74.15",
     "burnt": "^0.11.7",

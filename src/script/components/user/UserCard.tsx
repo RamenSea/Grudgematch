@@ -2,7 +2,7 @@ import {Pressable, View} from "react-native";
 import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
 import React from "react";
-import {Image, Card, Text} from "tamagui";
+import {Image, Card, Text, XStack, Spacer, YStack} from "tamagui";
 
 
 export function UserCard(
@@ -19,42 +19,21 @@ export function UserCard(
     const profileImageSize = 42;
     const qmRating = user.averageRecentQMRating(true);
 
-    let quickMatchView: React.JSX.Element;
-    if (qmRating <= 0) {
-        quickMatchView = (<View/>);
-    } else {
+    let quickMatchView: React.JSX.Element|undefined = undefined;
+    if (qmRating > 0) {
         quickMatchView = (
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: rankedRowHeight,
-                }}
+            <Text
             >
-                <Text
-                    style={{
-                        textAlign: "left",
-                    }}
-                >
-                    QM: {qmRating}
-                </Text>
-            </View>
+                QM: {qmRating}
+            </Text>
         );
     }
-    let soloRankView: React.JSX.Element;
+    let soloRankView: React.JSX.Element|undefined = undefined;
     const soloRank = user.recentRank(true);
-    if (soloRank == Rank.NONE) {
-        soloRankView = (<View/>);
-    } else {
+    if (soloRank != Rank.NONE) {
         const soloRating = user.recentRating(true);
         soloRankView = (
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: rankedRowHeight,
-                }}
-            >
+            <>
                 <RankIcon
                     rank={soloRank}
                     isSolo={true}
@@ -62,31 +41,19 @@ export function UserCard(
                     height={iconSize}
                 />
                 <Text
-                    style={{
-                        textAlign: "left",
-                        lineHeight: ratingLineHeight,
-                    }}
                 >
                     {soloRating}
                 </Text>
-            </View>
+            </>
         );
     }
 
-    let teamRankView: React.JSX.Element;
+    let teamRankView: React.JSX.Element|undefined = undefined;
     const teamRank = user.recentRank(false);
-    if (teamRank == Rank.NONE) {
-        teamRankView = (<View/>);
-    } else {
+    if (teamRank != Rank.NONE) {
         const teamRating = user.recentRating(false);
         teamRankView = (
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: rankedRowHeight,
-                }}
-            >
+            <>
                 <RankIcon
                     rank={teamRank}
                     isSolo={false}
@@ -94,78 +61,58 @@ export function UserCard(
                     height={iconSize}
                 />
                 <Text
-                    style={{
-                        textAlign: "left",
-                        lineHeight: ratingLineHeight,
-                        color: "#000",
-                    }}
                 >
                     {teamRating}
                 </Text>
-            </View>
+            </>
         );
     }
 
-    const inner = (
+    const onPress = onClick ? (e: any) => onClick(user) : undefined;
+    return (
         <Card
+            elevate
+            padded
+            onPress={onPress}
         >
-            <View
-                style={{
-                    alignContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                }}>
-                <Image
-                    source={{
-                        uri: user.mediumAvatarImageUrl,
-                    }}
+            <YStack>
+                <XStack
                     style={{
-                        width: profileImageSize,
-                        height: profileImageSize,
-                        backgroundColor: "rgba(131,131,131,0.38)",
-                    }}
-                />
-                <View
-                    style={{
-                        width: 8,
-                        height: 1,
-                    }}
-                />
-                <Text
-                    style={{
-                        textAlign: "left",
-                        fontSize: 18,
-                    }}
-                >
-                    {user.username}
-                </Text>
+                        alignContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                    }}>
+                    <Image
+                        source={{
+                            uri: user.mediumAvatarImageUrl,
+                        }}
+                        style={{
+                            width: profileImageSize,
+                            height: profileImageSize,
+                            backgroundColor: "rgba(131,131,131,0.38)",
+                        }}
+                    />
+                    <Spacer
+                        width={8}
+                        height={1}
+                    />
+                    <Text
+                        fontSize={18}
+                    >
+                        {user.username}
+                    </Text>
 
-            </View>
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: rankedRowHeight,
-                }}
-            >
-                {quickMatchView}
-                {soloRankView}
-                {teamRankView}
-            </View>
+                </XStack>
+                <XStack
+                    height={rankedRowHeight}
+                    alignContent={"center"}
+                    alignItems={"center"}
+                >
+                    {quickMatchView}
+                    {soloRankView}
+                    {teamRankView}
+                </XStack>
+            </YStack>
         </Card>
     );
-
-    if (onClick) {
-        return (
-            <Pressable
-                // style={{width: "100%", height: "100%"}}
-                onPress={event => onClick(user)}
-            >
-                {inner}
-            </Pressable>
-        )
-    } else {
-        return inner;
-    }
 }

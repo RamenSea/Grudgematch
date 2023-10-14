@@ -5049,7 +5049,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/react-native-media-driver@npm:1.74.15":
+"@tamagui/react-native-media-driver@npm:1.74.15, @tamagui/react-native-media-driver@npm:^1.74.15":
   version: 1.74.15
   resolution: "@tamagui/react-native-media-driver@npm:1.74.15"
   dependencies:
@@ -11204,6 +11204,7 @@ __metadata:
     "@reactivex/rxjs": ^6.6.7
     "@tamagui/config": ^1.74.15
     "@tamagui/lucide-icons": ^1.74.15
+    "@tamagui/react-native-media-driver": ^1.74.15
     "@tamagui/themes": ^1.74.15
     "@tamagui/toast": ^1.74.15
     "@tsconfig/react-native": ^3.0.2

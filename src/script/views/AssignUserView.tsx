@@ -8,7 +8,7 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
-import {Text} from "tamagui";
+import {H3, Spacer, Text, YStack} from "tamagui";
 import {Button} from "../components/scaffolding/Button";
 
 
@@ -78,27 +78,24 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
             )
         }
         return (
-            <View
-                style={{
-                    flex: 1,
-                }}
+            <YStack
+                paddingTop={32}
+                flex={1}
             >
-                <Text
+                <H3
                     style={{
-                        marginTop: 32,
                         marginRight: 32,
                         marginLeft: 32,
                         marginBottom: 24,
                         textAlign: "center",
-                        fontSize: 24,
                     }}
                 >
                     Are you sure this is the correct user?
-                </Text>
+                </H3>
                 <UserCard
                     user={this.state.user}
                 />
-                <View
+                <Spacer
                     style={{
                         flex: 1,
                         minHeight: 50,
@@ -108,27 +105,19 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
                     title={"Wrong account"}
                     onPress={event => this.didSelectNotToAssign()}
                 />
-                <View
+                <Spacer
                     style={{
                         height: 8,
                     }}
                 />
                 <Button
+                    theme={"active"}
                     title="ASSIGN"
-                    // loadingProps={{ size: 'large', color: 'white' }}
+                    large={true}
                     loading={this.state.user === undefined}
-                    // buttonStyle={{
-                    //     height: 160,
-                    //     backgroundColor: 'rgba(111, 202, 186, 1)',
-                    // }}
-                    // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                    // containerStyle={{
-                    //     height: 160,
-                    //     width: "100%",
-                    // }}
                     onPress={event => this.didSelectAssignUser()}
                 />
-            </View>
+            </YStack>
         );
     }
 

@@ -1,13 +1,14 @@
 import "reflect-metadata";
 
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {StartUpService} from "./script/services/StartUpService";
 import {SERVICE_TYPES} from "./script/services/ServiceTypes";
 import {container} from "./inversify.config";
 import {RootRoute, RootRouteProps} from "./script/views/RootRoute";
-import {ActivityIndicator} from "react-native";
 import {UserService} from "./script/services/UserService";
 import {AppScaffolding} from "./script/components/scaffolding/AppScaffolding";
+import {H4, YStack} from "tamagui";
+import {ThemedSpinner} from "./script/components/scaffolding/ThemedSpinner";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);
 const userService = container.get<UserService>(SERVICE_TYPES.UserService);
@@ -43,23 +44,43 @@ class App extends React.Component<AppProps, AppState> {
         this.setState({hasBooted: true})
     }
     render() {
+
+        let inner: ReactNode;
         if (this.state.hasBooted == false) {
-            return (
-                <ActivityIndicator></ActivityIndicator>
+            inner = (
+                <YStack
+                    alignContent={"center"}
+                    alignItems={"center"}
+                    flex={1}
+                    height={"100%"}
+                >
+                    <H4
+                        marginTop={"auto"}
+                        marginBottom={16}
+                    >
+                        Leading...
+                    </H4>
+                    <ThemedSpinner
+                        size={"large"}
+                        marginBottom={"auto"}
+                    />
+                </YStack>
             );
-        }
-
-
-        let initialRouteName: keyof RootRouteProps = "SetUpView";
-        if (!userService.user.isNull()) {
-            initialRouteName = "UserOverviewView";
+        } else {
+            let initialRouteName: keyof RootRouteProps = "SetUpView";
+            if (!userService.user.isNull()) {
+                initialRouteName = "UserOverviewView";
+            }
+            inner = (
+                <RootRoute
+                    initialRouteName={initialRouteName}
+                />
+            );
         }
 
         return (
             <AppScaffolding>
-                <RootRoute
-                    initialRouteName={initialRouteName}
-                />
+                {inner}
             </AppScaffolding>
         );
     }

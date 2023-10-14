@@ -14,7 +14,8 @@ import {GameCard} from "../components/game/GameCard";
 import {MatchUpCard} from "../components/game/MatchUpCard";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 import {Button} from "../components/scaffolding/Button";
-import {Text} from "tamagui";
+import {H4, isWeb, Spinner, Text, YStack} from "tamagui";
+import {ThemedSpinner} from "../components/scaffolding/ThemedSpinner";
 
 export type UserOverviewViewProps = {
     username?: string
@@ -58,16 +59,18 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
         }
 
-        this.props.navigation.setOptions({
-            headerRight: () => {
-                return (
-                    <Button
-                        title={"Settings"}
-                        onPress={event => this.didPressingSettingsButton()}
-                    />
-                )
-            }
-        })
+        if (isWeb == false) {
+            this.props.navigation.setOptions({
+                headerRight: () => {
+                    return (
+                        <Button
+                            title={"Settings"}
+                            onPress={event => this.didPressingSettingsButton()}
+                        />
+                    )
+                }
+            })
+        }
     }
 
     private async findUser() {
@@ -160,14 +163,26 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
         const user = this.state.user;
         if (user === null || user.isNull()) {
             return (
-                <View>
-                    <Text>
-                        LOADING
-                    </Text>
-                </View>
+                <YStack
+                    alignContent={"center"}
+                    alignItems={"center"}
+                    flex={1}
+                >
+                    <H4
+                        marginTop={"auto"}
+                        marginBottom={16}
+                    >
+                        Leading in user...
+                    </H4>
+                    <ThemedSpinner
+                        size={"large"}
+                        marginBottom={"auto"}
+                    />
+                </YStack>
             )
         }
-        let bottomSection: React.JSX.Element;
+
+        let bottomSection: React.JSX.Element| undefined = undefined;
         if (this.state.mainGame != null) {
             bottomSection = (
                 <View>
@@ -218,34 +233,24 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                     }
                 </View>
             )
-        } else {
-            bottomSection = (<View/>);
         }
         return (
-            <View>
+            <YStack
+                paddingTop={24}
+            >
                 <UserCard
                     user={user}
                     onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}
                 />
                 <Button
+                    theme={"active"}
                     disabled={this.state.isFindingGame}
                     title={"Check"}
                     loading={this.state.isFindingGame}
                     onPress={event => this.didPressCheckCurrentGame()}
-                    // loadingProps={{ size: 'large', color: 'white' }}
-                    // buttonStyle={{
-                    //     height: 90,
-                    //     backgroundColor: 'rgba(111, 202, 186, 1)',
-                    // }}
-                    // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                    // containerStyle={{
-                    //     height: 90,
-                    //     marginTop: 16,
-                    //     width: "100%",
-                    // }}
                 />
                 {bottomSection}
-            </View>
+            </YStack>
         );
     }
 

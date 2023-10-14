@@ -1,12 +1,11 @@
 import {BaseView} from "./BaseView";
 import React from "react";
-import {View} from "react-native";
 import {MainAppViewProps} from "./RootRoute";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {User} from "../models/User";
-import {Input, Text} from "tamagui";
+import {H1, H2, H5, Input, Paragraph, Spacer, Text, YStack} from "tamagui";
 import {Button} from "../components/scaffolding/Button";
 
 
@@ -26,7 +25,7 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
 
     protected webMaxHeight(windowHeight: number): number {
         if (windowHeight > 768) {
-            return 450;
+            return 550;
         }
         return super.webMaxHeight(windowHeight);
     }
@@ -70,7 +69,6 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
                 userId: exactUser.aoe4WorldId
             });
         } else {
-            console.log(startingUsersToSelect);
             this.props.navigation.push("SelectUserView", {
                 username: usernameToSearch,
                 startingUsersToSelect: startingUsersToSelect,
@@ -79,102 +77,68 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
     }
     renderView(): React.JSX.Element {
         return (
-            <View
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    flex: 1,
-                    flexDirection: "column",
-                }}
+            <YStack
+                paddingTop={32}
+                flex={1}
             >
-                <Text
-                    style={{
-                        color: "#000",
-                        width: "100%",
-                        textAlign: "center",
-                        marginTop: 16,
-                        fontSize: 32,
-                        fontWeight: "800",
-                    }}
+                <H1
+                    textAlign={"center"}
                 >
                     Welcome
-                </Text>
-                <Text
-                    style={{
-                        marginTop: 16,
-                        paddingLeft: 24,
-                        paddingRight: 24,
-                        color: "#000",
-                        width: "100%",
-                        fontSize: 24,
-                        textAlign: "left",
-                    }}
+                </H1>
+                <Paragraph
+                    marginTop={24}
+                    paddingLeft={16}
+                    paddingRight={16}
+                    fontSize={24}
                 >
                     Grudge Match is a tool for Age of Empire 4 players to get some quick info about their opponent
-                </Text>
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "center",
-                    }}
+                </Paragraph>
+
+                <Spacer
+                    flex={1}
+                />
+                <YStack
                 >
                     <Text
                         style={{
-                            paddingLeft: 24,
-                            paddingRight: 24,
                             marginBottom: 16,
                             fontSize: 18,
-                            color: "#000",
-                            width: "100%",
-                            textAlign: "left",
+                            textAlign: "center",
                         }}
+                        paddingLeft={16}
+                        paddingRight={16}
                     >
                         To get started please enter your Age of Empire 4's username
                     </Text>
-                    <View
+                    <Input
+                        disabled={this.state.isLoading}
+                        onChangeText={text => this.onChangeUsernameText(text)}
+                        value={this.state.username}
+                        placeholder={"Username"}
                         style={{
-                            justifyContent: "center",
+                            height: 70,
+                            marginLeft: 32,
+                            marginRight: 32,
+                            borderWidth: 1,
+                            padding: 10,
+                            borderRadius: 4,
                         }}
-                    >
-                        <Input
-                            editable={this.state.isLoading == false}
-                            onChangeText={text => this.onChangeUsernameText(text)}
-                            value={this.state.username}
-                            placeholder={"Username"}
-                            style={{
-                                color: "#000",
-                                height: 70,
-                                marginLeft: 32,
-                                marginRight: 32,
-                                borderWidth: 1,
-                                padding: 10,
-                                borderRadius: 4,
-                            }}
-                        />
-                    </View>
-                </View>
-
-
-                <View
-                >
-                    <Button
-                        title="NEXT"
-                        disabled={this.isUsernameValid(this.state.username) == false}
-                        loading={this.state.isLoading}
-                        // loadingProps={{ size: 'large', color: 'white' }}
-                        // buttonStyle={{
-                        //     height: 160,
-                        //     backgroundColor: 'rgba(111, 202, 186, 1)',
-                        // }}
-                        // titleStyle={{ fontWeight: 'bold', fontSize: 32, letterSpacing: 16, }}
-                        // containerStyle={{
-                        //     height: 160,
-                        //     width: "100%",
-                        // }}
-                        onPress={event => this.onClickNext()}
                     />
-                </View>
-            </View>
+
+                </YStack>
+                <Spacer
+                    flex={1}
+                />
+                <Button
+                    title="NEXT"
+                    large={true}
+                    theme={"active"}
+                    disabled={this.isUsernameValid(this.state.username) == false}
+                    loading={this.state.isLoading}
+                    onPress={event => this.onClickNext()}
+                />
+            </YStack>
         );
     }
 }

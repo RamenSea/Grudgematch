@@ -1,14 +1,13 @@
 import {BaseView} from "./BaseView";
 import React from "react";
 import {User} from "../models/User";
-import {View} from "react-native";
 import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {UserList} from "../components/user/UserList";
-import {Text} from "tamagui";
+import {H2, YStack} from "tamagui";
 
 export type SelectUserViewProps = {
     username: string;
@@ -50,24 +49,28 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
     }
     renderView(): React.JSX.Element {
         return (
-            <View>
-                <Text
-                    style={{
-                        marginTop: 32,
-                        marginRight: 32,
-                        marginLeft: 32,
-                        marginBottom: 24,
-                        textAlign: "center",
-                        fontSize: 24,
-                    }}
+            <YStack
+                paddingTop={24}
+            >
+                <H2
+                    marginRight={32}
+                    marginLeft={32}
+                    marginBottom={24}
+                    textAlign={"center"}
+                    fontSize={24}
                 >
                     Select the user you want to use:
-                </Text>
-                <UserList
-                    users={this.state.usersToSelect}
-                    onRequestNextPage={() => this.onRequestNextPage()}
-                    onSelect={user => this.selectUser(user)}/>
-            </View>
+                </H2>
+                <YStack
+                    paddingLeft={16}
+                    paddingRight={16}
+                >
+                    <UserList
+                        users={this.state.usersToSelect}
+                        onRequestNextPage={() => this.onRequestNextPage()}
+                        onSelect={user => this.selectUser(user)}/>
+                </YStack>
+            </YStack>
         );
     }
 

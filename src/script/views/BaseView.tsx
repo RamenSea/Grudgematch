@@ -8,6 +8,7 @@ import {
 import React from "react";
 import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
+import {YStack} from "tamagui";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -127,7 +128,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
                 innerViewStyle.maxHeight = webMaxHeight;
             }
             return (
-                <View
+                <YStack
                     style={{
                         flex: 1,
                         alignItems: "center",
@@ -137,12 +138,12 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
                         minWidth: windowWidth,
                     }}
                 >
-                    <View
+                    <YStack
                         style={innerViewStyle}
                     >
                         {this.renderView()}
-                    </View>
-                </View>
+                    </YStack>
+                </YStack>
             );
         }
         return (

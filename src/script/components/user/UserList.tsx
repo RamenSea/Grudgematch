@@ -1,6 +1,7 @@
 import {User} from "../../models/User";
 import {UserCard} from "./UserCard";
 import {FlatList} from "react-native";
+import {Spacer} from "tamagui";
 
 export function UserList({
                              users,
@@ -12,11 +13,14 @@ export function UserList({
 }) {
     return (
         <FlatList
-            style={{width: "100%", height: "100%"}}
             data={users}
+            style={{
+                overflow: "visible",
+            }}
             keyExtractor={item => item.aoe4WorldId.toString()}
             onEndReached={info => onRequestNextPage ? onRequestNextPage() : null}
             onEndReachedThreshold={2}
+            ItemSeparatorComponent={props => <Spacer height={16}/>}
             renderItem={({item, index, separators}) => {
                 return (
                     <UserCard

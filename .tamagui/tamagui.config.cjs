@@ -21863,13 +21863,13 @@ VisuallyHidden.isVisuallyHidden = true;
 // node_modules/tamagui/dist/esm/createTamagui.js
 var import_core44 = require("@tamagui/core");
 var createTamagui = process.env.NODE_ENV !== "development" ? import_core44.createTamagui : (conf) => {
-  const sizeTokenKeys = ["$true"], hasKeys = /* @__PURE__ */ __name((expectedKeys, obj) => expectedKeys.every((k) => typeof obj[k] < "u"), "hasKeys"), tamaguiConfig2 = (0, import_core44.createTamagui)(conf);
+  const sizeTokenKeys = ["$true"], hasKeys = /* @__PURE__ */ __name((expectedKeys, obj) => expectedKeys.every((k) => typeof obj[k] < "u"), "hasKeys"), tamaguiConfig = (0, import_core44.createTamagui)(conf);
   for (const name of ["size", "space"]) {
-    const tokenSet = tamaguiConfig2.tokensParsed[name];
+    const tokenSet = tamaguiConfig.tokensParsed[name];
     if (!tokenSet)
       throw new Error(
         `Expected tokens for "${name}" in ${Object.keys(
-          tamaguiConfig2.tokensParsed
+          tamaguiConfig.tokensParsed
         ).join(", ")}`
       );
     if (!hasKeys(sizeTokenKeys, tokenSet))
@@ -21894,9 +21894,9 @@ size: {
 
 `);
   }
-  const expected = Object.keys(tamaguiConfig2.tokensParsed.size);
+  const expected = Object.keys(tamaguiConfig.tokensParsed.size);
   for (const name of ["radius", "zIndex"]) {
-    const tokenSet = tamaguiConfig2.tokensParsed[name], received = Object.keys(tokenSet);
+    const tokenSet = tamaguiConfig.tokensParsed[name], received = Object.keys(tokenSet);
     if (!received.some((rk) => expected.includes(rk)))
       throw new Error(`
 createTamagui() invalid tokens.${name}:
@@ -21907,7 +21907,7 @@ Expected a subset of: ${expected.join(", ")}
 
 `);
   }
-  return tamaguiConfig2;
+  return tamaguiConfig;
 };
 
 // node_modules/tamagui/dist/esm/views/TamaguiProvider.js
@@ -22187,10 +22187,8 @@ var Text3 = (0, import_core54.styled)(import_core54.Text, {
 var import_core55 = require("@tamagui/core");
 
 // src/tamagui.config.ts
-var tamaguiConfig = createTamagui({
-  ...config2
-});
-var tamagui_config_default = tamaguiConfig;
+var appConfig = createTamagui(config2);
+var tamagui_config_default = appConfig;
 /*! Bundled license information:
 
 use-sync-external-store/cjs/use-sync-external-store-shim.production.min.js:
