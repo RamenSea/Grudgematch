@@ -34,8 +34,9 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
 
         this.state = new GameListViewState(this.query.games);
     }
-    onWillAppear() {
-        super.onWillAppear();
+
+    onWillAppear(firstAppear: boolean) {
+        super.onWillAppear(firstAppear);
 
         this.setState({games: this.query.games.slice()});
         this.subscribe(this.query.onNextBatch, t => this.onNextBatchReceived(t));

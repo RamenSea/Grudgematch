@@ -9,6 +9,7 @@ import {UserService} from "./script/services/UserService";
 import {AppScaffolding} from "./script/components/scaffolding/AppScaffolding";
 import {H4, YStack} from "tamagui";
 import {ThemedSpinner} from "./script/components/scaffolding/ThemedSpinner";
+import {LoadingCover} from "./script/components/scaffolding/LoadingCover";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);
 const userService = container.get<UserService>(SERVICE_TYPES.UserService);
@@ -48,32 +49,13 @@ class App extends React.Component<AppProps, AppState> {
         let inner: ReactNode;
         if (this.state.hasBooted == false) {
             inner = (
-                <YStack
-                    alignContent={"center"}
-                    alignItems={"center"}
-                    flex={1}
+                <LoadingCover
                     height={"100%"}
-                >
-                    <H4
-                        marginTop={"auto"}
-                        marginBottom={16}
-                    >
-                        Leading...
-                    </H4>
-                    <ThemedSpinner
-                        size={"large"}
-                        marginBottom={"auto"}
-                    />
-                </YStack>
+                />
             );
         } else {
-            let initialRouteName: keyof RootRouteProps = "SetUpView";
-            if (!userService.user.isNull()) {
-                initialRouteName = "UserOverviewView";
-            }
             inner = (
                 <RootRoute
-                    initialRouteName={initialRouteName}
                 />
             );
         }

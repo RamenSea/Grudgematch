@@ -14,7 +14,7 @@ import {GameCard} from "../components/game/GameCard";
 import {MatchUpCard} from "../components/game/MatchUpCard";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 import {Button} from "../components/scaffolding/Button";
-import {H4, isWeb, Spinner, Text, YStack} from "tamagui";
+import {H4, isWeb, Spacer, Spinner, Text, YStack} from "tamagui";
 import {ThemedSpinner} from "../components/scaffolding/ThemedSpinner";
 
 export type UserOverviewViewProps = {
@@ -49,14 +49,16 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             this.usernameFromParams = props.route.params.username;
         }
 
-        if (this.usernameFromParams === null || this.usernameFromParams === this.userService.user.username) {
+        if (this.userService.user.isNull() == false &&
+            (this.usernameFromParams === this.userService.user.username || this.usernameFromParams == null)) {
             this.isTryingToFindUser = true;
             this.state = new UserOverviewViewState(this.userService.user);
         } else if (this.usernameFromParams) {
             this.state = new UserOverviewViewState(null);
             this.findUser();
         } else {
-            console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
+            this.state = new UserOverviewViewState(null);
+            props.navigation.replace("SetUpView");
         }
 
         if (isWeb == false) {
@@ -88,8 +90,9 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             console.log(new Error("You opened `UserOverviewView` without a user set in UserService or a user specified"));
         }
     }
-    onWillAppear() {
-        super.onWillAppear();
+
+    onWillAppear(firstAppear: boolean) {
+        super.onWillAppear(firstAppear);
         if (this.usernameFromParams === null || this.usernameFromParams === this.userService.user.username) {
             this.subscribe(this.userService.onUserUpdate, (user) => {
                 this.setState({user: user});
@@ -172,7 +175,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                         marginTop={"auto"}
                         marginBottom={16}
                     >
-                        Leading in user...
+                        Loading in user...
                     </H4>
                     <ThemedSpinner
                         size={"large"}
@@ -238,14 +241,22 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             <YStack
                 paddingTop={24}
             >
+                <H4
+                    marginBottom={8}
+                >
+                    Assigned user:
+                </H4>
                 <UserCard
                     user={user}
                     onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}
                 />
+                <Spacer
+                    height={8}
+                />
                 <Button
                     theme={"active"}
                     disabled={this.state.isFindingGame}
-                    title={"Check"}
+                    title={"Check last game"}
                     loading={this.state.isFindingGame}
                     onPress={event => this.didPressCheckCurrentGame()}
                 />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {ReactNode} from "react";
 import {createNativeStackNavigator, NativeStackScreenProps} from "@react-navigation/native-stack";
 import {DarkTheme, DefaultTheme, getPathFromState, NavigationContainer} from "@react-navigation/native";
 import {SetUpView} from "./SetUpView";
@@ -18,6 +18,7 @@ export type RootRouteProps = {
     SelectUserView: SelectUserViewProps,
     AssignUserView: AssignUserViewProps,
     UserOverviewView: UserOverviewViewProps,
+    RootScreen: UserOverviewViewProps,
     GameListView: GameListViewProps,
     SettingsView: undefined,
 };
@@ -40,9 +41,12 @@ const Stack = createNativeStackNavigator<RootRouteProps>();
  * Our apps main routing system
  * @constructor
  */
-export function RootRoute({initialRouteName}: {initialRouteName: PossibleRoutePropNames}) {
+export function RootRoute({
+                          }: {
+}) {
     const scheme = useColorScheme();
 
+    let rootScreen: ReactNode
     return (
         <NavigationContainer
             theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
@@ -50,12 +54,11 @@ export function RootRoute({initialRouteName}: {initialRouteName: PossibleRoutePr
                 enabled: true,
                 prefixes: [""],
                 config: {
-                    initialRouteName: initialRouteName,
                     screens: {
-                        SetUpView: "setup",
+                        SetUpView: "welcome",
                         SelectUserView: "select",
                         AssignUserView: "assign",
-                        UserOverviewView: "overview",
+                        UserOverviewView: "",
                         SettingsView: "settings",
                         GameListView: "games",
                     },
@@ -88,7 +91,6 @@ export function RootRoute({initialRouteName}: {initialRouteName: PossibleRoutePr
             }}
             >
             <Stack.Navigator
-                initialRouteName={initialRouteName}
             >
                 <Stack.Screen
                     name="SetUpView"

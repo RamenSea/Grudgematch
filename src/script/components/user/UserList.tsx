@@ -1,7 +1,8 @@
 import {User} from "../../models/User";
 import {UserCard} from "./UserCard";
 import {FlatList} from "react-native";
-import {Spacer} from "tamagui";
+import {Spacer, YStack} from "tamagui";
+import {useCallback, useState} from "react";
 
 export function UserList({
                              users,
@@ -15,18 +16,23 @@ export function UserList({
         <FlatList
             data={users}
             style={{
-                overflow: "visible",
+                overflow: "scroll"
             }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.aoe4WorldId.toString()}
             onEndReached={info => onRequestNextPage ? onRequestNextPage() : null}
-            onEndReachedThreshold={2}
-            ItemSeparatorComponent={props => <Spacer height={16}/>}
+            onEndReachedThreshold={0.2}
             renderItem={({item, index, separators}) => {
                 return (
-                    <UserCard
-                        user={item}
-                        onClick={onSelect}
-                    />
+                    <YStack
+                        padding={8}
+                    >
+                        <UserCard
+                            user={item}
+                            onClick={onSelect}
+                        />
+                    </YStack>
                 )
             }}
         />

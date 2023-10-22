@@ -13,18 +13,18 @@ export function AppScaffolding({children}: {children: ReactNode}) {
 
     return (
         <TamaguiProvider config={config} defaultTheme={themeName}>
-            {/*<PortalProvider>*/}
-            {/*    <ToastProvider>*/}
-            {/*        <ToastViewport*/}
-            {/*            flexDirection="column"*/}
-            {/*            top={0}*/}
-            {/*            width={"100%"}*/}
-            {/*            multipleToasts={true}/>*/}
+            <PortalProvider>
+                <ToastProvider>
+                    <ToastViewport
+                        flexDirection="column"
+                        top={0}
+                        width={"100%"}
+                        multipleToasts={true}/>
                     <Provider container={container}>
                         {children}
                     </Provider>
-                {/*</ToastProvider>*/}
-            {/*</PortalProvider>*/}
+                </ToastProvider>
+            </PortalProvider>
         </TamaguiProvider>
     )
 }

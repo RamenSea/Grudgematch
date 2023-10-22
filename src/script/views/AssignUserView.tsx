@@ -10,6 +10,7 @@ import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {H3, Spacer, Text, YStack} from "tamagui";
 import {Button} from "../components/scaffolding/Button";
+import {LoadingCover} from "../components/scaffolding/LoadingCover";
 
 
 export type AssignUserViewProps = {
@@ -74,9 +75,14 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
     renderView(): React.JSX.Element {
         if (this.state.user === undefined) {
             return (
-                <ActivityIndicator></ActivityIndicator>
+                <LoadingCover
+                    message={"Loading user"}
+                    width={"100%"}
+                    height={"100%"}
+                />
             )
         }
+
         return (
             <YStack
                 paddingTop={32}

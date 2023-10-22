@@ -30,11 +30,13 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
         this.state = new SelectUserViewState(this.userQuery.users.slice());
     }
 
-    onWillAppear() {
-        super.onWillAppear();
+    onWillAppear(firstAppear: boolean) {
+        super.onWillAppear(firstAppear);
         this.setState({usersToSelect: [...this.userQuery.users]});
         this.subscribe(this.userQuery.onNextBatch,value => this.nextPageReceived(value));
-        this.onRequestNextPage();
+        if (firstAppear) {
+            this.onRequestNextPage();
+        }
     }
     nextPageReceived(users: User[]) {
         this.setState((state) => ({
@@ -51,6 +53,12 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
         return (
             <YStack
                 paddingTop={24}
+                overflow={"hidden"}
+                height={"100%"}
+                maxHeight={"100%"}
+                minHeight={"100%"}
+                paddingLeft={16}
+                paddingRight={16}
             >
                 <H2
                     marginRight={32}
@@ -61,15 +69,10 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
                 >
                     Select the user you want to use:
                 </H2>
-                <YStack
-                    paddingLeft={16}
-                    paddingRight={16}
-                >
-                    <UserList
-                        users={this.state.usersToSelect}
-                        onRequestNextPage={() => this.onRequestNextPage()}
-                        onSelect={user => this.selectUser(user)}/>
-                </YStack>
+                <UserList
+                    users={this.state.usersToSelect}
+                    onRequestNextPage={() => this.onRequestNextPage()}
+                    onSelect={user => this.selectUser(user)}/>
             </YStack>
         );
     }

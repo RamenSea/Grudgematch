@@ -24,6 +24,7 @@ export class AOE4WorldUserQuery {
         this.onNextBatch = new Subject<Array<User>>();
         if (startingUsers && startingUsers.length > 0) {
             this.users.push(...startingUsers);
+            this.isFinished = startingUsers.length < this.pageSize;
             this.currentPage++;
         }
     }

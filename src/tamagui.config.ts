@@ -12,6 +12,7 @@ import { palettes } from '@tamagui/themes'
 import { shadows } from '@tamagui/themes'
 import { maskOptions, templates } from '@tamagui/themes'
 import { darkColors, lightColors } from '@tamagui/themes'
+import {createSoftenMask} from "@tamagui/create-theme";
 
 const colorThemeDefinition = (colorName: string) => [
     {
@@ -25,11 +26,16 @@ const colorThemeDefinition = (colorName: string) => [
         template: 'base',
     },
 ]
-
+templates.base.background = 1;
+templates.colorLight.background = 1;
 const themesBuilder = createThemeBuilder()
     .addPalettes(palettes)
     .addTemplates(templates)
     .addMasks(masks)
+    .addMasks({
+        soften4: createSoftenMask({ strength: 4 }),
+        soften5: createSoftenMask({ strength: 5 }),
+    })
     .addThemes({
         light: {
             template: 'base',
@@ -49,25 +55,31 @@ const themesBuilder = createThemeBuilder()
         },
     })
     .addChildThemes({
-        orange: colorThemeDefinition('orange'),
-        yellow: colorThemeDefinition('yellow'),
+        // orange: colorThemeDefinition('orange'),
+        // yellow: colorThemeDefinition('yellow'),
         green: colorThemeDefinition('green'),
-        blue: colorThemeDefinition('blue'),
-        purple: colorThemeDefinition('purple'),
-        pink: colorThemeDefinition('pink'),
-        red: colorThemeDefinition('red'),
+        // blue: colorThemeDefinition('blue'),
+        // purple: colorThemeDefinition('purple'),
+        // pink: colorThemeDefinition('pink'),
+        // red: colorThemeDefinition('red'),
     })
     .addChildThemes({
         alt1: {
-            mask: 'soften',
+            mask: 'soften3',
             ...maskOptions.alt,
         },
         alt2: {
-            mask: 'soften2',
+            mask: 'soften4',
             ...maskOptions.alt,
         },
+        button: {
+            mask: 'soften4',
+            skip: {
+                color: 1,
+            },
+        },
         active: {
-            mask: 'soften3',
+            mask: 'soften5',
             skip: {
                 color: 1,
             },

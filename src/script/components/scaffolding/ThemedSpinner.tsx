@@ -1,7 +1,7 @@
 import {Spinner, styled} from "tamagui";
 
 const ThemedSpinner = styled(Spinner, {
-        color: "$color10"
+        color: "$color12"
     }
 )
 export {ThemedSpinner};

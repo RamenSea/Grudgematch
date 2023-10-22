@@ -40,6 +40,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
     private focusListener:(() => void)|null = null;
     private blurListener:(() => void)|null = null;
     private subscriptions: Subscription[] = [];
+    private firstAppear: boolean = true;
 
     /**
      * Because of TypeScript's typing system and two generic fields on this view, we easily limit subclasses' `props` and
@@ -65,7 +66,10 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
         return -1;
     }
     componentDidMount() {
-        this.focusListener = this.props.navigation.addListener("focus", () => this.onWillAppear());
+        this.focusListener = this.props.navigation.addListener("focus", () => {
+            this.onWillAppear(this.firstAppear);
+            this.firstAppear = false;
+        });
         this.blurListener = this.props.navigation.addListener("blur", () => this.onWillDisappear());
     }
     componentWillUnmount() {
@@ -92,7 +96,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
      * Mirror's UIViewControllers own `onWillAppear`
      * This is a good time to start subscribing to events.
      */
-    onWillAppear(){}
+    onWillAppear(firstAppear: boolean){}
     /**
      * Mirror's UIViewControllers own `onWillDisappear`
      * This is a good time to start unsubscribing to events

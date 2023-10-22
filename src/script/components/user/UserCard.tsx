@@ -3,6 +3,7 @@ import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
 import React from "react";
 import {Image, Card, Text, XStack, Spacer, YStack} from "tamagui";
+import {SelectableCard} from "../scaffolding/SelectableCard";
 
 
 export function UserCard(
@@ -68,51 +69,64 @@ export function UserCard(
         );
     }
 
-    const onPress = onClick ? (e: any) => onClick(user) : undefined;
+    const body = (
+        <YStack>
+            <XStack
+                style={{
+                    alignContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                }}>
+                <Image
+                    source={{
+                        uri: user.mediumAvatarImageUrl,
+                    }}
+                    borderRadius={4}
+                    style={{
+                        width: profileImageSize,
+                        height: profileImageSize,
+                        backgroundColor: "rgba(131,131,131,0.38)",
+                    }}
+                />
+                <Spacer
+                    width={8}
+                    height={1}
+                />
+                <Text
+                    fontSize={18}
+                >
+                    {user.username}
+                </Text>
+
+            </XStack>
+            <XStack
+                height={rankedRowHeight}
+                alignContent={"center"}
+                alignItems={"center"}
+            >
+                {quickMatchView}
+                {soloRankView}
+                {teamRankView}
+            </XStack>
+        </YStack>
+    )
+    if (onClick) {
+        return (
+            <SelectableCard
+                bordered
+                onPress={(e) => onClick(user)}
+            >
+                {body}
+            </SelectableCard>
+        )
+    }
     return (
         <Card
-            elevate
             padded
-            onPress={onPress}
+            bordered
+            elevation={30}
         >
-            <YStack>
-                <XStack
-                    style={{
-                        alignContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                    }}>
-                    <Image
-                        source={{
-                            uri: user.mediumAvatarImageUrl,
-                        }}
-                        style={{
-                            width: profileImageSize,
-                            height: profileImageSize,
-                            backgroundColor: "rgba(131,131,131,0.38)",
-                        }}
-                    />
-                    <Spacer
-                        width={8}
-                        height={1}
-                    />
-                    <Text
-                        fontSize={18}
-                    >
-                        {user.username}
-                    </Text>
-
-                </XStack>
-                <XStack
-                    height={rankedRowHeight}
-                    alignContent={"center"}
-                    alignItems={"center"}
-                >
-                    {quickMatchView}
-                    {soloRankView}
-                    {teamRankView}
-                </XStack>
-            </YStack>
+            {body}
         </Card>
     );
 }
