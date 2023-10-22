@@ -4,6 +4,7 @@ import {ThemedSpinner} from "./ThemedSpinner";
 export type ButtonProps = {
     loading?: boolean,
     large?: boolean,
+    dangerous?: boolean,
     title?: string
 };
 
@@ -12,14 +13,20 @@ export function Button(props: ButtonProps & TButtonProps) {
         title,
         large,
         loading,
+        dangerous,
         theme,
         ...rest
     } = props
 
+    let themeToUse = theme ?? "button";
+    if (!theme && dangerous) {
+        themeToUse = "red_active";
+    }
+
     return (
         <TButton
             {...rest}
-            theme={theme ?? "button"}
+            theme={themeToUse}
             opacity={rest.disabled ? 0.5 : 1.0}
             minHeight={large ? 160 : undefined}
         >

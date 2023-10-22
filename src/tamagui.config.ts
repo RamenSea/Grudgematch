@@ -61,7 +61,7 @@ const themesBuilder = createThemeBuilder()
         // blue: colorThemeDefinition('blue'),
         // purple: colorThemeDefinition('purple'),
         // pink: colorThemeDefinition('pink'),
-        // red: colorThemeDefinition('red'),
+        red: colorThemeDefinition('red'),
     })
     .addChildThemes({
         alt1: {
@@ -71,6 +71,12 @@ const themesBuilder = createThemeBuilder()
         alt2: {
             mask: 'soften4',
             ...maskOptions.alt,
+        },
+        softButton: {
+            mask: 'soften3',
+            skip: {
+                color: 1,
+            },
         },
         button: {
             mask: 'soften4',

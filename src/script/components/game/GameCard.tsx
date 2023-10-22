@@ -2,6 +2,8 @@ import {Game, Player} from "../../models/Game";
 import {FlatList, Pressable, View} from "react-native";
 import {CivilizationFlag} from "./CivilizationFlag";
 import {Card, Text} from "tamagui";
+import {StandardCard} from "../scaffolding/StandardCard";
+import {SelectableCard} from "../scaffolding/SelectableCard";
 
 
 export function GameCard({
@@ -14,9 +16,8 @@ export function GameCard({
 
     const teams = game.teams;
 
-    const inner = (
-        <Card
-        >
+    const body = (
+        <>
             <Text>
                 Game is: {game.isPlaying ? "still going": "complete"}
             </Text>
@@ -34,20 +35,22 @@ export function GameCard({
                     )
                 }}
             />
-        </Card>
+        </>
     );
     if (onClick) {
         return (
-            <Pressable
-                style={{
-                }}
+            <SelectableCard
                 onPress={event => onClick(game)}
             >
-                {inner}
-            </Pressable>
+                {body}
+            </SelectableCard>
         )
     }
-    return inner;
+    return (
+        <StandardCard>
+            {body}
+        </StandardCard>
+    );
 }
 
 

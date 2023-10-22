@@ -14,8 +14,11 @@ import {GameCard} from "../components/game/GameCard";
 import {MatchUpCard} from "../components/game/MatchUpCard";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 import {Button} from "../components/scaffolding/Button";
-import {H4, isWeb, Spacer, Spinner, Text, YStack} from "tamagui";
+import {H4, isWeb, Spacer, Spinner, Text, XStack, YStack} from "tamagui";
 import {ThemedSpinner} from "../components/scaffolding/ThemedSpinner";
+import {LoadingCover} from "../components/scaffolding/LoadingCover";
+import {UserOverviewBottomSection, UserOverviewBottomSectionProps} from "../components/user/UserOverviewBottomSection";
+import {ListenForGame} from "../general/ListenForGame";
 
 export type UserOverviewViewProps = {
     username?: string
@@ -25,10 +28,9 @@ class UserOverviewViewState {
         public user: User|null,
 
         public isFindingGame: boolean = false,
+        public isFindingPlayingGame: boolean = true,
 
-        public mainGame: Game|null = null,
-        public matchUpsFromGameAllies: MatchUp[]|null = null,
-        public matchUpsFromGameEnemies: MatchUp[]|null = null,
+        public bottomSectionProps: UserOverviewBottomSectionProps|null = null,
     ) { }
 }
 export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewView">, UserOverviewViewState> {
@@ -41,6 +43,8 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
 
     private isTryingToFindUser = false;
     private usernameFromParams: string|null;
+    private listenForGame: ListenForGame|null = null;
+
     constructor(props: MainAppViewProps<"UserOverviewView">, context: {}) {
         super(props, context);
 
@@ -129,18 +133,47 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
         this.props.navigation.push("GameListView", {q: AOE4GameQuery.CreateMatchUpQuery(matchup), games: matchup.games, playerId: this.state.user?.aoe4WorldId});
     }
     private async didPressCheckCurrentGame() {
-        if (this.state.isFindingGame ||
+        if (this.isLoadingInAGame() ||
             this.state.user == null) {
             return;
         }
         await this.asyncSetState({isFindingGame: true});
         const games = await this.aoe4WorldApiService.getGames(this.state.user.aoe4WorldId, -1, 1);
         if (games.length === 0) {
-            this.setState({isFindingGame: false});
+            this.failedToFindGame(false);
             return;
         }
-
         const game = games[0];
+        this.getMatchForGame(game, false);
+
+    }
+    private cancelListeningForPlayingGames() {
+        if (this.listenForGame != null) {
+            this.listenForGame.cancel();
+        }
+        this.setState({isFindingGame: false, isFindingPlayingGame: false});
+    }
+    private async didPressListenForPlayingGame() {
+        if (this.isLoadingInAGame() ||
+            this.state.user == null) {
+            return;
+        }
+        await this.asyncSetState({isFindingPlayingGame: true});
+
+        this.listenForGame = new ListenForGame(this.aoe4WorldApiService, this.state.user, game => {
+            if (game) {
+                this.getMatchForGame(game, true)
+            } else {
+                this.failedToFindGame(true);
+            }
+        });
+        this.listenForGame.start();
+    }
+    private async getMatchForGame(game: Game, wasPlayingGameCheck: boolean) {
+        if (this.state.user == null) {
+            this.failedToFindGame(wasPlayingGameCheck);
+            return;
+        }
         const myTeamId = game.getPlayerById(this.state.user.aoe4WorldId)?.teamId ?? NULL_TEAM_ID;
         const matchUpsToCheck: number[] = [];
         game.players.forEach(value => {
@@ -160,83 +193,30 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                 matchUpsFromGameEnemies.push(matchUp)
             }
         }
-        this.setState({isFindingGame: false, mainGame: game, matchUpsFromGameAllies, matchUpsFromGameEnemies});
+        const bottomProps: UserOverviewBottomSectionProps = {
+            user: this.state.user,
+            game: game,
+            matchUpsFromGameAllies: matchUpsFromGameAllies,
+            matchUpsFromGameEnemies: matchUpsFromGameEnemies,
+        }
+        this.setState({isFindingGame: false, isFindingPlayingGame: false, bottomSectionProps: bottomProps});
+    }
+    private async failedToFindGame(wasPlayingGameCheck: boolean) {
+        this.setState({isFindingGame: false, isFindingPlayingGame: false});
+    }
+    private isLoadingInAGame() {
+        return this.state.isFindingPlayingGame || this.state.isFindingGame;
     }
     renderView(): React.JSX.Element {
         const user = this.state.user;
         if (user === null || user.isNull()) {
             return (
-                <YStack
-                    alignContent={"center"}
-                    alignItems={"center"}
-                    flex={1}
-                >
-                    <H4
-                        marginTop={"auto"}
-                        marginBottom={16}
-                    >
-                        Loading in user...
-                    </H4>
-                    <ThemedSpinner
-                        size={"large"}
-                        marginBottom={"auto"}
-                    />
-                </YStack>
+                <LoadingCover
+                    message={"Loading user"}
+                />
             )
         }
 
-        let bottomSection: React.JSX.Element| undefined = undefined;
-        if (this.state.mainGame != null) {
-            bottomSection = (
-                <View>
-                    <GameCard
-                        game={this.state.mainGame}
-                        onClick={game => this.openLinkToGame(game.id)}
-                    />
-                    { this.state.matchUpsFromGameAllies != null && this.state.matchUpsFromGameAllies.length > 0 &&
-                        <>
-                            <Text>
-                                Match ups with allies:
-                            </Text>
-                            <FlatList
-                                data={this.state.matchUpsFromGameAllies}
-                                renderItem={info => {
-                                    return (
-                                        <MatchUpCard
-                                            against={user}
-                                            matchUp={info.item}
-                                            onUserClick={user => this.openLinkToUser(user.aoe4WorldId)}
-                                            onGameClick={game => this.openLinkToGame(game.id)}
-                                            onShowMoreGamesClicked={matchUp => this.openMoreGamesSection(matchUp)}
-                                        />
-                                    )
-                                }}
-                            />
-                        </>
-                    }
-                    { this.state.matchUpsFromGameEnemies != null && this.state.matchUpsFromGameEnemies.length > 0 &&
-                        <>
-                            <Text>
-                                Match ups with opponents:
-                            </Text>
-                            <FlatList
-                                data={this.state.matchUpsFromGameEnemies}
-                                renderItem={info => {
-                                    return (
-                                        <MatchUpCard
-                                            against={user}
-                                            matchUp={info.item}
-                                            onUserClick={user => this.openLinkToUser(user.aoe4WorldId)}
-                                            onGameClick={game => this.openLinkToGame(game.id)}
-                                        />
-                                    )
-                                }}
-                            />
-                        </>
-                    }
-                </View>
-            )
-        }
         return (
             <YStack
                 paddingTop={24}
@@ -250,17 +230,63 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                     user={user}
                     onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}
                 />
-                <Spacer
-                    height={8}
-                />
-                <Button
-                    theme={"active"}
-                    disabled={this.state.isFindingGame}
-                    title={"Check last game"}
-                    loading={this.state.isFindingGame}
-                    onPress={event => this.didPressCheckCurrentGame()}
-                />
-                {bottomSection}
+                <XStack
+                    marginTop={8}
+                >
+                    {this.state.isFindingPlayingGame &&
+                        <Button
+                            dangerous={true}
+                            title={"Cancel finding game"}
+                            flex={1}
+                            onPress={event => this.cancelListeningForPlayingGames()}
+                        />
+                    }
+                    {!this.state.isFindingPlayingGame &&
+                        <>
+                            <Button
+                                disabled={this.isLoadingInAGame()}
+                                title={"Check last game"}
+                                loading={this.isLoadingInAGame()}
+                                flex={1}
+                                onPress={event => this.didPressCheckCurrentGame()}
+                                marginRight={4}
+                            />
+                            <Button
+                                disabled={this.isLoadingInAGame()}
+                                title={"Listen for game"}
+                                loading={this.isLoadingInAGame()}
+                                flex={1}
+                                onPress={event => this.didPressListenForPlayingGame()}
+                                marginLeft={4}
+                            />
+                        </>
+                    }
+                </XStack>
+                {this.state.isFindingPlayingGame &&
+                    <>
+                        <H4
+                            marginTop={32}
+                            marginLeft={"auto"}
+                            marginRight={"auto"}
+                        >
+                            Waiting for your game to start...
+                        </H4>
+                        <ThemedSpinner
+                            marginTop={8}
+                            marginLeft={"auto"}
+                            marginRight={"auto"}
+                        />
+                    </>
+                }
+                {this.state.bottomSectionProps != null &&
+                    <UserOverviewBottomSection
+                        key={"bottom_section_todo"}
+                        props={this.state.bottomSectionProps}
+                        onClickGame={game => this.openLinkToGame(game.id)}
+                        onClickUser={u => this.openLinkToUser(u.aoe4WorldId)}
+                        onClickMoreGames={matchUp => this.openMoreGamesSection(matchUp)}
+                    />
+                }
             </YStack>
         );
     }
