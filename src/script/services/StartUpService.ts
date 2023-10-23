@@ -14,6 +14,7 @@ export class StartUpService  {
     private resolver: ((value?: void | PromiseLike<void>) => void)|null = null;
     private _booted: boolean = false;
     private _lastCompatibilityVersion: number = FIRST_BOOT_COMPATABILITY_VERSION;
+    private hasStartedBooting = false;
 
     public userService: UserService;
     public keystoreService: KeyStoreService;
@@ -38,6 +39,10 @@ export class StartUpService  {
     }
 
     async boot() {
+        if (this.hasStartedBooting) {
+            return;
+        }
+        this.hasStartedBooting = true;
         const lcv = this.keystoreService.getNumber("last_compat_ver");
         if (lcv) {
             this._lastCompatibilityVersion = lcv;

@@ -7,6 +7,7 @@ const {
     addWebpackAlias,
     addWebpackModuleRule,
     addWebpackPlugin,
+    removeModuleScopePlugin,
 } = require("customize-cra");
 const { TamaguiPlugin } = require('tamagui-loader')
 const path = require("path");
@@ -30,7 +31,7 @@ module.exports = override(
         path.resolve(__dirname, 'node_modules/react-native-ratings'),
         path.resolve(__dirname, 'src'),
     ]),
-
+    removeModuleScopePlugin(),
     addWebpackAlias({
         "react-native$": "react-native-web",
         "react-native-linear-gradient": "react-native-web-linear-gradient",

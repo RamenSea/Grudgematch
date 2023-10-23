@@ -1,3 +1,4 @@
+import {jsonMember, jsonObject} from "typedjson";
 
 
 export enum Civilization {
@@ -14,6 +15,26 @@ export enum Civilization {
     RUS = "rus",
 }
 export const NULL_TEAM_ID = -1;
+
+// @jsonObject()
+// export class Player {
+//     @jsonMember({name: "profile_id"})
+//     readonly aoe4WorldId: number
+//     @jsonMember({name: "name"})
+//     readonly username: string
+//     @jsonMember(String)
+//     readonly civilization: Civilization
+//
+//     teamId: number = -1;
+//
+//
+//     constructor(aoe4WorldId: number, username: string, civilization: Civilization, teamId: number) {
+//         this.aoe4WorldId = aoe4WorldId;
+//         this.username = username;
+//         this.civilization = civilization;
+//         this.teamId = teamId;
+//     }
+// }
 
 export class Player {
 

@@ -92,28 +92,53 @@ export function UserOverviewBottomSection({
                     overflow={"visible"}
                 >
                     {props.matchUpsFromGameAllies.map((value, index) => {
-                        return (
+
+                        const card = (
                             <MatchUpCard
                                 key={"match" + value.opponent.aoe4WorldId + "matchUpAlly"}
                                 matchUp={value}
                                 onUserClick={onClickUser}
                                 onMatchUpCardClicked={onMatchUpCardClicked}
                             />
-                        )
+                        );
+                        if (index > 0) {
+                            return (
+                                <>
+                                    <Spacer
+                                        height={8}
+                                        key={"match" + value.opponent.aoe4WorldId + "matchUpAllySPACER"}
+                                    />
+                                    {card}
+                                </>
+                            )
+                        }
+                        return card
                     })}
                 </Tabs.Content>
                 <Tabs.Content
                     value="opponents"
                 >
                     {props.matchUpsFromGameEnemies.map((value, index) => {
-                        return (
+                        const card = (
                             <MatchUpCard
                                 key={"match" + value.opponent.aoe4WorldId + "opponent"}
                                 matchUp={value}
                                 onUserClick={onClickUser}
                                 onMatchUpCardClicked={onMatchUpCardClicked}
                             />
-                        )
+                        );
+                        if (index > 0) {
+                            return (
+                                <>
+                                    <Spacer
+                                        height={8}
+                                        key={"match" + value.opponent.aoe4WorldId + "opponentSPACER"}
+                                    />
+                                    {card}
+                                </>
+                            )
+                        }
+                        return card
                     })}
                 </Tabs.Content>
             </Tabs>

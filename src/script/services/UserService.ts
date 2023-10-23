@@ -49,9 +49,10 @@ export class UserService {
                         this.onUserUpdate.next(this._user);
                     });
                 }
-            } catch (e) { }
+            } catch (e) {
+                console.error(e)
+            }
         }
-
 
     }
 }

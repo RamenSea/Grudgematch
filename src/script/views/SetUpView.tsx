@@ -20,7 +20,6 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
 
     constructor(props: MainAppViewProps<"SetUpView">, context: {}) {
         super(props, context);
-        console.log("SetUpView")
         this.state = new SetUpViewState();
     }
 

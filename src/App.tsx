@@ -12,8 +12,6 @@ import {ThemedSpinner} from "./script/components/scaffolding/ThemedSpinner";
 import {LoadingCover} from "./script/components/scaffolding/LoadingCover";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);
-const userService = container.get<UserService>(SERVICE_TYPES.UserService);
-
 startUpService.boot();
 
 type AppProps = {};

@@ -55,10 +55,10 @@ export function RootRoute({
                 prefixes: [""],
                 config: {
                     screens: {
+                        UserOverviewView: "",
                         SetUpView: "welcome",
                         SelectUserView: "select",
                         AssignUserView: "assign",
-                        UserOverviewView: "",
                         SettingsView: "settings",
                         GameListView: "games",
                     },
@@ -93,17 +93,6 @@ export function RootRoute({
             <Stack.Navigator
             >
                 <Stack.Screen
-                    name="SetUpView"
-                    component={SetUpView}
-                    options={{ title: "", headerShown: false}}
-                />
-                <Stack.Screen
-                    name="SelectUserView"
-                    component={SelectUserView}
-                    getId={(params) => params.params.username }
-                    options={{title: 'Select user'}}
-                />
-                <Stack.Screen
                     name="UserOverviewView"
                     component={UserOverviewView}
                     getId={(params) => {
@@ -113,6 +102,17 @@ export function RootRoute({
                         return "ME";
                     }}
                     options={{title: 'User'}}
+                />
+                <Stack.Screen
+                    name="SetUpView"
+                    component={SetUpView}
+                    options={{ title: "", headerShown: false}}
+                />
+                <Stack.Screen
+                    name="SelectUserView"
+                    component={SelectUserView}
+                    getId={(params) => params.params.username }
+                    options={{title: 'Select user'}}
                 />
                 <Stack.Screen
                     name="AssignUserView"
