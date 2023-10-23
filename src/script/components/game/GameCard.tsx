@@ -40,6 +40,7 @@ export function GameCard({
     if (onClick) {
         return (
             <SelectableCard
+                padded
                 onPress={event => onClick(game)}
             >
                 {body}

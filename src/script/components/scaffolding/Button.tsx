@@ -1,10 +1,17 @@
-import {Button as TButton, ButtonProps as TButtonProps, Spinner, Stack, Text, useTheme, YStack, ZStack} from 'tamagui'
+import {
+    Button as TButton,
+    ButtonProps as TButtonProps,
+    Text,
+    ZStack
+} from 'tamagui'
 import {ThemedSpinner} from "./ThemedSpinner";
+import {Dimensions} from "react-native";
 
 export type ButtonProps = {
     loading?: boolean,
     large?: boolean,
     dangerous?: boolean,
+    removeRoundEdgeOnMobile?: boolean,
     title?: string
 };
 
@@ -14,6 +21,7 @@ export function Button(props: ButtonProps & TButtonProps) {
         large,
         loading,
         dangerous,
+        removeRoundEdgeOnMobile,
         theme,
         ...rest
     } = props
@@ -23,12 +31,21 @@ export function Button(props: ButtonProps & TButtonProps) {
         themeToUse = "red_active";
     }
 
+    let borderRadius: number|undefined = undefined;
+    if (removeRoundEdgeOnMobile) {
+        const windowWidth = Dimensions.get('window').width;
+        if (windowWidth <= 768) { //TODO formalize mobile vs desktop detection
+            borderRadius = 0
+        }
+    }
+
     return (
         <TButton
             {...rest}
             theme={themeToUse}
             opacity={rest.disabled ? 0.5 : 1.0}
             minHeight={large ? 160 : undefined}
+            borderRadius={borderRadius}
         >
             {title &&
                 <Text

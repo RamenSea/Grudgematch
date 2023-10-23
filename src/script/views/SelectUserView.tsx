@@ -8,6 +8,7 @@ import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {UserList} from "../components/user/UserList";
 import {H2, YStack} from "tamagui";
+import {WebHeader} from "../components/scaffolding/WebHeader";
 
 export type SelectUserViewProps = {
     username: string;
@@ -52,7 +53,6 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
     renderView(): React.JSX.Element {
         return (
             <YStack
-                paddingTop={24}
                 overflow={"hidden"}
                 height={"100%"}
                 maxHeight={"100%"}
@@ -60,15 +60,9 @@ export class SelectUserView extends BaseView<MainAppViewProps<"SelectUserView">,
                 paddingLeft={16}
                 paddingRight={16}
             >
-                <H2
-                    marginRight={32}
-                    marginLeft={32}
-                    marginBottom={24}
-                    textAlign={"center"}
-                    fontSize={24}
-                >
-                    Select the user you want to use:
-                </H2>
+                <WebHeader
+                    title={"Select user"}
+                />
                 <UserList
                     users={this.state.usersToSelect}
                     onRequestNextPage={() => this.onRequestNextPage()}

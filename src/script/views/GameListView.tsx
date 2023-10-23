@@ -9,11 +9,14 @@ import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {Game} from "../models/Game";
 import {GameList} from "../components/game/GameList";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
+import {H4, YStack} from "tamagui";
+import {WebHeader} from "../components/scaffolding/WebHeader";
 
 export type GameListViewProps = {
     q: string;
     playerId?: number;
     games?: Game[];
+    wasFinishedWithArray?: boolean;
 }
 class GameListViewState {
     constructor(public games: Game[]) { }
@@ -40,7 +43,9 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
 
         this.setState({games: this.query.games.slice()});
         this.subscribe(this.query.onNextBatch, t => this.onNextBatchReceived(t));
-        this.requestNextBatch();
+        if (firstAppear) {
+            this.requestNextBatch();
+        }
     }
 
     private openLinkToGame(game: Game) {
@@ -72,12 +77,20 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
     }
     renderView(): React.JSX.Element {
         return (
-            <View>
+            <YStack
+                overflow={"hidden"}
+                height={"100%"}
+                maxHeight={"100%"}
+                minHeight={"100%"}
+            >
+                <WebHeader
+                    title={"Games"}
+                />
                 <GameList
                     games={this.state.games}
                     onRequestNextPage={() => this.requestNextBatch()}
                     onSelect={game => this.openLinkToGame(game)}/>
-            </View>
+            </YStack>
         );
     }
 

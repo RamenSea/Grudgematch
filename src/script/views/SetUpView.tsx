@@ -41,6 +41,9 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
         }));
     }
     async onClickNext() {
+        if (this.state.isLoading) {
+            return;
+        }
         const usernameToSearch = this.state.username;
         if (this.isUsernameValid(usernameToSearch) == false) {
             return;
@@ -91,24 +94,25 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
                     marginTop={24}
                     paddingLeft={16}
                     paddingRight={16}
-                    fontSize={24}
+                    fontSize={22}
+                    lineHeight={32}
+                    textAlign={"center"}
+
                 >
                     Grudge Match is a tool for Age of Empire 4 players to get some quick info about their opponent
                 </Paragraph>
 
                 <Spacer
-                    flex={1}
+                    height={36}
                 />
                 <YStack
                 >
                     <Text
-                        style={{
-                            marginBottom: 16,
-                            fontSize: 18,
-                            textAlign: "center",
-                        }}
+                        textAlign={"center"}
+                        fontSize={18}
                         paddingLeft={16}
                         paddingRight={16}
+                        marginBottom={24}
                     >
                         To get started please enter your Age of Empire 4's username
                     </Text>
@@ -125,6 +129,10 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
                             padding: 10,
                             borderRadius: 4,
                         }}
+                        onSubmitEditing={e => this.onClickNext()}
+                        autoCapitalize={"none"}
+                        textContentType={"username"}
+                        clearButtonMode="while-editing"
                     />
 
                 </YStack>
@@ -138,6 +146,7 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
                     disabled={this.isUsernameValid(this.state.username) == false}
                     loading={this.state.isLoading}
                     onPress={event => this.onClickNext()}
+                    removeRoundEdgeOnMobile={true}
                 />
             </YStack>
         );

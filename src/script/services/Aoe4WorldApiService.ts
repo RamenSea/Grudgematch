@@ -47,12 +47,12 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         const user = await userRequest;
         const opponent = await opponentUserRequest;
         const games = await gamesRequest;
-
         if (opponent == null || user == null) {
             return null;
         }
 
-        return new MatchUp(user, opponent, games);
+        const finishedGames = games.filter(value => value.isPlaying == false);
+        return new MatchUp(user, opponent, finishedGames, games.length < 50);
     }
     getGameQuery(query: string, startingGames: Game[]|undefined = undefined): AOE4GameQuery {
         return new AOE4GameQuery(

@@ -18,12 +18,12 @@ export function UserOverviewBottomSection({
                                               props,
     onClickUser,
     onClickGame,
-    onClickMoreGames,
+                                              onMatchUpCardClicked,
 }: {
     props: UserOverviewBottomSectionProps,
     onClickUser: (user: User) => void,
     onClickGame: (game: Game) => void,
-    onClickMoreGames: (matchUp: MatchUp) => void,
+    onMatchUpCardClicked: (matchUp: MatchUp) => void,
 }) {
 
     return (
@@ -52,6 +52,7 @@ export function UserOverviewBottomSection({
                 - Match ups -
 
             </H4>
+
             <Tabs
                 defaultValue="allies"
                 flex={1}
@@ -60,7 +61,7 @@ export function UserOverviewBottomSection({
                 overflow={"visible"}
             >
                 <Tabs.List
-                    marginBottom={16}
+                    marginBottom={24}
                     paddingLeft={16}
                     paddingRight={16}
                 >
@@ -88,41 +89,32 @@ export function UserOverviewBottomSection({
 
                 <Tabs.Content
                     value="allies"
+                    overflow={"visible"}
                 >
-                    <FlatList
-                        data={props.matchUpsFromGameAllies}
-                        keyExtractor={item => item.opponent.aoe4WorldId + "matchUpAlly"}
-                        renderItem={info => {
-                            return (
-                                <MatchUpCard
-                                    against={props.user}
-                                    matchUp={info.item}
-                                    onUserClick={onClickUser}
-                                    onGameClick={onClickGame}
-                                    onShowMoreGamesClicked={onClickMoreGames}
-                                />
-                            )
-                        }}
-                    />
+                    {props.matchUpsFromGameAllies.map((value, index) => {
+                        return (
+                            <MatchUpCard
+                                key={"match" + value.opponent.aoe4WorldId + "matchUpAlly"}
+                                matchUp={value}
+                                onUserClick={onClickUser}
+                                onMatchUpCardClicked={onMatchUpCardClicked}
+                            />
+                        )
+                    })}
                 </Tabs.Content>
                 <Tabs.Content
                     value="opponents"
                 >
-                    <FlatList
-                        data={props.matchUpsFromGameEnemies}
-                        keyExtractor={item => item.opponent.aoe4WorldId + "matchUpEnemy"}
-                        renderItem={info => {
-                            return (
-                                <MatchUpCard
-                                    against={props.user}
-                                    matchUp={info.item}
-                                    onUserClick={onClickUser}
-                                    onGameClick={onClickGame}
-                                    onShowMoreGamesClicked={onClickMoreGames}
-                                />
-                            )
-                        }}
-                    />
+                    {props.matchUpsFromGameEnemies.map((value, index) => {
+                        return (
+                            <MatchUpCard
+                                key={"match" + value.opponent.aoe4WorldId + "opponent"}
+                                matchUp={value}
+                                onUserClick={onClickUser}
+                                onMatchUpCardClicked={onMatchUpCardClicked}
+                            />
+                        )
+                    })}
                 </Tabs.Content>
             </Tabs>
 

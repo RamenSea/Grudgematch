@@ -95,13 +95,13 @@ export function RootRoute({
                 <Stack.Screen
                     name="SetUpView"
                     component={SetUpView}
-                    options={{title: 'Set up', headerShown: false}}
+                    options={{ title: "", headerShown: false}}
                 />
                 <Stack.Screen
                     name="SelectUserView"
                     component={SelectUserView}
                     getId={(params) => params.params.username }
-                    options={{title: 'Select'}}
+                    options={{title: 'Select user'}}
                 />
                 <Stack.Screen
                     name="UserOverviewView"
@@ -126,7 +126,7 @@ export function RootRoute({
                         }
                         return "NONE";
                     }}
-                    options={{title: 'Select'}}
+                    options={{title: 'Assign'}}
                 />
                 <Stack.Screen
                     name="GameListView"

@@ -22237,11 +22237,11 @@ var themesBuilder2 = createThemeBuilder().addPalettes(palettes).addTemplates(tem
 }).addChildThemes({
   // orange: colorThemeDefinition('orange'),
   // yellow: colorThemeDefinition('yellow'),
-  green: colorThemeDefinition2("green")
+  green: colorThemeDefinition2("green"),
   // blue: colorThemeDefinition('blue'),
   // purple: colorThemeDefinition('purple'),
   // pink: colorThemeDefinition('pink'),
-  // red: colorThemeDefinition('red'),
+  red: colorThemeDefinition2("red")
 }).addChildThemes({
   alt1: {
     mask: "soften3",
@@ -22250,6 +22250,12 @@ var themesBuilder2 = createThemeBuilder().addPalettes(palettes).addTemplates(tem
   alt2: {
     mask: "soften4",
     ...maskOptions.alt
+  },
+  softButton: {
+    mask: "soften3",
+    skip: {
+      color: 1
+    }
   },
   button: {
     mask: "soften4",

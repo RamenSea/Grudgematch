@@ -1,6 +1,8 @@
 import {FlatList} from "react-native";
 import {Game} from "../../models/Game";
 import {GameCard} from "./GameCard";
+import {YStack} from "tamagui";
+import {UserCard} from "../user/UserCard";
 
 export function GameList({
                              games,
@@ -12,18 +14,30 @@ export function GameList({
 }) {
     return (
         <FlatList
-            style={{width: "100%", height: "100%"}}
+            style={{
+                overflow: "scroll"
+            }}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             data={games}
             keyExtractor={item => item.id.toString()}
-            // onEndReached={info => console.log(info.distanceFromEnd)}
-            // onEndReachedThreshold={0.3}
+            onEndReached={info => onRequestNextPage ? onRequestNextPage() : null}
+            onEndReachedThreshold={0.3}
             renderItem={({item, index, separators}) => {
                 return (
-                    <GameCard
-                        key={item.id}
-                        game={item}
-                        onClick={onSelect}
-                    />
+                    <YStack
+                        paddingLeft={24}
+                        paddingRight={24}
+                        paddingTop={8}
+                        paddingBottom={8}
+                        overflow={"visible"}
+                    >
+                        <GameCard
+                            key={item.id}
+                            game={item}
+                            onClick={onSelect}
+                        />
+                    </YStack>
                 )
             }}
         />

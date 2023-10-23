@@ -6,13 +6,11 @@ import {Image, Card, Text, XStack, Spacer, YStack} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
 
 
-export function UserCard(
+export function UserCardInsides(
     {
         user,
-        onClick
     }: {
         user: User,
-        onClick?: ((user: User) => void)
     }) {
     const rankedRowHeight = 42;
     const iconSize = 32;
@@ -69,7 +67,7 @@ export function UserCard(
         );
     }
 
-    const body = (
+    return (
         <YStack>
             <XStack
                 style={{
@@ -110,13 +108,25 @@ export function UserCard(
             </XStack>
         </YStack>
     )
+}
+export function UserCard(
+    {
+        user,
+        onClick
+    }: {
+        user: User,
+        onClick?: ((user: User) => void)
+    }) {
+
     if (onClick) {
         return (
             <SelectableCard
                 bordered
                 onPress={(e) => onClick(user)}
             >
-                {body}
+                <UserCardInsides
+                    user={user}
+                />
             </SelectableCard>
         )
     }
@@ -126,7 +136,9 @@ export function UserCard(
             bordered
             elevation={30}
         >
-            {body}
+            <UserCardInsides
+                user={user}
+            />
         </Card>
     );
 }

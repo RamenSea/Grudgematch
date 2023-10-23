@@ -1,5 +1,5 @@
 import config from "../../../tamagui.config";
-import {ToastProvider, ToastViewport} from "@tamagui/toast";
+// import {ToastProvider, ToastViewport} from "@tamagui/toast";
 import React, {ReactNode} from "react";
 import {PortalProvider, TamaguiProvider, Theme} from "tamagui";
 import {container} from "../../../inversify.config";
@@ -14,16 +14,16 @@ export function AppScaffolding({children}: {children: ReactNode}) {
     return (
         <TamaguiProvider config={config} defaultTheme={themeName}>
             <PortalProvider>
-                <ToastProvider>
-                    <ToastViewport
-                        flexDirection="column"
-                        top={0}
-                        width={"100%"}
-                        multipleToasts={true}/>
+                {/*<ToastProvider>*/}
+                {/*    <ToastViewport*/}
+                {/*        flexDirection="column"*/}
+                {/*        top={0}*/}
+                {/*        width={"100%"}*/}
+                {/*        multipleToasts={true}/>*/}
                     <Provider container={container}>
                         {children}
                     </Provider>
-                </ToastProvider>
+                {/*</ToastProvider>*/}
             </PortalProvider>
         </TamaguiProvider>
     )

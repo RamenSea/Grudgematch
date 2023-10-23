@@ -90,8 +90,8 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
             >
                 <H3
                     style={{
-                        marginRight: 32,
-                        marginLeft: 32,
+                        marginRight: 24,
+                        marginLeft: 24,
                         marginBottom: 24,
                         textAlign: "center",
                     }}
@@ -110,6 +110,7 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
                 <Button
                     title={"Wrong account"}
                     onPress={event => this.didSelectNotToAssign()}
+                    removeRoundEdgeOnMobile={true}
                 />
                 <Spacer
                     style={{
@@ -122,6 +123,7 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
                     large={true}
                     loading={this.state.user === undefined}
                     onPress={event => this.didSelectAssignUser()}
+                    removeRoundEdgeOnMobile={true}
                 />
             </YStack>
         );

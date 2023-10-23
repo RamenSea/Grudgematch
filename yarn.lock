@@ -5397,28 +5397,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/toast@npm:^1.74.21":
-  version: 1.74.21
-  resolution: "@tamagui/toast@npm:1.74.21"
-  dependencies:
-    "@tamagui/animate-presence": 1.74.21
-    "@tamagui/compose-refs": 1.74.21
-    "@tamagui/core": 1.74.21
-    "@tamagui/create-context": 1.74.21
-    "@tamagui/dismissable": 1.74.21
-    "@tamagui/polyfill-dev": 1.74.21
-    "@tamagui/portal": 1.74.21
-    "@tamagui/stacks": 1.74.21
-    "@tamagui/text": 1.74.21
-    "@tamagui/use-controllable-state": 1.74.21
-    "@tamagui/visually-hidden": 1.74.21
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: fa4262cba3e01f2450af790fef38f3d738c129b82d0bf5e1900d7b74eb219865e2cc54c69d04e72f66b5fa8e810bc704c4d01ebec4383f591315fff64f1db692
-  languageName: node
-  linkType: hard
-
 "@tamagui/toggle-group@npm:1.74.21":
   version: 1.74.21
   resolution: "@tamagui/toggle-group@npm:1.74.21"
@@ -7675,20 +7653,6 @@ __metadata:
   version: 3.3.0
   resolution: "builtin-modules@npm:3.3.0"
   checksum: db021755d7ed8be048f25668fe2117620861ef6703ea2c65ed2779c9e3636d5c3b82325bd912244293959ff3ae303afa3471f6a15bf5060c103e4cc3a839749d
-  languageName: node
-  linkType: hard
-
-"burnt@npm:^0.12.1":
-  version: 0.12.1
-  resolution: "burnt@npm:0.12.1"
-  dependencies:
-    sf-symbols-typescript: ^1.0.0
-    sonner: ^0.3.5
-  peerDependencies:
-    expo: "*"
-    react: "*"
-    react-native: "*"
-  checksum: 5aa27ffd871daf47237a973f43611031bbb7a00ae50b7469c875b2a487659e43440d616e71671cc433c1c15b83fe8c2563320d8b72700508b0d0149460d9a747
   languageName: node
   linkType: hard
 
@@ -11232,7 +11196,6 @@ __metadata:
     "@tamagui/lucide-icons": ^1.74.21
     "@tamagui/react-native-media-driver": ^1.74.21
     "@tamagui/themes": ^1.74.21
-    "@tamagui/toast": ^1.74.21
     "@tsconfig/react-native": ^3.0.2
     "@types/react": ^18.2.31
     "@types/react-dom": ^18.2.14
@@ -11242,7 +11205,6 @@ __metadata:
     babel-plugin-parameter-decorator: ^1.0.16
     babel-plugin-react-native-web: ^0.19.9
     babel-plugin-transform-typescript-metadata: ^0.3.2
-    burnt: ^0.12.1
     customize-cra: ^1.0.0
     eslint: ^8.52.0
     icon-set-creator: ^1.1.6
@@ -18510,13 +18472,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sf-symbols-typescript@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "sf-symbols-typescript@npm:1.0.0"
-  checksum: ab7f427b6145ba308e9ab0357e86a8b32c4bd2ed7d5bba983812483b6f8320097121a7dac1855d344cf8b5a6e45ef9b7e8f121ad640fc7821f3fd433a8280567
-  languageName: node
-  linkType: hard
-
 "shallow-clone@npm:^3.0.0":
   version: 3.0.1
   resolution: "shallow-clone@npm:3.0.1"
@@ -18696,16 +18651,6 @@ __metadata:
     ip: ^2.0.0
     smart-buffer: ^4.2.0
   checksum: 259d9e3e8e1c9809a7f5c32238c3d4d2a36b39b83851d0f573bfde5f21c4b1288417ce1af06af1452569cd1eb0841169afd4998f0e04ba04656f6b7f0e46d748
-  languageName: node
-  linkType: hard
-
-"sonner@npm:^0.3.5":
-  version: 0.3.5
-  resolution: "sonner@npm:0.3.5"
-  peerDependencies:
-    react: ^18.0.0
-    react-dom: ^18.0.0
-  checksum: c0c564eddef03edb61d5a9ba4993d2a2d05a1e24e7ac9bdd4fa461e8b1fceeef69b99d4da0ffa23b3e8cbffdb660eb54327d583a9131aca34eb436a88a063691
   languageName: node
   linkType: hard
 

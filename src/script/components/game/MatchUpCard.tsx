@@ -1,69 +1,117 @@
 import {Game} from "../../models/Game";
-import {View} from "react-native";
+import {Pressable, View} from "react-native";
 import {MatchUp} from "../../models/MatchUp";
-import {UserCard} from "../user/UserCard";
+import {UserCard, UserCardInsides} from "../user/UserCard";
 import {User} from "../../models/User";
 import {GameCard} from "./GameCard";
 import React from "react";
 import {Button} from "../scaffolding/Button";
-import {Text} from "tamagui";
+import {Paragraph, Spacer, Text, YStack} from "tamagui";
+import {SelectableCard} from "../scaffolding/SelectableCard";
+import {StandardCard} from "../scaffolding/StandardCard";
 
-export function MatchUpCard({   against,
+export function MatchUpInsides({
                                 matchUp,
-                                onUserClick,
-                                onGameClick,
-                                onShowMoreGamesClicked}: {
-    against: User,
+}: {
     matchUp: MatchUp,
-    onUserClick?: (user: User) => void,
-    onGameClick?: (game: Game) => void,
-    onShowMoreGamesClicked?: (matchUp: MatchUp) => void,
 }) {
-    const maxShowGames = 3;
-    const showMoreButton = matchUp.games.length > maxShowGames;
-    let winsForMe = 0
-    matchUp.games.forEach((value, index) => {
-        const myPlayer = value.getPlayerById(against.aoe4WorldId);
-        if (myPlayer != null && value.winningTeam == myPlayer.teamId) {
-            winsForMe++;
-        }
-    })
-
-    const gameComponents: JSX.Element[] = [];
-    for (let i = 0; i < matchUp.games.length && i < maxShowGames; i++) {
-        gameComponents.push((
-           <GameCard
-               game={matchUp.games[i]}
-               onClick={onGameClick}
-           />
-        ));
+    const isFreshMatchUp = matchUp.games.length == 0;
+    if (isFreshMatchUp) {
+        return (
+            <YStack>
+                <Text>
+                    Fresh match up,
+                </Text>
+                <Text>
+                    Good luck!
+                </Text>
+            </YStack>
+        )
     }
-    return (
-        <View
-        >
-            <UserCard
-                user={matchUp.opponent}
-                onClick={onUserClick}
-            />
-            { showMoreButton &&
-                <Button
-                    onPress={() => onShowMoreGamesClicked && onShowMoreGamesClicked(matchUp)}
-                    title={"Show more >"}
-                />
-            }
 
-            <Text>
-                games: {winsForMe} / {matchUp.games.length}
+    const percent = matchUp.wins / matchUp.games.length;
+    const plural = matchUp.games.length > 1 ? "s" : "";
+    return (
+        <YStack
+        >
+            <Paragraph
+                fontSize={18}
+                marginBottom={8}
+            >
+                <Text
+                    fontWeight={"bold"}
+                >
+                    {" "}{matchUp.wins}
+                </Text>
+                <Text
+                    fontSize={16}
+                >
+                    ({(percent * 100).toFixed(0)}%)
+                </Text>
+                <Text
+                >
+                    {" "}win{plural} out of {matchUp.didReachLimitOnGames ? "" : "the last "}{matchUp.games.length} game{plural}
+                </Text>
+            </Paragraph>
+            <Text
+                fontWeight={"bold"}
+                fontSize={14}
+            >
+                Tap to see the game{plural}
             </Text>
-            {gameComponents}
-            <View
-                style={{
-                    marginTop: 8,
-                    backgroundColor: "#000",
-                    height: 4,
-                    width: "100%",
-                }}
+        </YStack>
+    )
+}
+
+
+export function MatchUpCard({matchUp,
+                                    onUserClick,
+                                    onMatchUpCardClicked,
+                                }: {
+    matchUp: MatchUp,
+    onUserClick: (user: User) => void,
+    onMatchUpCardClicked: (matchUp: MatchUp) => void,
+}) {
+    return (
+        <SelectableCard
+            padding={0}
+            overflow={"hidden"}
+        >
+            <Pressable
+                onPress={() => onUserClick(matchUp.opponent)}
+            >
+                <YStack
+                    padding={16}
+                    hoverStyle={{ backgroundColor: "$color6" }}
+                >
+                    <UserCardInsides
+                        user={matchUp.opponent}
+                    />
+                </YStack>
+            </Pressable>
+
+            <Spacer
+                height={1}
+                maxHeight={1}
+                minHeight={1}
+                width={"100%"}
+                backgroundColor={"$color4"}
+                marginLeft={"auto"}
+                marginRight={"auto"}
             />
-        </View>
+
+            <Pressable
+                onPress={() => onMatchUpCardClicked(matchUp)}
+            >
+                <YStack
+                    padding={16}
+                    hoverStyle={{ backgroundColor: "$color6" }}
+                >
+                    <MatchUpInsides
+                        matchUp={matchUp}
+                    />
+                </YStack>
+            </Pressable>
+        </SelectableCard>
     )
 }

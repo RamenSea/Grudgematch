@@ -4,21 +4,20 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {MainAppViewProps} from "./RootRoute";
 import React from "react";
-import {FlatList, Linking, View} from "react-native";
+import {Linking, Button as NativeButton} from "react-native";
 import {User} from "../models/User";
 import {UserService} from "../services/UserService";
 import {UserCard} from "../components/user/UserCard";
 import {MatchUp} from "../models/MatchUp";
 import {Game, NULL_TEAM_ID} from "../models/Game";
-import {GameCard} from "../components/game/GameCard";
-import {MatchUpCard} from "../components/game/MatchUpCard";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 import {Button} from "../components/scaffolding/Button";
-import {H4, isWeb, Spacer, Spinner, Text, XStack, YStack} from "tamagui";
+import {H4, isWeb, ScrollView, Spacer, Spinner, Text, XStack, YStack} from "tamagui";
 import {ThemedSpinner} from "../components/scaffolding/ThemedSpinner";
 import {LoadingCover} from "../components/scaffolding/LoadingCover";
 import {UserOverviewBottomSection, UserOverviewBottomSectionProps} from "../components/user/UserOverviewBottomSection";
 import {ListenForGame} from "../general/ListenForGame";
+import {WebHeader} from "../components/scaffolding/WebHeader";
 
 export type UserOverviewViewProps = {
     username?: string
@@ -28,7 +27,7 @@ class UserOverviewViewState {
         public user: User|null,
 
         public isFindingGame: boolean = false,
-        public isFindingPlayingGame: boolean = true,
+        public isFindingPlayingGame: boolean = false,
 
         public bottomSectionProps: UserOverviewBottomSectionProps|null = null,
     ) { }
@@ -69,7 +68,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             this.props.navigation.setOptions({
                 headerRight: () => {
                     return (
-                        <Button
+                        <NativeButton
                             title={"Settings"}
                             onPress={event => this.didPressingSettingsButton()}
                         />
@@ -158,7 +157,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             this.state.user == null) {
             return;
         }
-        await this.asyncSetState({isFindingPlayingGame: true});
+        await this.asyncSetState({isFindingPlayingGame: true, bottomSectionProps: null});
 
         this.listenForGame = new ListenForGame(this.aoe4WorldApiService, this.state.user, game => {
             if (game) {
@@ -219,74 +218,83 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
 
         return (
             <YStack
-                paddingTop={24}
             >
-                <H4
-                    marginBottom={8}
-                >
-                    Assigned user:
-                </H4>
-                <UserCard
-                    user={user}
-                    onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}
+                <WebHeader
+                    title={""}
                 />
-                <XStack
-                    marginTop={8}
+                <ScrollView
+                    paddingLeft={8}
+                    paddingRight={8}
                 >
-                    {this.state.isFindingPlayingGame &&
-                        <Button
-                            dangerous={true}
-                            title={"Cancel finding game"}
-                            flex={1}
-                            onPress={event => this.cancelListeningForPlayingGames()}
-                        />
-                    }
-                    {!this.state.isFindingPlayingGame &&
-                        <>
+                    <H4
+                        marginTop={8}
+                        marginBottom={8}
+                    >
+                        Assigned user:
+                    </H4>
+                    <UserCard
+                        user={user}
+                        onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}
+                    />
+                    <XStack
+                        marginTop={16}
+                    >
+                        {this.state.isFindingPlayingGame &&
                             <Button
-                                disabled={this.isLoadingInAGame()}
-                                title={"Check last game"}
-                                loading={this.isLoadingInAGame()}
+                                dangerous={true}
+                                title={"Cancel finding game"}
                                 flex={1}
-                                onPress={event => this.didPressCheckCurrentGame()}
-                                marginRight={4}
+                                onPress={event => this.cancelListeningForPlayingGames()}
                             />
-                            <Button
-                                disabled={this.isLoadingInAGame()}
-                                title={"Listen for game"}
-                                loading={this.isLoadingInAGame()}
-                                flex={1}
-                                onPress={event => this.didPressListenForPlayingGame()}
-                                marginLeft={4}
+                        }
+                        {!this.state.isFindingPlayingGame &&
+                            <>
+                                <Button
+                                    disabled={this.isLoadingInAGame()}
+                                    title={"Check last"}
+                                    loading={this.isLoadingInAGame()}
+                                    flex={1}
+                                    onPress={event => this.didPressCheckCurrentGame()}
+                                    marginRight={8}
+                                />
+                                <Button
+                                    disabled={this.isLoadingInAGame()}
+                                    title={"Listen"}
+                                    loading={this.isLoadingInAGame()}
+                                    flex={1}
+                                    onPress={event => this.didPressListenForPlayingGame()}
+                                    marginLeft={8}
+                                />
+                            </>
+                        }
+                    </XStack>
+                    {this.state.isFindingPlayingGame &&
+                        <>
+                            <H4
+                                marginTop={32}
+                                marginLeft={"auto"}
+                                marginRight={"auto"}
+                            >
+                                Waiting for your game to start...
+                            </H4>
+                            <ThemedSpinner
+                                marginTop={8}
+                                marginLeft={"auto"}
+                                marginRight={"auto"}
                             />
                         </>
                     }
-                </XStack>
-                {this.state.isFindingPlayingGame &&
-                    <>
-                        <H4
-                            marginTop={32}
-                            marginLeft={"auto"}
-                            marginRight={"auto"}
-                        >
-                            Waiting for your game to start...
-                        </H4>
-                        <ThemedSpinner
-                            marginTop={8}
-                            marginLeft={"auto"}
-                            marginRight={"auto"}
+                    {this.state.bottomSectionProps != null &&
+                        <UserOverviewBottomSection
+                            key={"bottom_section_todo"}
+                            props={this.state.bottomSectionProps}
+                            onClickGame={game => this.openLinkToGame(game.id)}
+                            onClickUser={u => this.openLinkToUser(u.aoe4WorldId)}
+                            onMatchUpCardClicked={matchUp => this.openMoreGamesSection(matchUp)}
                         />
-                    </>
-                }
-                {this.state.bottomSectionProps != null &&
-                    <UserOverviewBottomSection
-                        key={"bottom_section_todo"}
-                        props={this.state.bottomSectionProps}
-                        onClickGame={game => this.openLinkToGame(game.id)}
-                        onClickUser={u => this.openLinkToUser(u.aoe4WorldId)}
-                        onClickMoreGames={matchUp => this.openMoreGamesSection(matchUp)}
-                    />
-                }
+                    }
+                    <Spacer height={8}/>
+                </ScrollView>
             </YStack>
         );
     }
