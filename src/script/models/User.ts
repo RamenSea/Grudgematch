@@ -1,5 +1,6 @@
 import {ICacheable} from "../caches/SimpleCache";
 import {Civilization} from "./Game";
+import {jsonMember, jsonObject, TypedJSON} from "typedjson";
 
 
 export enum GameModeType {
@@ -48,37 +49,34 @@ export enum Rank {
     CONQUEROR_3 = "conqueror_3",
 
 }
+
+@jsonObject()
 export class GameModeSeason {
-    constructor(
-        readonly mode: GameModeType,
-        readonly rank: Rank,
-        readonly maxRating: number,
-        readonly maxRating1M: number,
-        readonly maxRating7D: number,
-        readonly gameCount: number,
-        readonly winCount: number,
-        readonly winStreak: number,
-        /*
+    mode: GameModeType
+    @jsonMember(String, {name: "rank_level"})
+    readonly rank: Rank
+    @jsonMember({name: "max_rating"})
+    readonly maxRating: number
+    @jsonMember({name: "max_rating_1m"})
+    readonly maxRating1M: number
+    @jsonMember({name: "max_rating_7d"})
+    readonly maxRating7D: number
+    @jsonMember({name: "games_count"})
+    readonly gameCount: number
+    @jsonMember({name: "wins_count"})
+    readonly winCount: number
+    @jsonMember({name: "streak"})
+    readonly winStreak: number
 
-         */
-    ) {
-    }
-    toJson(): any {
-        return { }
-    }
-    static FromJson(mode: GameModeType, jsonObject: any): GameModeSeason {
-        return new GameModeSeason(
-            mode,
-            jsonObject.rank_level as Rank ?? Rank.NONE, //todo test null state
-
-            jsonObject.max_rating,
-            jsonObject.max_rating_1m,
-            jsonObject.max_rating_7d,
-
-            jsonObject.games_count,
-            jsonObject.wins_count,
-            jsonObject.streak,
-        )
+    constructor(mode: GameModeType, rank: Rank, maxRating: number, maxRating1M: number, maxRating7D: number, gameCount: number, winCount: number, winStreak: number) {
+        this.mode = mode;
+        this.rank = rank;
+        this.maxRating = maxRating;
+        this.maxRating1M = maxRating1M;
+        this.maxRating7D = maxRating7D;
+        this.gameCount = gameCount;
+        this.winCount = winCount;
+        this.winStreak = winStreak;
     }
 }
 export class GameMode {
@@ -93,18 +91,15 @@ export class GameMode {
         return { }
     }
     static FromJson(mode: GameModeType, jsonObject: any): GameMode {
-        const current = GameModeSeason.FromJson(mode, jsonObject);
-        const seasons: GameModeSeason[] = [current]
+        const current = GameModeSeasonSerializer.parse(jsonObject);
+        const seasons: GameModeSeason[] = [current!]
         if (jsonObject.previous_seasons !== undefined && jsonObject.previous_seasons !== null && jsonObject.previous_seasons.length > 0) {
-            for (let i = 0; i < jsonObject.previous_seasons.length; i++) {
-                const seasonJson = jsonObject.previous_seasons[i];
-                const season = GameModeSeason.FromJson(mode, seasonJson);
-                seasons.push(season);
-            }
+            seasons.push(...GameModeSeasonSerializer.parseAsArray(jsonObject.previous_seasons));
         }
+        seasons.forEach(v => v.mode = mode);
         return new GameMode(
             mode,
-            current,
+            current!,
             seasons,
         )
     }
@@ -168,6 +163,7 @@ export class SimplifiedGameMode {
     }
 }
 
+@jsonObject()
 export class User implements ICacheable<number>{
     public static MIN_USERNAME_LENGTH = 3;
     public static NULL_AOE4WORLD_ID = -1;
@@ -356,3 +352,6 @@ export class User implements ICacheable<number>{
         );
     }
 }
+
+
+export const GameModeSeasonSerializer = new TypedJSON(GameModeSeason);

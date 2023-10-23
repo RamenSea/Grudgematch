@@ -1,4 +1,6 @@
-import {jsonMember, jsonObject} from "typedjson";
+import {jsonArrayMember, jsonMember, jsonObject, TypedJSON} from "typedjson";
+import {id} from "inversify";
+import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
 
 
 export enum Civilization {
@@ -16,44 +18,30 @@ export enum Civilization {
 }
 export const NULL_TEAM_ID = -1;
 
-// @jsonObject()
-// export class Player {
-//     @jsonMember({name: "profile_id"})
-//     readonly aoe4WorldId: number
-//     @jsonMember({name: "name"})
-//     readonly username: string
-//     @jsonMember(String)
-//     readonly civilization: Civilization
-//
-//     teamId: number = -1;
-//
-//
-//     constructor(aoe4WorldId: number, username: string, civilization: Civilization, teamId: number) {
-//         this.aoe4WorldId = aoe4WorldId;
-//         this.username = username;
-//         this.civilization = civilization;
-//         this.teamId = teamId;
-//     }
-// }
-
+function DidWinDeserializer(
+    json: string,
+    params: CustomDeserializerParams,
+) {
+    return json == "win";
+}
+@jsonObject()
 export class Player {
+    @jsonMember({name: "profile_id"})
+    readonly aoe4WorldId: number
+    @jsonMember({name: "name"})
+    readonly username: string
+    @jsonMember(String)
+    readonly civilization: Civilization
+    @jsonMember(String, {name: "result", deserializer: DidWinDeserializer})
+    readonly didWin: boolean
 
-    constructor(
-        readonly aoe4WorldId: number,
-        readonly username: string,
-        readonly teamId: number,
-        readonly civilization: Civilization,
-    ) {
-    }
+    teamId: number = -1;
 
-    static FromJson(teamId: number, jsonObject: any): Player {
-
-        return new Player(
-            jsonObject.profile_id,
-            jsonObject.name,
-            teamId,
-            jsonObject.civilization as Civilization ?? Civilization.NONE, //todo test null state
-        );
+    constructor(aoe4WorldId: number, username: string, civilization: Civilization, didWin: boolean) {
+        this.aoe4WorldId = aoe4WorldId;
+        this.username = username;
+        this.civilization = civilization;
+        this.didWin = didWin;
     }
 }
 
@@ -64,17 +52,57 @@ export class Team {
     ) {
     }
 }
-
-export class Game {
-    constructor(
-        readonly id: number,
-        readonly isPlaying: boolean,
-        public players: Array<Player>,
-        public winningTeam: number,
-    ) {
+function TeamDeserializer(
+    json: Array<any>,
+    params: CustomDeserializerParams,
+) {
+    const players: Player[] = [];
+    for (let i = 0; i < json.length; i++) {
+        const teamSetJson = json[i].map((v: any) => v.player);
+        const teamSet = PlayerSerializer.parseAsArray(teamSetJson);
+        teamSet.forEach(value => {
+            value.teamId = i;
+        })
+        players.push(...teamSet);
     }
+    // console.log(json, players);
+    return players;
+}
+
+@jsonObject()
+export class Game {
+    @jsonMember({name: "game_id"})
+    readonly id: number
+    @jsonMember({name: "ongoing"})
+    readonly isPlaying: boolean
+
+    @jsonArrayMember(Player, {name: "teams", deserializer: TeamDeserializer})
+    readonly players: Array<Player>
+
 
     private cachedTeamValue: Team[]|null = null;
+    private cachedWinningTeam: number = -10;
+
+    constructor(id: number, isPlaying: boolean, players: Array<Player>) {
+        this.id = id;
+        this.isPlaying = isPlaying;
+        this.players = players;
+    }
+
+    get winningTeam(): number {
+        if (this.cachedWinningTeam >= NULL_TEAM_ID) {
+            return this.cachedWinningTeam;
+        }
+
+        this.cachedWinningTeam = NULL_TEAM_ID;
+        for (let i = 0; i < this.players.length; i++) {
+            if (this.players[i].didWin) {
+                this.cachedWinningTeam = this.players[i].teamId;
+                break;
+            }
+        }
+        return this.cachedWinningTeam;
+    }
     get teams():  Team[] {
         if (this.cachedTeamValue !== null) {
             return this.cachedTeamValue;
@@ -98,26 +126,7 @@ export class Game {
         }
         return null;
     }
-    static FromJson(jsonObject: any): Game {
-        let winningTeam = NULL_TEAM_ID;
-
-        const players = new Array<Player>();
-        for (let i = 0; i < jsonObject.teams.length; i++) {
-            const team = jsonObject.teams[i];
-            for (let playerIndex = 0; playerIndex < team.length; playerIndex++) {
-                const playerJson = team[playerIndex].player;
-                if (playerJson.result !== undefined && playerJson.result === "win") {
-                    winningTeam = i;
-                }
-                const player = Player.FromJson(i, playerJson);
-                players.push(player);
-            }
-        }
-        return new Game(
-            jsonObject.game_id,
-            jsonObject.ongoing,
-            players,
-            winningTeam
-        );
-    }
 }
+
+export const PlayerSerializer = new TypedJSON(Player);
+export const GameSerializer = new TypedJSON(Game);

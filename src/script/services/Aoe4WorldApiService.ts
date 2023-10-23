@@ -1,4 +1,4 @@
-import {Game} from "../models/Game";
+import {Game, GameSerializer} from "../models/Game";
 import {User} from "../models/User";
 import {injectable} from "inversify";
 import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
@@ -87,13 +87,7 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         const results = await fetch(apiUrl);
         const responseJson = await results.json();
 
-        let games = [];
-        for (let i = 0; i < responseJson.games.length; i++) {
-            const gameJson = responseJson.games[i];
-            const game = Game.FromJson(gameJson);
-            games.push(game);
-        }
-        return games;
+        return GameSerializer.parseAsArray(responseJson.games);
     }
 
     getUserQuery(username: string, startingUsers: User[]|undefined = undefined): AOE4WorldUserQuery {

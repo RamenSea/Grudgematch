@@ -103,13 +103,14 @@ export function UserOverviewBottomSection({
                         );
                         if (index > 0) {
                             return (
-                                <>
+                                <React.Fragment
+                                    key={"match" + value.opponent.aoe4WorldId + "matchUpAllySPACER"}
+                                >
                                     <Spacer
                                         height={8}
-                                        key={"match" + value.opponent.aoe4WorldId + "matchUpAllySPACER"}
                                     />
                                     {card}
-                                </>
+                                </React.Fragment>
                             )
                         }
                         return card
@@ -129,13 +130,14 @@ export function UserOverviewBottomSection({
                         );
                         if (index > 0) {
                             return (
-                                <>
+                                <React.Fragment
+                                    key={"match" + value.opponent.aoe4WorldId + "opponentSPACER"}
+                                >
                                     <Spacer
                                         height={8}
-                                        key={"match" + value.opponent.aoe4WorldId + "opponentSPACER"}
                                     />
                                     {card}
-                                </>
+                                </React.Fragment>
                             )
                         }
                         return card
