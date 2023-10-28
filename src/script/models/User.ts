@@ -1,6 +1,6 @@
 import {ICacheable} from "../caches/SimpleCache";
-import {Civilization} from "./Game";
-import {jsonMember, jsonObject, TypedJSON} from "typedjson";
+import {jsonArrayMember, jsonMember, jsonObject, TypedJSON} from "typedjson";
+import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
 
 
 export enum GameModeType {
@@ -79,6 +79,39 @@ export class GameModeSeason {
         this.winStreak = winStreak;
     }
 }
+
+function GameModeListDeserializer(
+    modeListJson: any,
+    params: CustomDeserializerParams,
+) {
+    if (!modeListJson) {
+        return;
+    }
+    const modes: GameMode[] = [];
+    for (const key in modeListJson) {
+        const mode = key as GameModeType ?? GameModeType.NONE;
+        if (mode == GameModeType.NONE) {
+            continue;
+        }
+        const modeJson = modeListJson[mode];
+
+        const current = GameModeSeasonSerializer.parse(modeJson);
+        const seasons: GameModeSeason[] = [current!]
+        if (modeJson.previous_seasons !== undefined && modeJson.previous_seasons !== null && modeJson.previous_seasons.length > 0) {
+            seasons.push(...GameModeSeasonSerializer.parseAsArray(modeJson.previous_seasons));
+        }
+        seasons.forEach(v => v.mode = mode);
+        const gm = new GameMode(
+            mode,
+            current!,
+            seasons,
+        )
+
+        modes.push(gm);
+    }
+
+    return modes;
+}
 export class GameMode {
     constructor(
         readonly mode: GameModeType,
@@ -86,52 +119,29 @@ export class GameMode {
         readonly seasons: GameModeSeason[],
     ) {
     }
-
-    toJson(): any {
-        return { }
-    }
-    static FromJson(mode: GameModeType, jsonObject: any): GameMode {
-        const current = GameModeSeasonSerializer.parse(jsonObject);
-        const seasons: GameModeSeason[] = [current!]
-        if (jsonObject.previous_seasons !== undefined && jsonObject.previous_seasons !== null && jsonObject.previous_seasons.length > 0) {
-            seasons.push(...GameModeSeasonSerializer.parseAsArray(jsonObject.previous_seasons));
-        }
-        seasons.forEach(v => v.mode = mode);
-        return new GameMode(
-            mode,
-            current!,
-            seasons,
-        )
-    }
 }
 
+@jsonObject()
 export class SimplifiedGameModeSeason {
-    constructor(
-        readonly mode: GameModeType,
-        readonly rank: Rank,
-        readonly maxRating: number,
-        readonly gameCount: number,
-        readonly winCount: number,
-        readonly winStreak: number,
-        /*
+    mode: GameModeType
+    @jsonMember(String, {name: "rank_level"})
+    readonly rank: Rank
+    @jsonMember({name: "rating"})
+    readonly maxRating: number
+    @jsonMember({name: "games_count"})
+    readonly gameCount: number
+    @jsonMember({name: "wins_count"})
+    readonly winCount: number
+    @jsonMember({name: "streak"})
+    readonly winStreak: number
 
-         */
-    ) {
-    }
-    toJson(): any {
-        return { }
-    }
-    static FromJson(mode: GameModeType, jsonObject: any): SimplifiedGameModeSeason {
-        return new SimplifiedGameModeSeason(
-            mode,
-            jsonObject.rank_level as Rank ?? Rank.NONE, //todo test null state
-
-            jsonObject.rating ?? 0,
-
-            jsonObject.games_count,
-            jsonObject.wins_count,
-            jsonObject.streak,
-        )
+    constructor(mode: GameModeType, rank: Rank, maxRating: number, gameCount: number, winCount: number, winStreak: number) {
+        this.mode = mode;
+        this.rank = rank;
+        this.maxRating = maxRating;
+        this.gameCount = gameCount;
+        this.winCount = winCount;
+        this.winStreak = winStreak;
     }
 }
 export class SimplifiedGameMode {
@@ -141,28 +151,55 @@ export class SimplifiedGameMode {
         readonly seasons: SimplifiedGameModeSeason[],
     ) {
     }
-
-    toJson(): any {
-        return { }
+}
+function SimplifiedGameModeDeserializer(
+    modeListJson: any,
+    params: CustomDeserializerParams,
+) {
+    if (!modeListJson) {
+        return;
     }
-    static FromJson(mode: GameModeType, jsonObject: any): SimplifiedGameMode {
-        const current = SimplifiedGameModeSeason.FromJson(mode, jsonObject);
-        const seasons: SimplifiedGameModeSeason[] = [current]
-        if (jsonObject.previous_seasons !== undefined && jsonObject.previous_seasons !== null && jsonObject.previous_seasons.length > 0) {
-            for (let i = 0; i < jsonObject.previous_seasons.length; i++) {
-                const seasonJson = jsonObject.previous_seasons[i];
-                const season = SimplifiedGameModeSeason.FromJson(mode, seasonJson);
-                seasons.push(season);
-            }
+    const modes: SimplifiedGameMode[] = [];
+    for (const key in modeListJson) {
+        const mode = key as GameModeType ?? GameModeType.NONE;
+        if (mode == GameModeType.NONE) {
+            continue;
         }
-        return new SimplifiedGameMode(
+        const modeJson = modeListJson[mode];
+
+        const current = SimplifiedGameModeSeasonSerializer.parse(modeJson);
+        const seasons: SimplifiedGameModeSeason[] = [current!]
+        if (modeJson.previous_seasons !== undefined && modeJson.previous_seasons !== null && modeJson.previous_seasons.length > 0) {
+            seasons.push(...SimplifiedGameModeSeasonSerializer.parseAsArray(modeJson.previous_seasons));
+        }
+        seasons.forEach(v => v.mode = mode);
+        const gm = new SimplifiedGameMode(
             mode,
-            current,
+            current!,
             seasons,
         )
+
+        modes.push(gm);
     }
+
+    return modes;
 }
 
+@jsonObject()
+export class UserAvatar {
+    @jsonMember
+    readonly full: string|null
+    @jsonMember
+    readonly medium: string|null
+    @jsonMember
+    readonly small: string|null
+
+    constructor(full: string|null = null, medium: string|null = null, small: string|null = null) {
+        this.full = full;
+        this.medium = medium;
+        this.small = small;
+    }
+}
 @jsonObject()
 export class User implements ICacheable<number>{
     public static MIN_USERNAME_LENGTH = 3;
@@ -172,67 +209,74 @@ export class User implements ICacheable<number>{
         User.NULL_AOE4WORLD_ID,
         User.NULL_STEAM_ID,
         "NULL",
-        "",
-        "",
-        "",
+        null,
         null,
         null,
     )
 
+    @jsonMember({name: "profile_id"})
+    readonly aoe4WorldId: number
+    @jsonMember({name: "steam_id"})
+    readonly steamId: string|null
+    @jsonMember({name: "name"})
+    readonly username: string
+    @jsonMember(UserAvatar)
+    readonly avatars: UserAvatar|null
+    @jsonArrayMember(GameMode, {name: "modes", deserializer: GameModeListDeserializer})
+    readonly modeList: GameMode[]| null
+    @jsonArrayMember(SimplifiedGameMode, {name: "leaderboards", deserializer: SimplifiedGameModeDeserializer})
+    readonly simplifiedModeList: SimplifiedGameMode[]| null
 
-    readonly modes: Map<GameModeType, GameMode>| null
-    readonly simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null
+    private _modes: Map<GameModeType, GameMode>| null = null
+    get modes(): Map<GameModeType, GameMode>| null {
+        if (this._modes || this.modeList == null) {
+            return this._modes;
+        }
+
+        this._modes = new Map<GameModeType, GameMode>();
+        for (let i = 0; i < this.modeList.length; i++) {
+            const mode = this.modeList[i];
+            this._modes.set(mode.mode, mode);
+        }
+        return this._modes;
+    }
+    private _simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null = null
+    get simplifiedModes(): Map<GameModeType, SimplifiedGameMode>| null {
+        if (this._simplifiedModes || this.simplifiedModeList == null) {
+            return this._simplifiedModes;
+        }
+
+        this._simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
+        for (let i = 0; i < this.simplifiedModeList.length; i++) {
+            const mode = this.simplifiedModeList[i];
+            this._simplifiedModes.set(mode.mode, mode);
+        }
+        return this._simplifiedModes;
+    }
     get cacheKey(): number {
         return this.aoe4WorldId;
     }
-    constructor(
-        readonly aoe4WorldId: number,
-        readonly steamId: string|null,
-        readonly username: string,
-        readonly fullAvatarImageUrl: string,
-        readonly mediumAvatarImageUrl: string,
-        readonly smallAvatarImageUrl: string,
-        readonly modeList: GameMode[]| null,
-        readonly simplifiedModeList: SimplifiedGameMode[]| null,
-    ) {
+    get fullAvatarImageUrl(): string {
+        return this.avatars?.full ?? "";
+    }
+    get mediumAvatarImageUrl(): string {
+        return this.avatars?.medium ?? "";
+    }
+    get smallAvatarImageUrl(): string {
+        return this.avatars?.small ?? "";
+    }
 
-        if (modeList != null) {
-            this.modes = new Map<GameModeType, GameMode>();
-            for (let i = 0; i < modeList.length; i++) {
-                const mode = modeList[i];
-                this.modes.set(mode.mode, mode);
-            }
-        } else {
-            this.modes = null;
-        }
-
-        if (simplifiedModeList != null) {
-            this.simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
-            for (let i = 0; i < simplifiedModeList.length; i++) {
-                const mode = simplifiedModeList[i];
-                this.simplifiedModes.set(mode.mode, mode);
-            }
-        } else {
-            this.simplifiedModes = null;
-        }
+    constructor(aoe4WorldId: number, steamId: string | null, username: string, avatars: UserAvatar | null, modeList: GameMode[] | null, simplifiedModeList: SimplifiedGameMode[] | null) {
+        this.aoe4WorldId = aoe4WorldId;
+        this.steamId = steamId;
+        this.username = username;
+        this.avatars = avatars;
+        this.modeList = modeList;
+        this.simplifiedModeList = simplifiedModeList;
     }
 
     isNull(): boolean {
         return this.aoe4WorldId == User.NULL_AOE4WORLD_ID;
-    }
-
-    //TODO figure out a good JSON deserialization library
-    toJson(): any {
-        return {
-            profile_id: this.aoe4WorldId,
-            steam_id: this.steamId,
-            name: this.username,
-            avatars: {
-                full: this.fullAvatarImageUrl,
-                medium: this.mediumAvatarImageUrl,
-                small: this.smallAvatarImageUrl,
-            }
-        }
     }
     recentRank(isSolo: boolean): Rank {
         if (this.modes != null) {
@@ -317,41 +361,9 @@ export class User implements ICacheable<number>{
         }
         return 0;
     }
-    static FromJson(jsonObject: any): User {
-        let modes: GameMode[]| null = null;
-        let simplifiedModes: SimplifiedGameMode[]| null = null;
-
-        if (jsonObject.modes !== undefined && jsonObject.modes !== null) {
-            modes = [];
-            for (const key in jsonObject.modes) {
-                const mode = key as GameModeType ?? GameModeType.NONE;
-                if (mode == GameModeType.NONE) {
-                    continue;
-                }
-                modes.push(GameMode.FromJson(mode, jsonObject.modes[mode]));
-            }
-        } else if (jsonObject.leaderboards !== undefined && jsonObject.leaderboards !== null) {
-            simplifiedModes = [];
-            for (const key in jsonObject.leaderboards) {
-                const mode = key as GameModeType ?? GameModeType.NONE;
-                if (mode == GameModeType.NONE) {
-                    continue;
-                }
-                simplifiedModes.push(SimplifiedGameMode.FromJson(mode, jsonObject.leaderboards[mode]));
-            }
-        }
-        return new User(
-            jsonObject.profile_id,
-            jsonObject.steam_id,
-            jsonObject.name,
-            jsonObject.avatars.full,
-            jsonObject.avatars.medium,
-            jsonObject.avatars.small,
-            modes,
-            simplifiedModes,
-        );
-    }
 }
 
 
 export const GameModeSeasonSerializer = new TypedJSON(GameModeSeason);
+export const SimplifiedGameModeSeasonSerializer = new TypedJSON(SimplifiedGameModeSeason);
+export const UserSerializer = new TypedJSON(User);

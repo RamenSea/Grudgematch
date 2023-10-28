@@ -1,5 +1,5 @@
 import {inject, injectable} from "inversify";
-import {User} from "../models/User";
+import {User, UserSerializer} from "../models/User";
 import {SERVICE_TYPES} from "./ServiceTypes";
 import {Aoe4WorldApiService} from "./Aoe4WorldApiService";
 import {Subject} from "@reactivex/rxjs/dist/package";
@@ -28,15 +28,14 @@ export class UserService {
     }
     async setUser(user: User) {
         this._user = user;
-        this.keystoreService.set("user", JSON.stringify(user.toJson()));
+        this.keystoreService.setObject("user", user, UserSerializer);
     }
     async boot() {
         const userString = this.keystoreService.getString("user");
 
         if (userString) {
             try {
-                const userJson = JSON.parse(userString);
-                const parsedUser = User.FromJson(userJson);
+                const parsedUser = this.keystoreService.getObject("user", UserSerializer) ?? User.NULL_USER;
                 this._user = parsedUser;
                 if (this._user.isNull() == false) {
                     this.onUserUpdate.next(this._user);

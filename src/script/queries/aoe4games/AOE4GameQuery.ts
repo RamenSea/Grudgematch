@@ -32,6 +32,7 @@ export class AOE4GameQuery {
         this.onNextBatch = new Subject<Array<Game>>();
         if (startingGames && startingGames.length > 0) {
             this.games.push(...startingGames);
+            this.isFinished = startingGames.length < this.pageSize;
             this.currentPage++;
         }
     }
