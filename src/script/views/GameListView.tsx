@@ -21,7 +21,7 @@ export type GameListViewProps = {
 class GameListViewState {
     constructor(public games: Game[]) { }
 }
-//todo add a title to this page
+
 export class GameListView extends BaseView<MainAppViewProps<"GameListView">, GameListViewState> {
 
     @resolve(SERVICE_TYPES.UserService)

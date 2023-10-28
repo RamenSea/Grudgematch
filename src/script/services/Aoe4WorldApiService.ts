@@ -48,17 +48,17 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         try {
             const userRequest = this.getUsersById(playerId);
             const opponentUserRequest = this.getUsersById(opponentId);
-            const gamesRequest = this.getGames(playerId, opponentId);
-
+            const query = new AOE4GameQuery(
+                AOE4GameQuery.CreateMatchUpQuery(playerId, opponentId),
+                this
+            );
             const user = await userRequest;
             const opponent = await opponentUserRequest;
-            const games = await gamesRequest;
             if (opponent == null || user == null) {
                 return null;
             }
-
-            const finishedGames = games.filter(value => value.isPlaying == false);
-            return new MatchUp(user, opponent, finishedGames, games.length < 50);
+            await query.next();
+            return new MatchUp(user, opponent, query);
         } catch (e) {
             console.error(e);
             return null;
@@ -105,11 +105,12 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
         }
     }
 
-    getUserQuery(username: string, startingUsers: User[]|undefined = undefined): AOE4WorldUserQuery {
+    getUserQuery(username: string, startingUsers: User[]|undefined = undefined, isFuzzy: boolean = false,): AOE4WorldUserQuery {
         return new AOE4WorldUserQuery(
             username,
             this,
             startingUsers,
+            isFuzzy,
         );
     }
     async getSingleUserByUsername(username: string): Promise<User|null> {
@@ -125,7 +126,7 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
 
         return null;
     }
-    async getUsersByUsername(username: string, exact: boolean = false, page: number| null = null): Promise<Array<User>> { //limit is hard coded to be 50
+    async getUsersByUsername(username: string, exact: boolean = false, fuzzy: boolean = false, page: number| null = null): Promise<Array<User>> { //limit is hard coded to be 50
         try {
             const searchParams = new URLSearchParams();
             searchParams.append("query", username);
@@ -136,7 +137,8 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
                 searchParams.append("page", page.toString());
             }
 
-            const apiUrl = `https://aoe4world.com/api/v0/players/search?${searchParams.toString()}`;
+            const searchType = fuzzy ? "search" : "search"
+            const apiUrl = `https://aoe4world.com/api/v0/players/${searchType}?${searchParams.toString()}`;
             const results = await fetch(apiUrl);
             if (results.status == 500) {
                 return []; // it looks like if you over page the results with the server it throws a 500

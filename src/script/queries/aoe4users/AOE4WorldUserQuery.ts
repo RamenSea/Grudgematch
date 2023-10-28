@@ -10,6 +10,7 @@ export class AOE4WorldUserQuery {
 
     private isLoading = false;
     private isFinished = false;
+    private isFuzzy = false;
     private currentPage = 1; // indexing starts at 1
 
     private currentPromise: Promise<void>|null = null;
@@ -18,9 +19,11 @@ export class AOE4WorldUserQuery {
         public username: string,
         private aoe4WorldApiService: Aoe4WorldApiService,
         startingUsers: User[]|undefined = undefined,
+        isFuzzy: boolean = false,
     ) {
 
         this.users = [];
+        this.isFuzzy = isFuzzy;
         this.onNextBatch = new Subject<Array<User>>();
         if (startingUsers && startingUsers.length > 0) {
             this.users.push(...startingUsers);
@@ -43,7 +46,7 @@ export class AOE4WorldUserQuery {
 
         let nextBatch: User[];
         try {
-            nextBatch = await this.aoe4WorldApiService.getUsersByUsername(this.username, false, this.currentPage);
+            nextBatch = await this.aoe4WorldApiService.getUsersByUsername(this.username, false, this.isFuzzy, this.currentPage);
         } catch (e) {
             // TODO error handling
             console.error(e);

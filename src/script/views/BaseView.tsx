@@ -8,7 +8,8 @@ import {
 import React from "react";
 import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
-import {YStack} from "tamagui";
+import {isWeb, YStack} from "tamagui";
+import {FillScreen} from "../components/scaffolding/FillScreen";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -105,6 +106,13 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
      */
     onWillDisappear(){}
 
+    mobileBreakPoint(): boolean {
+        if (isWeb == false) {
+            return true;
+        }
+        const windowWidth = Dimensions.get('window').width;
+        return windowWidth <= 600;
+    }
     /**
      *
      */
@@ -118,8 +126,8 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
      */
     render() {
         if (Platform.OS == "web") {
-            const windowWidth = Dimensions.get('window').width;
             const windowHeight = Dimensions.get('window').height;
+            const windowWidth = Dimensions.get('window').width;
             const webMaxHeight = this.webMaxHeight(windowHeight);
             const webWidth = Math.min(windowWidth, 600);
 
@@ -132,33 +140,20 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
                 innerViewStyle.maxHeight = webMaxHeight;
             }
             return (
-                <YStack
-                    style={{
-                        flex: 1,
-                        alignItems: "center",
-                        height: windowHeight,
-                        minHeight:windowHeight,
-                        width: windowWidth,
-                        minWidth: windowWidth,
-                    }}
+                <FillScreen
                 >
                     <YStack
                         style={innerViewStyle}
                     >
                         {this.renderView()}
                     </YStack>
-                </YStack>
+                </FillScreen>
             );
         }
         return (
-            <SafeAreaView
-                style={{
-                    width: "100%",
-                    height: "100%",
-                }}
-            >
+            <FillScreen>
                 {this.renderView()}
-            </SafeAreaView>
+            </FillScreen>
         );
     }
 }

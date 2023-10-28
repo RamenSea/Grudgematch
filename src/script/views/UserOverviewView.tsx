@@ -18,6 +18,7 @@ import {LoadingCover} from "../components/scaffolding/LoadingCover";
 import {UserOverviewBottomSection, UserOverviewBottomSectionProps} from "../components/user/UserOverviewBottomSection";
 import {ListenForGame} from "../general/ListenForGame";
 import {WebHeader} from "../components/scaffolding/WebHeader";
+import {Settings} from "@tamagui/lucide-icons";
 
 export type UserOverviewViewProps = {
     username?: string
@@ -68,8 +69,9 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             this.props.navigation.setOptions({
                 headerRight: () => {
                     return (
-                        <NativeButton
-                            title={"Settings"}
+                        <Button
+                            icon={<Settings size={24}/>}
+                            backgroundColor={"rgba(0,0,0,0)"}
                             onPress={event => this.didPressingSettingsButton()}
                         />
                     )
@@ -102,9 +104,11 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             });
         }
     }
-
     didPressingSettingsButton() {
         this.props.navigation.push("SettingsView");
+    }
+    didPressFindButton() {
+        this.props.navigation.push("FindGrudgeView");
     }
     private openLinkToUser(aoeWorldId: number) {
         const userLink = `https://aoe4world.com/players/${aoeWorldId}`;
@@ -129,7 +133,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
         });
     }
     private openMoreGamesSection(matchup: MatchUp) {
-        this.props.navigation.push("GameListView", {q: AOE4GameQuery.CreateMatchUpQuery(matchup), games: matchup.games, playerId: this.state.user?.aoe4WorldId});
+        this.props.navigation.push("GameListView", {q: matchup.query.queryString, games: matchup.games, playerId: this.state.user?.aoe4WorldId});
     }
     private async didPressCheckCurrentGame() {
         if (this.isLoadingInAGame() ||
@@ -226,12 +230,24 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                     paddingLeft={8}
                     paddingRight={8}
                 >
-                    <H4
-                        marginTop={8}
-                        marginBottom={8}
+                    <XStack
+                        paddingTop={16}
+                        paddingBottom={16}
                     >
-                        Assigned user:
-                    </H4>
+                        <H4
+                            marginTop={"auto"}
+                            marginBottom={"auto"}
+                        >
+                            Assigned user:
+                        </H4>
+                        <Spacer flex={1}/>
+                        <Button
+                            marginTop={"auto"}
+                            marginBottom={"auto"}
+                            title={"Find"}
+                            onPress={event => this.didPressFindButton()}
+                        />
+                    </XStack>
                     <UserCard
                         user={user}
                         onClick={user => {this.openLinkToUser(user.aoe4WorldId)}}

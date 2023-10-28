@@ -2,6 +2,9 @@ import {BaseView} from "./BaseView";
 import React from "react";
 import {MainAppViewProps} from "./RootRoute";
 import {Button} from "../components/scaffolding/Button";
+import {ListItem, YStack} from "tamagui";
+import {ChevronRight, UserCircle} from "@tamagui/lucide-icons";
+import {WebHeader} from "../components/scaffolding/WebHeader";
 
 class SettingsViewState {
 }
@@ -12,10 +15,25 @@ export class SettingsView extends BaseView<MainAppViewProps<"SettingsView">, Set
     }
     renderView(): React.JSX.Element {
         return (
-            <Button
-                onPress={event => this.didPressSetUser()}
-                title={"Set user"}
-            />
+            <YStack
+                flex={1}
+            >
+                <WebHeader
+                    title={"Settings"}
+                />
+                <ListItem
+                    hoverTheme
+                    onPress={event => this.didPressSetUser()}
+                    icon={UserCircle}
+                    iconAfter={ChevronRight}
+                >
+                    <ListItem.Text
+                        fontSize={18}
+                    >
+                        Set user
+                    </ListItem.Text>
+                </ListItem>
+            </YStack>
         );
     }
 

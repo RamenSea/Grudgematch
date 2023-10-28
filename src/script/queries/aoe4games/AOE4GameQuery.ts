@@ -22,11 +22,11 @@ export class AOE4GameQuery {
     private currentPromise: Promise<void>|null = null;
     public readonly pageSize = 50; // This value is hardcoded on the server
     constructor(
-        query: string,
+        public queryString: string,
         private aoe4WorldApiService: Aoe4WorldApiService,
         startingGames: Game[]|undefined = undefined,
     ) {
-        this.parsedQuery = JSON.parse(query);
+        this.parsedQuery = JSON.parse(queryString);
         this.parsedQueryType = this.parsedQuery.t as AOE4GameQueryTypes;
         this.games = [];
         this.onNextBatch = new Subject<Array<Game>>();
@@ -77,8 +77,8 @@ export class AOE4GameQuery {
         resolver();
     }
 
-    static CreateMatchUpQuery(matchUp: MatchUp): string {
-        return `{"t":"${AOE4GameQueryTypes.MATCH_UP.toString()}", "pId": ${matchUp.user.aoe4WorldId}, "oId": ${matchUp.opponent.aoe4WorldId}}`;
+    static CreateMatchUpQuery(userId: number, opponentId: number): string {
+        return `{"t":"${AOE4GameQueryTypes.MATCH_UP.toString()}", "pId": ${userId}, "oId": ${opponentId}}`;
     }
     static CreateRecentQuery(userId: number): string {
         return `{"t":"${AOE4GameQueryTypes.RECENT.toString()}", "pId": ${userId}}`;

@@ -256,14 +256,14 @@ export class User implements ICacheable<number>{
     get cacheKey(): number {
         return this.aoe4WorldId;
     }
-    get fullAvatarImageUrl(): string {
-        return this.avatars?.full ?? "";
+    get fullAvatarImageUrl(): string |null{
+        return this.avatars?.full ?? null;
     }
-    get mediumAvatarImageUrl(): string {
-        return this.avatars?.medium ?? "";
+    get mediumAvatarImageUrl(): string|null {
+        return this.avatars?.medium ?? null;
     }
-    get smallAvatarImageUrl(): string {
-        return this.avatars?.small ?? "";
+    get smallAvatarImageUrl(): string|null {
+        return this.avatars?.small ?? null;
     }
 
     constructor(aoe4WorldId: number, steamId: string | null, username: string, avatars: UserAvatar | null, modeList: GameMode[] | null, simplifiedModeList: SimplifiedGameMode[] | null) {

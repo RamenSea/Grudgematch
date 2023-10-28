@@ -8,6 +8,8 @@ import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
 import {SettingsView} from "./SettingsView";
 import {GameListView, GameListViewProps} from "./GameListView";
+import {FindGrudgeView} from "./FindGrudgeView";
+import {GrudgeView, GrudgeViewProps} from "./GrudgeView";
 
 
 /**
@@ -21,6 +23,8 @@ export type RootRouteProps = {
     RootScreen: UserOverviewViewProps,
     GameListView: GameListViewProps,
     SettingsView: undefined,
+    GrudgeView: GrudgeViewProps,
+    FindGrudgeView: undefined,
 };
 
 /**
@@ -140,6 +144,16 @@ export function RootRoute({
                     name="SettingsView"
                     component={SettingsView}
                     options={{title: 'Settings'}}
+                />
+                <Stack.Screen
+                    name="FindGrudgeView"
+                    component={FindGrudgeView}
+                    options={{title: 'Find'}}
+                />
+                <Stack.Screen
+                    name="GrudgeView"
+                    component={GrudgeView}
+                    options={{title: 'Grudge'}}
                 />
             </Stack.Navigator>
         </NavigationContainer>

@@ -77,7 +77,7 @@ export function UserCardInsides(
                 }}>
                 <Image
                     source={{
-                        uri: user.mediumAvatarImageUrl,
+                        uri: user.mediumAvatarImageUrl ?? undefined,
                     }}
                     borderRadius={4}
                     style={{
