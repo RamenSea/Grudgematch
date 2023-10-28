@@ -11,6 +11,8 @@ const {
 } = require("customize-cra");
 const { TamaguiPlugin } = require('tamagui-loader')
 const path = require("path");
+const CompressionPlugin = require("compression-webpack-plugin");
+const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = override(
     disableEsLint(),
@@ -47,8 +49,11 @@ module.exports = override(
         ],
     }),
 
-    addWebpackPlugin( new TamaguiPlugin({
+    addWebpackPlugin(new TamaguiPlugin({
         config: './src/tamagui.config.ts',
         components: ['tamagui'], // matching the yarn add you chose above
     })),
+    // addWebpackPlugin(new CompressionPlugin({
+    //     test: /\.js(\?.*)?$/i,
+    // })),
 );

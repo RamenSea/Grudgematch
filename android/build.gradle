@@ -11,6 +11,11 @@ buildscript {
         ndkVersion = "23.1.7779620"
     }
     repositories {
+        maven { url 'https://maven.google.com' }
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/../node_modules/react-native/android"
+        }
         google()
         mavenCentral()
     }

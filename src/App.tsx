@@ -4,11 +4,8 @@ import React, {ReactNode} from 'react';
 import {StartUpService} from "./script/services/StartUpService";
 import {SERVICE_TYPES} from "./script/services/ServiceTypes";
 import {container} from "./inversify.config";
-import {RootRoute, RootRouteProps} from "./script/views/RootRoute";
-import {UserService} from "./script/services/UserService";
+import {RootRoute} from "./script/views/RootRoute";
 import {AppScaffolding} from "./script/components/scaffolding/AppScaffolding";
-import {H4, YStack} from "tamagui";
-import {ThemedSpinner} from "./script/components/scaffolding/ThemedSpinner";
 import {LoadingCover} from "./script/components/scaffolding/LoadingCover";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);

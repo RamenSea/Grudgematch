@@ -1,7 +1,6 @@
 import {H4, YStack} from "tamagui";
 import {ThemedSpinner} from "./ThemedSpinner";
 import React from "react";
-import {AnimatedText} from "react-native-reanimated/lib/typescript/reanimated2/component/Text";
 
 export function LoadingCover({
     message,
