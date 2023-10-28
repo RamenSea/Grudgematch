@@ -7,16 +7,19 @@ import {UserCard} from "../user/UserCard";
 export function GameList({
                              games,
                              onRequestNextPage,
-                             onSelect}: {
+                             onSelect,
+                             nestedScrollEnabled,}: {
     games: Game[],
     onRequestNextPage?: (() => void),
     onSelect?: ((game: Game) => void)
+    nestedScrollEnabled?: boolean,
 }) {
     return (
         <FlatList
             style={{
                 overflow: "scroll"
             }}
+            nestedScrollEnabled={nestedScrollEnabled}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             data={games}

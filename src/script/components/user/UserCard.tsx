@@ -2,7 +2,7 @@ import {Pressable, View} from "react-native";
 import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
 import React from "react";
-import {Image, Card, Text, XStack, Spacer, YStack} from "tamagui";
+import {Image, Card, Text, XStack, Spacer, YStack, Square} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
 
 
@@ -13,15 +13,17 @@ export function UserCardInsides(
         user: User,
     }) {
     const rankedRowHeight = 42;
-    const iconSize = 32;
+    const iconSize = 28;
     const ratingLineHeight = 22;
-    const profileImageSize = 42;
+    const profileImageSize = 64;
+    const fontSize = 16;
     const qmRating = user.averageRecentQMRating(true);
 
     let quickMatchView: React.JSX.Element|undefined = undefined;
     if (qmRating > 0) {
         quickMatchView = (
             <Text
+                fontSize={fontSize}
             >
                 QM: {qmRating}
             </Text>
@@ -40,6 +42,7 @@ export function UserCardInsides(
                     height={iconSize}
                 />
                 <Text
+                    fontSize={fontSize}
                 >
                     {soloRating}
                 </Text>
@@ -60,6 +63,7 @@ export function UserCardInsides(
                     height={iconSize}
                 />
                 <Text
+                    fontSize={fontSize}
                 >
                     {teamRating}
                 </Text>
@@ -68,45 +72,50 @@ export function UserCardInsides(
     }
 
     return (
-        <YStack>
-            <XStack
-                style={{
-                    alignContent: "center",
-                    alignItems: "center",
-                    flexDirection: "row",
-                }}>
+        <XStack>
+            { user.mediumAvatarImageUrl &&
                 <Image
                     source={{
-                        uri: user.mediumAvatarImageUrl ?? undefined,
+                        uri: user.mediumAvatarImageUrl,
                     }}
                     borderRadius={4}
-                    style={{
-                        width: profileImageSize,
-                        height: profileImageSize,
-                        backgroundColor: "rgba(131,131,131,0.38)",
-                    }}
+                    width={profileImageSize}
+                    height={profileImageSize}
+                    backgroundColor={"rgba(131,131,131,0.38)"}
                 />
-                <Spacer
-                    width={8}
-                    height={1}
+            }
+            { !user.mediumAvatarImageUrl &&
+                <Square
+                    borderRadius={4}
+                    width={profileImageSize}
+                    height={profileImageSize}
+                    backgroundColor={"rgba(131,131,131,0.38)"}
                 />
+            }
+            <YStack
+                marginLeft={8}
+            >
                 <Text
                     fontSize={18}
+                    marginTop={0}
+                    fontWeight={"600"}
+                    marginBottom={"auto"}
                 >
                     {user.username}
                 </Text>
-
-            </XStack>
-            <XStack
-                height={rankedRowHeight}
-                alignContent={"center"}
-                alignItems={"center"}
-            >
-                {quickMatchView}
-                {soloRankView}
-                {teamRankView}
-            </XStack>
-        </YStack>
+                <XStack
+                    height={rankedRowHeight}
+                    alignContent={"flex-end"}
+                    alignItems={"flex-end"}
+                    marginTop={"auto"}
+                    marginBottom={0}
+                >
+                    {quickMatchView}
+                    {soloRankView}
+                    {teamRankView}
+                </XStack>
+            </YStack>
+        </XStack>
     )
 }
 export function UserCard(

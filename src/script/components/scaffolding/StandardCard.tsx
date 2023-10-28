@@ -13,7 +13,7 @@ export function StandardCard(props: StandardCardProps) {
     return (
         <Card
             padded
-            elevate
+            elevation={5}
             {...rest}
         >
 

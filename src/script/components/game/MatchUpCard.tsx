@@ -6,16 +6,18 @@ import {User} from "../../models/User";
 import {GameCard} from "./GameCard";
 import React from "react";
 import {Button} from "../scaffolding/Button";
-import {Paragraph, Spacer, Text, YStack} from "tamagui";
+import {H3, Paragraph, Spacer, Text, YStack} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
 import {StandardCard} from "../scaffolding/StandardCard";
 
 export function MatchUpInsides({
                                 matchUp,
+                                   showTapToSeeMore,
 }: {
     matchUp: MatchUp,
+    showTapToSeeMore: boolean,
 }) {
-    const isFreshMatchUp = matchUp.games.length == 0;
+    const isFreshMatchUp = matchUp.totalCompletedGames == 0;
     if (isFreshMatchUp) {
         return (
             <YStack>
@@ -29,8 +31,29 @@ export function MatchUpInsides({
         )
     }
 
-    const percent = matchUp.wins / matchUp.games.length;
-    const plural = matchUp.games.length > 1 ? "s" : "";
+    const percent = matchUp.wins / matchUp.totalCompletedGames;
+
+    let matchUpText = ""
+    if (matchUp.totalCompletedGames < 3) {
+        matchUpText = "A fresh grudge is brewing";
+    } else if (percent >= 0.9) {
+        matchUpText = "Auto-concede Grudge";
+    } else if (percent >= 0.8) {
+        matchUpText = "Stalwart Hatred Grudge";
+    } else if (percent >= 0.7) {
+        matchUpText = "Vanguard Grudge";
+    } else if (percent >= 0.6) {
+        matchUpText = "Hard Fought Grudge";
+    }  else if (percent >= 0.5) {
+        matchUpText = "Hard Fought Grudge";
+    }  else if (percent >= 0.4) {
+        matchUpText = "Hard Fought Grudge";
+    }  else if (percent >= 0.3) {
+        matchUpText = "Bully Grudge";
+    } else {
+        matchUpText = "Arch-nemesis Grudge";
+    }
+    const plural = matchUp.totalCompletedGames > 1 ? "s" : "";
     return (
         <YStack
         >
@@ -46,19 +69,28 @@ export function MatchUpInsides({
                 <Text
                     fontSize={16}
                 >
-                    ({(percent * 100).toFixed(0)}%)
+                    {" "}({(percent * 100).toFixed(0)}%)
                 </Text>
                 <Text
                 >
-                    {" "}win{plural} out of {matchUp.didReachLimitOnGames ? "" : "the last "}{matchUp.games.length} game{plural}
+                    {" "}win{plural} out of {matchUp.query.isFinished ? "" : "the last "}{matchUp.totalCompletedGames} game{plural}
                 </Text>
             </Paragraph>
             <Text
-                fontWeight={"bold"}
-                fontSize={14}
+                fontSize={18}
+                fontWeight={"600"}
+                textAlign={"center"}
             >
-                Tap to see the game{plural}
+                {matchUpText}
             </Text>
+            { showTapToSeeMore &&
+                <Text
+                    fontWeight={"bold"}
+                    fontSize={14}
+                >
+                    Tap to see the game{plural}
+                </Text>
+            }
         </YStack>
     )
 }
@@ -109,6 +141,7 @@ export function MatchUpCard({matchUp,
                 >
                     <MatchUpInsides
                         matchUp={matchUp}
+                        showTapToSeeMore={true}
                     />
                 </YStack>
             </Pressable>

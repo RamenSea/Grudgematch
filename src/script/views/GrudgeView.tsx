@@ -5,7 +5,7 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
-import {H2, H3, H4, Text, YStack} from "tamagui";
+import {Card, H2, H3, H4, ScrollView, Square, Text, YStack} from "tamagui";
 import {WebHeader} from "../components/scaffolding/WebHeader";
 import {User} from "../models/User";
 import {SelectableCard} from "../components/scaffolding/SelectableCard";
@@ -17,8 +17,10 @@ import {Subscription} from "@reactivex/rxjs/dist/package";
 import {Game} from "../models/Game";
 import {MatchUp} from "../models/MatchUp";
 import {LoadingCover} from "../components/scaffolding/LoadingCover";
-import {Linking} from "react-native";
+import {Linking, View} from "react-native";
 import {GameList} from "../components/game/GameList";
+import {MatchUpInsides} from "../components/game/MatchUpCard";
+import {StandardCard} from "../components/scaffolding/StandardCard";
 
 export type GrudgeViewProps = {
     userTwoId: number,
@@ -88,6 +90,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             return (
                 <LoadingCover
                     message={"Loading in this momentous grudge"}
+                    height={"100%"}
                 />
             )
         }
@@ -104,14 +107,14 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         user={this.state.matchUp.user}
                         onClick={(e) => this.didSelectUser(this.state.matchUp!.user)}
                     />
-                    <H2
-                        marginTop={24}
+                    <H4
+                        marginTop={8}
                         marginRight={"auto"}
-                        marginBottom={24}
+                        marginBottom={8}
                         marginLeft={"auto"}
                     >
                         VS
-                    </H2>
+                    </H4>
                     <UserCard
                         user={this.state.matchUp.opponent}
                         onClick={(e) => this.didSelectUser(this.state.matchUp!.opponent)}
@@ -126,30 +129,47 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             )
         }
         return (
-            <YStack
-                overflow={"hidden"}
+            <ScrollView
+                overflow={"scroll"}
                 flex={1}
             >
                 <WebHeader
                     title={"Find"}
                 />
                 {topPortion}
-                <Text>
-                    SOMETHIGN about a grudge
-                </Text>
-                <Text>
+                <StandardCard
+                    marginTop={24}
+                    marginRight={16}
+                    marginLeft={16}
+                >
+                    <MatchUpInsides
+                        matchUp={this.state.matchUp}
+                        showTapToSeeMore={false}
+                    />
+                </StandardCard>
+                <H3
+                    marginTop={16}
+                    marginRight={"auto"}
+                    marginBottom={8}
+                    marginLeft={"auto"}
+                >
                     - Games -
-                </Text>
-                <YStack
-                    height={500}
+                </H3>
+                <View
+                    style={{
+                        height:500,
+                        width:"100%",
+                        paddingBottom:8,
+                    }}
                 >
                     <GameList
                         games={this.state.games}
                         onRequestNextPage={() => this.requestNextPage()}
                         onSelect={game => this.didPressGameCard(game)}
+                        nestedScrollEnabled={true}
                     />
-                </YStack>
-            </YStack>
+                </View>
+            </ScrollView>
         );
     }
 

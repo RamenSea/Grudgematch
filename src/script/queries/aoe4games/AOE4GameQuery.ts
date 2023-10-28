@@ -16,7 +16,7 @@ export class AOE4GameQuery {
     private parsedQuery: any;
     private parsedQueryType: AOE4GameQueryTypes;
     private isLoading = false;
-    private isFinished = false;
+    isFinished = false;
     private currentPage = 1; // indexing starts at 1
 
     private currentPromise: Promise<void>|null = null;
