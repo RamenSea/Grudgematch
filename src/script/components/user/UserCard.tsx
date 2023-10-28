@@ -29,7 +29,7 @@ export function UserCardInsides(
     }
     let soloRankView: React.JSX.Element|undefined = undefined;
     const soloRank = user.recentRank(true);
-    if (soloRank != Rank.NONE) {
+    if (soloRank != Rank.NONE && soloRank != Rank.UNRANKED) {
         const soloRating = user.recentRating(true);
         soloRankView = (
             <>
@@ -49,7 +49,7 @@ export function UserCardInsides(
 
     let teamRankView: React.JSX.Element|undefined = undefined;
     const teamRank = user.recentRank(false);
-    if (teamRank != Rank.NONE) {
+    if (teamRank != Rank.NONE && teamRank != Rank.UNRANKED) {
         const teamRating = user.recentRating(false);
         teamRankView = (
             <>
