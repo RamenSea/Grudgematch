@@ -108,7 +108,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
         this.props.navigation.push("SettingsView");
     }
     didPressFindButton() {
-        this.props.navigation.push("FindGrudgeView");
+        this.props.navigation.push("GrudgeView", {});
     }
     private openLinkToUser(aoeWorldId: number) {
         const userLink = `https://aoe4world.com/players/${aoeWorldId}`;

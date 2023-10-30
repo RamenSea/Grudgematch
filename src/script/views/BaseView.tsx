@@ -133,6 +133,8 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
 
             const innerViewStyle: StyleProp<ViewStyle> = {
                 flex: 1,
+                marginLeft: "auto",
+                marginRight: "auto",
                 height: windowHeight,
                 width: webWidth,
             }

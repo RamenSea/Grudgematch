@@ -2,21 +2,68 @@ import {Pressable, View} from "react-native";
 import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
 import React from "react";
-import {Image, Card, Text, XStack, Spacer, YStack, Square} from "tamagui";
+import {Image, Card, Text, XStack, Spacer, YStack, Square, H4} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
+import {ThemedSpinner} from "../scaffolding/ThemedSpinner";
 
 
 export function UserCardInsides(
     {
         user,
+        emptyMessage,
     }: {
-        user: User,
+        user: User|null,
+        emptyMessage?: string,
     }) {
+
     const rankedRowHeight = 42;
     const iconSize = 28;
     const ratingLineHeight = 22;
     const profileImageSize = 64;
     const fontSize = 16;
+
+    if (user == null) {
+        if (emptyMessage) {
+            return (
+                <YStack
+                    height={profileImageSize}
+                    flex={1}
+                    alignItems={"center"}
+                >
+                    <Text
+                        marginTop={"auto"}
+                        marginBottom={"auto"}
+                        fontSize={20}
+                        fontWeight={"600"}
+                    >
+                        {emptyMessage}
+                    </Text>
+                </YStack>
+            )
+        }
+        return (
+            <YStack
+                height={profileImageSize}
+                flex={1}
+                alignItems={"center"}
+            >
+                <ThemedSpinner
+                    marginTop={"auto"}
+                    marginBottom={3}
+                />
+                <Text
+                    fontSize={20}
+                    fontWeight={"400"}
+                    marginTop={3}
+                    marginBottom={"auto"}
+                >
+                    Loading in the user
+                </Text>
+            </YStack>
+        )
+    }
+
+
     const qmRating = user.averageRecentQMRating(true);
 
     let quickMatchView: React.JSX.Element|undefined = undefined;
@@ -121,20 +168,31 @@ export function UserCardInsides(
 export function UserCard(
     {
         user,
-        onClick
+        onClick,
+        onClickEmpty,
+        emptyMessage,
     }: {
-        user: User,
+        user: User|null,
         onClick?: ((user: User) => void)
+        onClickEmpty?: (() => void)
+        emptyMessage?: string,
     }) {
 
-    if (onClick) {
+    if (onClick || onClickEmpty) {
         return (
             <SelectableCard
                 bordered
-                onPress={(e) => onClick(user)}
+                onPress={(e) => {
+                    if (user && onClick) {
+                        onClick(user)
+                    } else if (user == null && onClickEmpty) {
+                        onClickEmpty()
+                    }
+                }}
             >
                 <UserCardInsides
                     user={user}
+                    emptyMessage={emptyMessage}
                 />
             </SelectableCard>
         )
@@ -147,6 +205,7 @@ export function UserCard(
         >
             <UserCardInsides
                 user={user}
+                emptyMessage={emptyMessage}
             />
         </Card>
     );

@@ -8,7 +8,6 @@ import {UserOverviewView, UserOverviewViewProps} from "./UserOverviewView";
 import {SelectUserView, SelectUserViewProps} from "./SelectUserView";
 import {SettingsView} from "./SettingsView";
 import {GameListView, GameListViewProps} from "./GameListView";
-import {FindGrudgeView} from "./FindGrudgeView";
 import {GrudgeView, GrudgeViewProps} from "./GrudgeView";
 
 
@@ -24,7 +23,6 @@ export type RootRouteProps = {
     GameListView: GameListViewProps,
     SettingsView: undefined,
     GrudgeView: GrudgeViewProps,
-    FindGrudgeView: undefined,
 };
 
 /**
@@ -65,6 +63,7 @@ export function RootRoute({
                         AssignUserView: "assign",
                         SettingsView: "settings",
                         GameListView: "games",
+                        GrudgeView: "grudge",
                     },
                 },
                 getPathFromState: (state, options) => {
@@ -144,11 +143,6 @@ export function RootRoute({
                     name="SettingsView"
                     component={SettingsView}
                     options={{title: 'Settings'}}
-                />
-                <Stack.Screen
-                    name="FindGrudgeView"
-                    component={FindGrudgeView}
-                    options={{title: 'Find'}}
                 />
                 <Stack.Screen
                     name="GrudgeView"
