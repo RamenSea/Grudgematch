@@ -2,7 +2,7 @@
 // for reanimated: @tamagui/config/v2-reanimated
 // for react-native only: @tamagui/config/v2-native
 import { config } from '@tamagui/config/v2'
-import { createTamagui } from 'tamagui'
+import {createTamagui, createTokens} from 'tamagui'
 
 import { createThemeBuilder } from '@tamagui/theme-builder'
 
@@ -98,9 +98,28 @@ const themesBuilder = createThemeBuilder()
 
 export const themes = themesBuilder.build()
 
+const tokens = createTokens({
+    ...config.tokens,
+});
+
 const appConfig = createTamagui({
     ...config,
+    tokens: tokens,
     themes: themes,
+    media: {
+        xs: { maxWidth: 320 },
+        gtXs: { minWidth: 320 + 1 },
+        sm: { maxWidth: 580 },
+        gtSm: { minWidth: 580 + 1 },
+        md: { maxWidth: 767 },
+        gtMd: { minWidth: 767 + 1 },
+        lg: { maxWidth: 1024 },
+        gtLg: { minWidth: 1024 + 1 },
+        short: { maxHeight: 820 },
+        tall: { minHeight: 820 },
+        hoverNone: { hover: 'none' },
+        pointerCoarse: { pointer: 'coarse' },
+    }
 })
 
 export type AppConfig = typeof appConfig

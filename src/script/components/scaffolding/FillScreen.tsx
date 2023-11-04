@@ -1,6 +1,5 @@
 import {SafeAreaView, useWindowDimensions, ViewProps} from "react-native";
 import React from "react";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {isWeb} from "tamagui";
 
 export function FillScreen(props:ViewProps) {

@@ -8,6 +8,31 @@ import {User} from "../../models/User";
 import React, {ReactNode} from "react";
 
 
+function GetTimeDifferenceText(from: Date, to: Date): string {
+    const difference = Math.abs(to.getTime() - from.getTime());
+
+    if (difference <= 60 * 1000) {
+        return `${Math.round(difference / 1000)} seconds ago`
+    }
+    if (difference <= 60 * 60 * 1000) {
+        return `${Math.round(difference / (1000 * 60))} minutes ago`
+    }
+    if (difference <= 24 * 60 * 60 * 1000) {
+        return `${Math.round(difference / (1000 * 60 * 60))} hours ago`
+    }
+    if (difference <= 24 * 60 * 60 * 1000) {
+        return `${Math.round(difference / (1000 * 60 * 60))} hours ago`
+    }
+    if (to.getFullYear() != from.getFullYear()) {
+        return `${to.getFullYear() - from.getFullYear()} years ago`
+    }
+    if (to.getMonth() != from.getMonth()) {
+        return `${to.getMonth() - from.getMonth()} months ago`
+    }
+
+    return `${to.getDay() - from.getDay()} days ago`
+}
+
 export function GameCard({
     user,
                              game,
@@ -39,6 +64,11 @@ export function GameCard({
 
     const playerList: ReactNode[] = []
     const maxTeam = Math.max(teamOne.players.length, teamTwo.players.length);
+
+    let timeText = "Still fighting..."
+    if (game.isPlaying == false) {
+        timeText = GetTimeDifferenceText(game.endDate, new Date());
+    }
     for (let i = 0; i < maxTeam; i++) {
         let playerOne: Player|undefined = undefined;
         let playerTwo: Player|undefined = undefined;
@@ -50,7 +80,7 @@ export function GameCard({
             playerTwo = teamTwo.players[i];
         }
         playerList.push((
-            <GameCardPlayerListItem
+            <GameCardPlayerRow
                 isfirst={i == 0}
                 gameInProgress={game.isPlaying}
                 playerOne={playerOne}
@@ -60,8 +90,12 @@ export function GameCard({
     }
     const body = (
         <>
-            <Text>
-                Game is: {game.isPlaying ? "still going": "complete"}
+            <Text
+                marginBottom={4}
+                fontSize={14}
+                color={"$color9"}
+            >
+                {timeText}
             </Text>
             {playerList}
         </>
@@ -84,7 +118,52 @@ export function GameCard({
 }
 
 
-export function GameCardPlayerListItem({
+function GameCardPlayerItem({
+                                player,
+                                           isfirst,
+                                isLeft,
+
+                                   }: {
+
+    player: Player,
+    isLeft: boolean,
+    isfirst: boolean,
+}) {
+    return (
+        <>
+            <CivilizationFlag width={24} height={24} civilization={player.civilization}/>
+            <Text
+                marginLeft={isLeft ? 8 : 0}
+                marginRight={isLeft ? 0 : 8}
+                theme={player.didWin ? undefined : "red"}
+                color={player.didWin ? "$color" : "$color9"}
+                $md={{
+                    fontSize: 16
+                }}
+                maxHeight={20}
+                textOverflow={"ellipsis"}
+                overflow={"hidden"}
+                whiteSpace={"nowrap"}
+            >
+                {player.username}
+            </Text>
+            <Spacer flex={1}/>
+            <Text
+                color={"$color9"}
+                fontSize={12}
+                marginLeft={4}
+                marginRight={4}
+                $gtMd={{
+                    marginLeft: 16,
+                    marginRight: 16,
+                }}
+            >
+                {player.rating}
+            </Text>
+        </>
+    )
+}
+export function GameCardPlayerRow({
                                             playerOne,
                                             playerTwo,
                                            gameInProgress,
@@ -109,30 +188,11 @@ export function GameCardPlayerListItem({
                 alignItems={"center"}
             >
                 { playerOne &&
-                    <>
-                        <CivilizationFlag width={24} height={24} civilization={playerOne.civilization}/>
-                        <Text
-                            marginLeft={8}
-                            theme={playerOne.didWin ? undefined : "red"}
-                            color={playerOne.didWin ? "$color" : "$color9"}
-                            $md={{
-                                fontSize: 16
-                            }}
-                            maxHeight={20}
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"nowrap"}
-                        >
-                            {playerOne.username}
-                        </Text>
-                        <Spacer flex={1}/>
-                        <Text
-                            color={"$color8"}
-                            fontSize={12}
-                        >
-                            {playerOne.rating}
-                        </Text>
-                    </>
+                    <GameCardPlayerItem
+                        player={playerOne}
+                        isfirst={isfirst}
+                        isLeft={true}
+                    />
                 }
             </XStack>
             <XStack
@@ -155,82 +215,14 @@ export function GameCardPlayerListItem({
             >
                 { playerTwo &&
                     <>
-                        <CivilizationFlag width={24} height={24} civilization={playerTwo.civilization}/>
-                        <Text
-                            marginRight={8}
-                            theme={playerTwo.didWin ? undefined : "red"}
-                            color={playerTwo.didWin ? "$color" : "$color9"}
-                            textAlign={"right"}
-                            $md={{
-                                fontSize: 16
-                            }}
-                            maxHeight={20}
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"nowrap"}
-                        >
-                            {playerTwo.username}
-                        </Text>
-                        <Spacer flex={1}/>
-                        <Text
-                            color={"$color8"}
-                            fontSize={12}
-                        >
-                            {playerTwo.rating}
-                        </Text>
+                        <GameCardPlayerItem
+                            player={playerTwo}
+                            isfirst={isfirst}
+                            isLeft={false}
+                        />
                     </>
                 }
             </XStack>
         </XStack>
-    )
-}
-export function GameCardPlayerList({
-    players,
-    gameInProgress,
-    didWin,
-    isLeftAlign,
-                                   }:{
-    players: Player[],
-    gameInProgress: boolean,
-    didWin: boolean,
-    isLeftAlign: boolean,
-}) {
-
-    const playerList = players.map(player => {
-        return (
-            <XStack
-                key={player.aoe4WorldId}
-                alignItems={"center"}
-                flexDirection={isLeftAlign ? "row" : "row-reverse"}
-            >
-                <CivilizationFlag width={24} height={24} civilization={player.civilization}/>
-                <Text
-                    marginLeft={isLeftAlign ? 8 : 0}
-                    marginRight={isLeftAlign ? 0 : 8}
-                    theme={didWin ? undefined : "red"}
-                    color={didWin ? "$color" : "$color9"}
-                    $md={{
-                        maxWidth: 130,
-                        maxHeight: 19,
-                        overflow: "hidden"
-                    }}
-                >
-                    {player.username}
-                </Text>
-                <Text
-                    marginLeft={isLeftAlign ? 8 : 0}
-                    marginRight={isLeftAlign ? 0 : 8}
-                    color={"$color8"}
-                    fontSize={12}
-                >
-                    {player.rating}
-                </Text>
-            </XStack>
-        )
-    });
-    return (
-        <YStack>
-            {playerList}
-        </YStack>
     )
 }

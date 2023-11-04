@@ -81,6 +81,10 @@ export class Game {
     readonly id: number
     @jsonMember({name: "ongoing"})
     readonly isPlaying: boolean
+    @jsonMember({name: "duration"})
+    readonly duration: number
+    @jsonMember(Date,{name: "started_at"})
+    readonly startedAt: Date
 
     @jsonArrayMember(Player, {name: "teams", deserializer: TeamDeserializer})
     readonly players: Array<Player>
@@ -88,10 +92,13 @@ export class Game {
 
     private cachedTeamValue: Team[]|null = null;
     private cachedWinningTeam: number = -10;
+    private cachedEndDate: Date| null = null;
 
-    constructor(id: number, isPlaying: boolean, players: Array<Player>) {
+    constructor(id: number, isPlaying: boolean, duration: number, startedAt: Date, players: Array<Player>) {
         this.id = id;
         this.isPlaying = isPlaying;
+        this.duration = duration;
+        this.startedAt = startedAt;
         this.players = players;
     }
 
@@ -123,6 +130,14 @@ export class Game {
         }
         this.cachedTeamValue = t;
         return t;
+    }
+    get endDate(): Date {
+        if (this.isPlaying || this.duration == undefined) {
+            return this.startedAt
+        }
+
+        this.cachedEndDate = new Date(this.startedAt.getTime() + this.duration);
+        return this.cachedEndDate;
     }
     getPlayerById(aoe4Id: number): Player|null {
         for (let i = 0; i < this.players.length; i++) {

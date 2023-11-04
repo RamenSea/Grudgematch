@@ -20,7 +20,7 @@ export function SelectableCard(props: SelectableCardProps) {
             <StandardCard
                 animation={"quick"}
                 elevation={5}
-                hoverStyle={{ scale: 1.03, elevation: 25 }}
+                hoverStyle={{ scale: 1.03, elevation: 25, backgroundColor: "$color6" }}
                 pressStyle={{ scale: 0.97, elevation: 15 }}
                 borderWidth={isSelected ? 2 : undefined}
                 borderColor={isSelected ? "$color10" : undefined}

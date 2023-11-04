@@ -1,14 +1,10 @@
-import {Game} from "../../models/Game";
-import {Pressable, View} from "react-native";
+import {Pressable} from "react-native";
 import {MatchUp} from "../../models/MatchUp";
-import {UserCard, UserCardInsides} from "../user/UserCard";
+import {UserCardInsides} from "../user/UserCard";
 import {User} from "../../models/User";
-import {GameCard} from "./GameCard";
 import React from "react";
-import {Button} from "../scaffolding/Button";
-import {H3, Paragraph, Spacer, Text, YStack} from "tamagui";
+import {Paragraph, Spacer, Text, YStack} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
-import {StandardCard} from "../scaffolding/StandardCard";
 
 export function MatchUpInsides({
                                 matchUp,
@@ -108,6 +104,7 @@ export function MatchUpCard({matchUp,
         <SelectableCard
             padding={0}
             overflow={"hidden"}
+            hoverStyle={{ backgroundColor: "$color2" }}
         >
             <Pressable
                 onPress={() => onUserClick(matchUp.opponent)}
