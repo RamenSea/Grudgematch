@@ -437,6 +437,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         }}
                     >
                         <GameList
+                            user={this.userService.user}
                             games={this.state.games}
                             onRequestNextPage={() => this.requestNextGamePage()}
                             onSelect={game => this.didPressGameCard(game)}
@@ -454,6 +455,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         }}
                     >
                         <GameList
+                            user={this.userService.user}
                             games={this.state.games}
                             onRequestNextPage={() => this.requestNextGamePage()}
                             onSelect={game => this.didPressGameCard(game)}

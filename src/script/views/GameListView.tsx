@@ -87,6 +87,7 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
                     title={"Games"}
                 />
                 <GameList
+                    user={this.userService.user}
                     games={this.state.games}
                     onRequestNextPage={() => this.requestNextBatch()}
                     onSelect={game => this.openLinkToGame(game)}/>

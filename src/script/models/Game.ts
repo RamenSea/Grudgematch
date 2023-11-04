@@ -34,14 +34,20 @@ export class Player {
     readonly civilization: Civilization
     @jsonMember(String, {name: "result", deserializer: DidWinDeserializer})
     readonly didWin: boolean
+    @jsonMember
+    readonly rating: number
+    @jsonMember({name: "rating_diff"})
+    readonly ratingDiff: number
 
     teamId: number = -1;
 
-    constructor(aoe4WorldId: number, username: string, civilization: Civilization, didWin: boolean) {
+    constructor(aoe4WorldId: number, username: string, civilization: Civilization, didWin: boolean, rating: number, ratingDiff: number) {
         this.aoe4WorldId = aoe4WorldId;
         this.username = username;
         this.civilization = civilization;
         this.didWin = didWin;
+        this.rating = rating;
+        this.ratingDiff = ratingDiff;
     }
 }
 
