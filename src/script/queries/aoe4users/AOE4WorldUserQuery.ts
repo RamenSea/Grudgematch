@@ -37,6 +37,7 @@ export class AOE4WorldUserQuery {
         if (this.isLoading || this.isFinished) {
             return this.currentPromise;
         }
+        console.error("asdf");
 
         this.isLoading = true;
         let resolver!: (() => void);

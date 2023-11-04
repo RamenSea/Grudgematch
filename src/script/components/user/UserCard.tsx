@@ -178,10 +178,13 @@ export function UserCard(
         emptyMessage?: string,
     }) {
 
+    const minWidth = 300
+
     if (onClick || onClickEmpty) {
         return (
             <SelectableCard
                 bordered
+                minWidth={minWidth}
                 onPress={(e) => {
                     if (user && onClick) {
                         onClick(user)
@@ -201,6 +204,7 @@ export function UserCard(
         <Card
             padded
             bordered
+            minWidth={minWidth}
             elevation={30}
         >
             <UserCardInsides

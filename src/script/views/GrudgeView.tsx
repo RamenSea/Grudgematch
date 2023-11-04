@@ -5,10 +5,9 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
-import {Card, H2, H3, H4, ScrollView, Square, Text, YStack} from "tamagui";
+import {Card, H2, H3, H4, ScrollView, Square, Text, XStack, YStack} from "tamagui";
 import {WebHeader} from "../components/scaffolding/WebHeader";
 import {User} from "../models/User";
-import {SelectableCard} from "../components/scaffolding/SelectableCard";
 import {UserCard} from "../components/user/UserCard";
 import {Button} from "../components/scaffolding/Button";
 import {SelectUserDialog} from "../components/dialogs/SelectUserDialog";
@@ -16,11 +15,11 @@ import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
 import {Subscription} from "@reactivex/rxjs/dist/package";
 import {Game} from "../models/Game";
 import {MatchUp} from "../models/MatchUp";
+import {Dimensions, Linking, View} from "react-native";
 import {LoadingCover} from "../components/scaffolding/LoadingCover";
-import {Linking, View} from "react-native";
 import {GameList} from "../components/game/GameList";
-import {MatchUpInsides} from "../components/game/MatchUpCard";
 import {StandardCard} from "../components/scaffolding/StandardCard";
+import {MatchUpInsides} from "../components/game/MatchUpCard";
 
 export type GrudgeViewProps = {
     userOneId?: number,
@@ -70,6 +69,8 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
     private currentUserTwoTimeOutUsername: string = "";
     private userTwoQuerySubscription: Subscription|null = null;
 
+    private gameSubscription: Subscription|null = null;
+
     constructor(props: MainAppViewProps<"GrudgeView">, context: {}) {
         super(props, context);
         let userOneId: number|null = this.props.route?.params?.userOneId ?? null;
@@ -84,13 +85,27 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             userTwoId,
         );
         this.routeToFetchStartData();
+        this.setParams();
+    }
+
+    protected webMaxHeight(windowHeight: number): number {
+        return windowHeight;
+    }
+
+    protected webWidth(windowWidth: number): number {
+        return Math.min(windowWidth, 768 - 1);
     }
     onWillAppear(firstAppear: boolean) {
         super.onWillAppear(firstAppear);
         this.checkQuery(null, true);
         this.checkQuery(null, false);
+        this.checkGameQuery(true)
         this.handleQuerySubscription(true, true);
         this.handleQuerySubscription(true, false);
+
+        if (firstAppear) {
+            this.setState({games: this.state.matchUp?.games.slice() ?? this.state.games});
+        }
     }
     onWillDisappear() {
         super.onWillDisappear();
@@ -105,6 +120,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         }
         this.handleQuerySubscription(false, true);
         this.handleQuerySubscription(false, false);
+        this.checkGameQuery(false)
     }
     async routeToFetchStartData() {
         if (this.state.userOneId && this.state.userTwoId) {
@@ -138,7 +154,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
      */
     private checkQuery(againstUsername: string|null, userOne: boolean) {
         if (userOne) {
-            const shouldForce = this.enteredUserOneTextTimeout == null && this.findUserOneQuery?.username != this.currentUserOneTimeOutUsername;
+            const shouldForce = this.enteredUserOneTextTimeout == null && this.findUserOneQuery?.username != this.currentUserOneTimeOutUsername && this.currentUserOneTimeOutUsername.length > 3;
             if ((againstUsername ?? this.state.userOneSearchingUsername) == this.currentUserOneTimeOutUsername && !shouldForce) {
                 return;
             }
@@ -150,7 +166,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             this.currentUserOneTimeOutUsername = this.state.userOneSearchingUsername;
             this.enteredUserOneTextTimeout = setTimeout(() => this.shouldQueryForUsers(userOne), 500);
         } else {
-            const shouldForce = this.enteredUserTwoTextTimeout == null && this.findUserTwoQuery?.username != this.currentUserTwoTimeOutUsername;
+            const shouldForce = this.enteredUserTwoTextTimeout == null && this.findUserTwoQuery?.username != this.currentUserTwoTimeOutUsername && this.currentUserOneTimeOutUsername.length > 3;
             if ((againstUsername ?? this.state.userTwoSearchingUsername) == this.currentUserTwoTimeOutUsername && !shouldForce) {
                 return;
             }
@@ -177,8 +193,20 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         } else {
             await this.asyncSetState({userTwoFound: user, userTwoId: user.aoe4WorldId, userTwoDialogIsOpen: false})
         }
+        this.setParams();
         if (this.state.userOneFound && this.state.userTwoFound) {
             this.fetchMatchUpData(true);
+        }
+    }
+    private setParams() {
+        const setUserIdOne = this.state.userOneId != null && this.state.userOneId != this.userService.user.aoe4WorldId;
+        const setUserIdTwo = this.state.userTwoId != null;
+        if (setUserIdOne && setUserIdTwo) {
+            this.props.navigation.setParams({userOneId: this.state.userOneId!, userTwoId: this.state.userTwoId!});
+        } else if (setUserIdOne) {
+            this.props.navigation.setParams({userOneId: this.state.userOneId!, userTwoId:undefined});
+        } else if (setUserIdTwo) {
+            this.props.navigation.setParams({userOneId: undefined, userTwoId: this.state.userTwoId!});
         }
     }
     requestNextUserPage(userOne: boolean) {
@@ -217,12 +245,6 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             this.findUserTwoQuery.next();
         }
     }
-
-
-
-    /*
-        Grudge finding section
-     */
     private handleQuerySubscription(shouldSubscribe: boolean, userOne: boolean) {
         if (userOne) {
             if (this.userOneQuerySubscription) {
@@ -244,6 +266,10 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             }
         }
     }
+
+    /*
+        Grudge finding section
+     */
     async fetchMatchUpData(setLoadingState: boolean) {
         if (this.state.userOneId == null || this.state.userTwoId == null) {
             return;
@@ -257,13 +283,24 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             return;
         }
 
-        this.setState({
+        await this.asyncSetState({
             matchUp: matchUp,
             games: matchUp.games.slice(),
             userOneFound: matchUp.user,
             userTwoFound: matchUp.opponent,
             loadingMatchUp: false,
         });
+        this.checkGameQuery(true);
+    }
+    checkGameQuery(shouldSubscribe: boolean) {
+        if (this.gameSubscription != null) {
+            this.gameSubscription.unsubscribe()
+            this.gameSubscription = null;
+        }
+
+        if (this.state.matchUp?.query != null) {
+            this.gameSubscription = this.state.matchUp.query.onNextBatch.subscribe(value => this.onNextBatchOfGames())
+        }
     }
     didPressGameCard(game: Game) {
         const link = `https://aoe4world.com/players/${this.props.route.params.userTwoId}/games/${game.id}`;
@@ -276,10 +313,13 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
     requestNextGamePage() {
         this.state.matchUp?.query.next()
     }
+    onNextBatchOfGames() {
+        this.setState({games: this.state.matchUp?.games.slice() ?? this.state.games});
+    }
     renderView(): React.JSX.Element {
         let userCardSection: ReactNode;
         let grudgeSection: ReactNode| undefined = undefined;
-
+        let wrapInScrollView = false;
         if (this.mobileBreakPoint()) {
             userCardSection = (
                 <>
@@ -333,9 +373,139 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         } else {
             userCardSection = (
                 <>
-                    <Text>TODO</Text>
+                    <XStack
+                        paddingLeft={16}
+                        paddingRight={16}
+                    >
+                        <UserCard
+                            user={this.state.userOneFound}
+                            emptyMessage={this.state.userOneId == null ? "Tap to set the first user": undefined}
+                            onClick={ user => this.didPressUserCard(true)}
+                            onClickEmpty={ () => this.didPressUserCard(true)}
+                        />
+                        <H2
+                            marginTop={24}
+                            marginRight={"auto"}
+                            marginBottom={24}
+                            marginLeft={"auto"}
+                        >
+                            VS
+                        </H2>
+                        <UserCard
+                            user={this.state.userTwoFound}
+                            emptyMessage={this.state.userTwoId == null ? "Tap to set the second user": undefined}
+                            onClick={ user => this.didPressUserCard(false)}
+                            onClickEmpty={ () => this.didPressUserCard(false)}
+                        />
+                        <SelectUserDialog
+                            isOpen={this.state.userOneDialogIsOpen}
+                            setIsOpen={isOpen => this.setState({userOneDialogIsOpen: isOpen})}
+                            username={this.state.userOneSearchingUsername}
+                            onUsernameUpdated={s => this.enteredUsernameDidChange(s, true)}
+                            users={this.state.userOneSearchingUsers}
+                            onRequestNextPage={() => this.requestNextUserPage(true)}
+                            onSelectUser={user => this.didSelectUser(user, true)}
+                            isLoading={this.state.userOneDialogIsLoading}
+                        />
+                        <SelectUserDialog
+                            isOpen={this.state.userTwoDialogIsOpen}
+                            setIsOpen={isOpen => this.setState({userTwoDialogIsOpen: isOpen})}
+                            username={this.state.userTwoSearchingUsername}
+                            onUsernameUpdated={s => this.enteredUsernameDidChange(s, false)}
+                            users={this.state.userTwoSearchingUsers}
+                            onRequestNextPage={() => this.requestNextUserPage(false)}
+                            onSelectUser={user => this.didSelectUser(user, false)}
+                            isLoading={this.state.userTwoDialogIsLoading}
+                        />
+                    </XStack>
                 </>
             )
+        }
+
+        if (this.state.matchUp) {
+            const heightOfTopSection = 158
+            const height = Dimensions.get('window').height;
+            let gameList: ReactNode;
+            if (this.mobileBreakPoint()) {
+                wrapInScrollView = true
+                gameList = (
+                    <YStack
+                        style={{
+                            width:"100%",
+                            maxHeight: height - heightOfTopSection,
+                            paddingBottom:8,
+                        }}
+                    >
+                        <GameList
+                            games={this.state.games}
+                            onRequestNextPage={() => this.requestNextGamePage()}
+                            onSelect={game => this.didPressGameCard(game)}
+                            nestedScrollEnabled={true}
+                        />
+                    </YStack>
+                )
+            } else {
+                gameList = (
+                    <YStack
+                        style={{
+                            flex: 1,
+                            width:"100%",
+                            paddingBottom:8,
+                        }}
+                    >
+                        <GameList
+                            games={this.state.games}
+                            onRequestNextPage={() => this.requestNextGamePage()}
+                            onSelect={game => this.didPressGameCard(game)}
+                            nestedScrollEnabled={true}
+                        />
+                    </YStack>
+                );
+            }
+            grudgeSection = (
+                <>
+                    <StandardCard
+                        marginTop={24}
+                        marginRight={16}
+                        marginLeft={16}
+                    >
+                        <MatchUpInsides
+                            matchUp={this.state.matchUp}
+                            showTapToSeeMore={false}
+                        />
+                    </StandardCard>
+                    <H3
+                        marginTop={16}
+                        marginRight={"auto"}
+                        marginBottom={8}
+                        marginLeft={"auto"}
+                    >
+                        - Games -
+                    </H3>
+                    {gameList}
+                </>
+            );
+        } else if (this.state.loadingMatchUp) {
+            grudgeSection = (
+                <LoadingCover
+                    message={"Loading in this momentous grudge!"}
+                    height={200}
+                />
+            );
+        }
+        if (wrapInScrollView) {
+            return (
+                <ScrollView
+                    overflow={"scroll"}
+                    flex={1}
+                >
+                    <WebHeader
+                        title={"Grudge"}
+                    />
+                    {userCardSection}
+                    {grudgeSection}
+                </ScrollView>
+            );
         }
         return (
             <YStack

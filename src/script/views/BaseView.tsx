@@ -66,6 +66,9 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
     protected webMaxHeight(windowHeight: number): number {
         return -1;
     }
+    protected webWidth(windowWidth: number): number {
+        return Math.min(windowWidth, 600);
+    }
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener("focus", () => {
             this.onWillAppear(this.firstAppear);
@@ -111,7 +114,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
             return true;
         }
         const windowWidth = Dimensions.get('window').width;
-        return windowWidth <= 600;
+        return windowWidth <= 768 - 1;
     }
     /**
      *
@@ -129,7 +132,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
             const windowHeight = Dimensions.get('window').height;
             const windowWidth = Dimensions.get('window').width;
             const webMaxHeight = this.webMaxHeight(windowHeight);
-            const webWidth = Math.min(windowWidth, 600);
+            const webWidth= this.webWidth(windowWidth);
 
             const innerViewStyle: StyleProp<ViewStyle> = {
                 flex: 1,
