@@ -21,7 +21,7 @@ import {WebHeader} from "../components/scaffolding/WebHeader";
 import {Settings} from "@tamagui/lucide-icons";
 
 export type UserOverviewViewProps = {
-    username?: string
+    username?: string|undefined
 }
 class UserOverviewViewState {
     constructor(
@@ -247,7 +247,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                         <Button
                             marginTop={"auto"}
                             marginBottom={"auto"}
-                            title={"Find"}
+                            title={"Grudge"}
                             onPress={event => this.didPressFindButton()}
                         />
                     </XStack>
