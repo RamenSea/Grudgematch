@@ -1,4 +1,4 @@
-import {Pressable, View} from "react-native";
+import {LayoutChangeEvent, Pressable, View} from "react-native";
 import {Rank, User} from "../../models/User";
 import {RankIcon} from "../game/RankIcon";
 import React from "react";
@@ -171,20 +171,25 @@ export function UserCard(
         onClick,
         onClickEmpty,
         emptyMessage,
+        onLayout,
     }: {
         user: User|null,
         onClick?: ((user: User) => void)
         onClickEmpty?: (() => void)
         emptyMessage?: string,
+        onLayout?: (layout: LayoutChangeEvent) => void,
     }) {
 
     const minWidth = 300
+    const minHeight = 92
 
     if (onClick || onClickEmpty) {
         return (
             <SelectableCard
+                onLayout={onLayout}
                 bordered
                 minWidth={minWidth}
+                minHeight={minHeight}
                 onPress={(e) => {
                     if (user && onClick) {
                         onClick(user)
@@ -202,6 +207,7 @@ export function UserCard(
     }
     return (
         <Card
+            onLayout={onLayout}
             padded
             bordered
             minWidth={minWidth}

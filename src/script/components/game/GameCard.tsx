@@ -81,6 +81,7 @@ export function GameCard({
         }
         playerList.push((
             <GameCardPlayerRow
+                key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
                 isfirst={i == 0}
                 gameInProgress={game.isPlaying}
                 playerOne={playerOne}
@@ -133,8 +134,9 @@ function GameCardPlayerItem({
         <>
             <CivilizationFlag width={24} height={24} civilization={player.civilization}/>
             <Text
-                marginLeft={isLeft ? 8 : 0}
-                marginRight={isLeft ? 0 : 8}
+                flex={1}
+                marginLeft={8}
+                marginRight={8}
                 theme={player.didWin ? undefined : "red"}
                 color={player.didWin ? "$color" : "$color9"}
                 $md={{
@@ -144,18 +146,18 @@ function GameCardPlayerItem({
                 textOverflow={"ellipsis"}
                 overflow={"hidden"}
                 whiteSpace={"nowrap"}
+                textAlign={isLeft ? "left" : "right"}
             >
                 {player.username}
             </Text>
-            <Spacer flex={1}/>
             <Text
                 color={"$color9"}
                 fontSize={12}
-                marginLeft={4}
-                marginRight={4}
+                marginRight={isLeft ? 6 : "auto"}
+                marginLeft={isLeft ? "auto" : 6}
                 $gtMd={{
-                    marginLeft: 16,
-                    marginRight: 16,
+                    marginLeft: isLeft ? 16 : "auto",
+                    marginRight: isLeft ? "auto" : 16,
                 }}
             >
                 {player.rating}

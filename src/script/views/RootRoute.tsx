@@ -54,7 +54,13 @@ export function RootRoute({
             theme={scheme === 'dark' ? DarkTheme : DefaultTheme}
             linking={{
                 enabled: true,
-                prefixes: [""],
+                prefixes: [
+                    "http://localhost:3000",
+                    'https://grudgematch.games',
+                    'http://grudgematch.games',
+                    'https://www.grudgematch.games',
+                    'http://www.grudgematch.games',
+                ],
                 config: {
                     screens: {
                         UserOverviewView: "",

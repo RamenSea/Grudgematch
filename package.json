@@ -13,6 +13,7 @@
     "upgrade": "yarn up \"*\" \"@*/*\";yarn add;"
   },
   "dependencies": {
+    "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-community/cli-doctor": "^11.3.9",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.16",

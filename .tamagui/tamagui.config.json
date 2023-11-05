@@ -24084,38 +24084,41 @@
       "useAnimations": "Function"
     },
     "media": {
-      "xl": {
-        "maxWidth": 1650
-      },
-      "lg": {
-        "maxWidth": 1280
-      },
-      "md": {
-        "maxWidth": 1020
-      },
-      "sm": {
-        "maxWidth": 800
-      },
       "xs": {
-        "maxWidth": 660
-      },
-      "xxs": {
-        "maxWidth": 390
+        "maxWidth": 320
       },
       "gtXs": {
-        "minWidth": 661
+        "minWidth": 321
+      },
+      "sm": {
+        "maxWidth": 580
       },
       "gtSm": {
-        "minWidth": 801
+        "minWidth": 581
+      },
+      "md": {
+        "maxWidth": 767
       },
       "gtMd": {
-        "minWidth": 1021
+        "minWidth": 768
+      },
+      "lg": {
+        "maxWidth": 1024
       },
       "gtLg": {
-        "minWidth": 1281
+        "minWidth": 1025
       },
-      "gtXl": {
-        "minWidth": 1651
+      "short": {
+        "maxHeight": 820
+      },
+      "tall": {
+        "minHeight": 820
+      },
+      "hoverNone": {
+        "hover": "none"
+      },
+      "pointerCoarse": {
+        "pointer": "coarse"
       }
     },
     "defaultFont": "$body",

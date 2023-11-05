@@ -20,7 +20,7 @@ export function GameList({
     return (
         <FlatList
             style={{
-                overflow: "scroll"
+                overflow: "scroll",
             }}
             nestedScrollEnabled={nestedScrollEnabled}
             showsVerticalScrollIndicator={false}

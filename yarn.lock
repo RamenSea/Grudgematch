@@ -3401,6 +3401,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-clipboard/clipboard@npm:^1.12.1":
+  version: 1.12.1
+  resolution: "@react-native-clipboard/clipboard@npm:1.12.1"
+  peerDependencies:
+    react: ">=16.0"
+    react-native: ">=0.57.0"
+  checksum: e9d8922d6a41f47db5def3988c6d0622346bf2ad022e90b37a31591c6a21bae2a15a155872fd0d112a83ff0e3fe45cc88d2c352cdfc9c53fdf07de18bed5ce90
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:11.3.7":
   version: 11.3.7
   resolution: "@react-native-community/cli-clean@npm:11.3.7"
@@ -11286,6 +11296,7 @@ __metadata:
     "@babel/preset-react": ^7.22.15
     "@babel/preset-typescript": ^7.23.2
     "@babel/runtime": ^7.23.2
+    "@react-native-clipboard/clipboard": ^1.12.1
     "@react-native-community/cli-doctor": ^11.3.9
     "@react-native/eslint-config": ^0.74.0
     "@react-native/metro-config": ^0.74.0

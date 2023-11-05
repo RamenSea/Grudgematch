@@ -5,7 +5,7 @@ import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
 import {MainAppViewProps} from "./RootRoute";
 import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
-import {Card, H2, H3, H4, ScrollView, Square, Text, XStack, YStack} from "tamagui";
+import {H2, H3, isWeb, Popover, Spacer, Text, XStack, YStack} from "tamagui";
 import {WebHeader} from "../components/scaffolding/WebHeader";
 import {User} from "../models/User";
 import {UserCard} from "../components/user/UserCard";
@@ -15,11 +15,13 @@ import {AOE4WorldUserQuery} from "../queries/aoe4users/AOE4WorldUserQuery";
 import {Subscription} from "@reactivex/rxjs/dist/package";
 import {Game} from "../models/Game";
 import {MatchUp} from "../models/MatchUp";
-import {Dimensions, Linking, View} from "react-native";
+import { Dimensions, LayoutChangeEvent, Linking, Pressable, Share, View} from "react-native";
 import {LoadingCover} from "../components/scaffolding/LoadingCover";
 import {GameList} from "../components/game/GameList";
 import {StandardCard} from "../components/scaffolding/StandardCard";
 import {MatchUpInsides} from "../components/game/MatchUpCard";
+import {ChevronsDown, ChevronsUp, Info} from "@tamagui/lucide-icons";
+import Clipboard from "@react-native-clipboard/clipboard";
 
 export type GrudgeViewProps = {
     userOneId?: number,
@@ -36,6 +38,8 @@ class GrudgeViewState {
         //once two users have been set
         public matchUp: MatchUp|null = null,
         public games: Game[] = [],
+        public gameSectionIsExpanded: boolean = false,
+        public heightOfTopSection: number = 300,
 
         public userOneFound: User|null = null,
         public userOneSearchingUsername: string = "",
@@ -292,13 +296,31 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         });
         this.checkGameQuery(true);
     }
+    onBottomUserCardDidLayout(layout: LayoutChangeEvent) {
+        const bottom = Math.round(layout.nativeEvent.layout.y + layout.nativeEvent.layout.height);
+        if (this.state.heightOfTopSection != bottom) {
+            this.setState({heightOfTopSection: bottom});
+        }
+    }
+    gameSectionExpandBy(): number {
+        const height = Dimensions.get('window').height;
+        if (isWeb == false) {
+            return height - this.state.heightOfTopSection;
+        }
+        const width = Dimensions.get('window').width;
+        if (width <= 757) {
+            return height;
+        }
+        return height - this.state.heightOfTopSection;
+        // return height;
+    }
     checkGameQuery(shouldSubscribe: boolean) {
         if (this.gameSubscription != null) {
             this.gameSubscription.unsubscribe()
             this.gameSubscription = null;
         }
 
-        if (this.state.matchUp?.query != null) {
+        if (shouldSubscribe && this.state.matchUp?.query != null) {
             this.gameSubscription = this.state.matchUp.query.onNextBatch.subscribe(value => this.onNextBatchOfGames())
         }
     }
@@ -316,18 +338,36 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
     onNextBatchOfGames() {
         this.setState({games: this.state.matchUp?.games.slice() ?? this.state.games});
     }
+    didPressShare(againstMe: boolean) {
+        const baseUrl = "https://grudgematch.games/grudge"
+        let searchTerms = ""
+        if (againstMe) {
+            if (this.userService.user.isNull()) {
+                this.props.navigation.navigate("SetUpView");
+                return;
+            }
+            searchTerms = `?userTwoId=${this.userService.user.aoe4WorldId}`;
+        } else {
+            searchTerms = `?userOneId=${this.state.userOneId}&userTwoId=${this.state.userTwoId}`;
+        }
+        const resolvedUrl = baseUrl + searchTerms;
+        if (isWeb) {
+            Clipboard.setString(resolvedUrl);
+        } else {
+            Share.share({
+                url: resolvedUrl,
+            });
+        }
+    }
     renderView(): React.JSX.Element {
         let userCardSection: ReactNode;
         let grudgeSection: ReactNode| undefined = undefined;
-        let wrapInScrollView = false;
         if (this.mobileBreakPoint()) {
             userCardSection = (
                 <>
-                    <H4
-                        padding={16}
-                    >
-                        Match up:
-                    </H4>
+                    <Spacer
+                        height={8}
+                    />
                     <UserCard
                         user={this.state.userOneFound}
                         emptyMessage={this.state.userOneId == null ? "Tap to set the first user": undefined}
@@ -343,6 +383,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         VS
                     </H2>
                     <UserCard
+                        onLayout={layout => this.onBottomUserCardDidLayout(layout)}
                         user={this.state.userTwoFound}
                         emptyMessage={this.state.userTwoId == null ? "Tap to set the second user": undefined}
                         onClick={ user => this.didPressUserCard(false)}
@@ -423,19 +464,37 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         }
 
         if (this.state.matchUp) {
-            const heightOfTopSection = 158
-            const height = Dimensions.get('window').height;
             let gameList: ReactNode;
-            if (this.mobileBreakPoint()) {
-                wrapInScrollView = true
+            if (this.mobileBreakPoint() && isWeb == false) {
+                const Chevron = this.state.gameSectionIsExpanded ? ChevronsUp : ChevronsDown;
                 gameList = (
                     <YStack
                         style={{
-                            width:"100%",
-                            maxHeight: height - heightOfTopSection,
-                            paddingBottom:8,
+                            width: "100%",
+                            height: this.gameSectionExpandBy(),
+                            paddingBottom: 8,
                         }}
                     >
+                        <Pressable
+                            onPress={event => this.setState({gameSectionIsExpanded: !this.state.gameSectionIsExpanded})}
+                        >
+                            <XStack
+                                marginTop={16}
+                                marginBottom={8}
+                                alignItems={"center"}
+                            >
+                                <Spacer flex={1}/>
+                                <Chevron width={24} height={24}/>
+                                <H3
+                                    marginRight={16}
+                                    marginLeft={16}
+                                >
+                                    Games
+                                </H3>
+                                <Chevron width={24} height={24}/>
+                                <Spacer flex={1}/>
+                            </XStack>
+                        </Pressable>
                         <GameList
                             user={this.userService.user}
                             games={this.state.games}
@@ -452,8 +511,21 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             flex: 1,
                             width:"100%",
                             paddingBottom:8,
+                            height: this.gameSectionExpandBy(),
+                        }}
+                        $md={{
+                            height: this.gameSectionExpandBy(),
                         }}
                     >
+
+                        <H3
+                            marginTop={16}
+                            marginRight={"auto"}
+                            marginBottom={8}
+                            marginLeft={"auto"}
+                        >
+                            - Games -
+                        </H3>
                         <GameList
                             user={this.userService.user}
                             games={this.state.games}
@@ -476,14 +548,6 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             showTapToSeeMore={false}
                         />
                     </StandardCard>
-                    <H3
-                        marginTop={16}
-                        marginRight={"auto"}
-                        marginBottom={8}
-                        marginLeft={"auto"}
-                    >
-                        - Games -
-                    </H3>
                     {gameList}
                 </>
             );
@@ -495,28 +559,71 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                 />
             );
         }
-        if (wrapInScrollView) {
-            return (
-                <ScrollView
-                    overflow={"scroll"}
-                    flex={1}
-                >
-                    <WebHeader
-                        title={"Grudge"}
-                    />
-                    {userCardSection}
-                    {grudgeSection}
-                </ScrollView>
-            );
-        }
         return (
             <YStack
-                overflow={"hidden"}
+                overflow={"visible"}
                 flex={1}
+                top={this.state.gameSectionIsExpanded ? -this.state.heightOfTopSection : 0}
             >
                 <WebHeader
                     title={"Grudge"}
                 />
+                <XStack
+                    paddingTop={16}
+                    paddingRight={16}
+                    paddingBottom={8}
+                    paddingLeft={16}
+                    alignItems={"center"}
+                    justifyContent="center"
+                >
+                    <H3>
+                        Share:
+                    </H3>
+                    <Spacer flex={1}/>
+                    <Button
+                        title={"Against me"}
+                        marginRight={8}
+                        onPress={e => this.didPressShare(true)}
+                    />
+
+                    <Popover size="$5" placement={"bottom"}>
+                        <Popover.Trigger>
+                            <Button
+                                icon={Info}
+                                backgroundColor={"rgba(0,0,0,0)"}
+                            />
+                        </Popover.Trigger>
+                        <Popover.Content
+                            borderWidth={1}
+                            borderColor="$borderColor"
+                            enterStyle={{ y: -10, opacity: 0 }}
+                            exitStyle={{ y: -10, opacity: 0 }}
+                            elevate
+
+                            animation={[
+                                'quick',
+                                {
+                                    opacity: {
+                                        overshootClamping: true,
+                                    },
+                                },
+                            ]}
+                        >
+                            <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
+
+                            <YStack space="$3">
+                                <Text>
+                                    asdlkfjasdflk;asdf
+                                </Text>
+                            </YStack>
+                        </Popover.Content>
+                    </Popover>
+                    <Button
+                        title={"Current"}
+                        disabled={this.state.userOneId == null || this.state.userTwoId == null}
+                        onPress={e => this.didPressShare(false)}
+                    />
+                </XStack>
                 {userCardSection}
                 {grudgeSection}
             </YStack>

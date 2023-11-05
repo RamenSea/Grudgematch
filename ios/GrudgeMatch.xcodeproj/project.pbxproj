@@ -43,6 +43,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-GrudgeMatch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GrudgeMatch.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GrudgeMatch/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-GrudgeMatch-GrudgeMatchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GrudgeMatch-GrudgeMatchTests.release.xcconfig"; path = "Target Support Files/Pods-GrudgeMatch-GrudgeMatchTests/Pods-GrudgeMatch-GrudgeMatchTests.release.xcconfig"; sourceTree = "<group>"; };
+		D6E4B2AC2AF7FC1B00236C20 /* GrudgeMatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = GrudgeMatch.entitlements; path = GrudgeMatch/GrudgeMatch.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* GrudgeMatch */ = {
 			isa = PBXGroup;
 			children = (
+				D6E4B2AC2AF7FC1B00236C20 /* GrudgeMatch.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -485,6 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GrudgeMatch/GrudgeMatch.entitlements;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = Y386BATLT3;
 				ENABLE_BITCODE = NO;
@@ -515,6 +518,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = GrudgeMatch/GrudgeMatch.entitlements;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = Y386BATLT3;
 				INFOPLIST_FILE = GrudgeMatch/Info.plist;

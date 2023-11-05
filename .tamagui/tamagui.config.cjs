@@ -1345,13 +1345,13 @@ var require_getElevation = __commonJS({
     var getElevation2 = /* @__PURE__ */ __name((size3, extras) => {
       if (!size3)
         return;
-      const { tokens: tokens2 } = extras, token = tokens2.size[size3], sizeNum = (0, import_core56.isVariable)(token) ? +token.val : size3;
+      const { tokens: tokens3 } = extras, token = tokens3.size[size3], sizeNum = (0, import_core56.isVariable)(token) ? +token.val : size3;
       return getSizedElevation2(sizeNum, extras);
     }, "getElevation");
-    var getSizedElevation2 = /* @__PURE__ */ __name((val, { theme, tokens: tokens2 }) => {
+    var getSizedElevation2 = /* @__PURE__ */ __name((val, { theme, tokens: tokens3 }) => {
       let num = 0;
       if (val === true) {
-        const val2 = (0, import_core56.getVariableValue)(tokens2.size.true);
+        const val2 = (0, import_core56.getVariableValue)(tokens3.size.true);
         typeof val2 == "number" ? num = val2 : num = 10;
       } else
         num = +val;
@@ -1477,10 +1477,10 @@ var require_cjs13 = __commonJS({
     var cacheWholeKeys = {};
     var stepTokenUpOrDown = /* @__PURE__ */ __name((type, current, options = defaultOptions) => {
       var _a, _b;
-      const tokens2 = (0, import_web22.getTokens)({ prefixed: true })[type];
+      const tokens3 = (0, import_web22.getTokens)({ prefixed: true })[type];
       if (!(type in cacheVariables)) {
         cacheKeys[type] = [], cacheVariables[type] = [], cacheWholeKeys[type] = [], cacheWholeVariables[type] = [];
-        const sorted = Object.keys(tokens2).map((k) => tokens2[k]).sort((a, b) => a.val - b.val);
+        const sorted = Object.keys(tokens3).map((k) => tokens3[k]).sort((a, b) => a.val - b.val);
         for (const token of sorted)
           cacheKeys[type].push(token.key), cacheVariables[type].push(token);
         const sortedExcludingHalfSteps = sorted.filter((x) => !x.key.endsWith(".5"));
@@ -1491,7 +1491,7 @@ var require_cjs13 = __commonJS({
       let shift2 = options.shift || 0;
       shift2 && (current === "$true" || (0, import_web18.isVariable)(current) && current.name === "true") && (shift2 += shift2 > 0 ? 1 : -1);
       const index3 = Math.min(max2, Math.max(min2, currentIndex + shift2)), found = tokensOrdered[index3];
-      return (typeof found == "string" ? tokens2[found] : found) || tokens2.$true;
+      return (typeof found == "string" ? tokens3[found] : found) || tokens3.$true;
     }, "stepTokenUpOrDown");
     var getTokenRelative = stepTokenUpOrDown;
   }
@@ -1521,7 +1521,7 @@ var require_cjs14 = __commonJS({
     });
     module2.exports = __toCommonJS2(src_exports);
     var import_get_token13 = require_cjs13();
-    var getButtonSized6 = /* @__PURE__ */ __name((val, { tokens: tokens2, props }) => {
+    var getButtonSized6 = /* @__PURE__ */ __name((val, { tokens: tokens3, props }) => {
       if (!val)
         return;
       if (typeof val == "number")
@@ -1530,7 +1530,7 @@ var require_cjs14 = __commonJS({
           height: val,
           borderRadius: props.circular ? 1e5 : val * 0.2
         };
-      const xSize = (0, import_get_token13.getSpace)(val), radiusToken = tokens2.radius[val] ?? tokens2.radius.$true;
+      const xSize = (0, import_get_token13.getSpace)(val), radiusToken = tokens3.radius[val] ?? tokens3.radius.$true;
       return {
         paddingHorizontal: xSize,
         height: val,
@@ -1596,17 +1596,17 @@ var require_variants = __commonJS({
     }), "bordered");
     var padded2 = {
       true: (_, extras) => {
-        const { tokens: tokens2, props } = extras;
+        const { tokens: tokens3, props } = extras;
         return {
-          padding: tokens2.space[props.size] || tokens2.space.$true
+          padding: tokens3.space[props.size] || tokens3.space.$true
         };
       }
     };
     var radiused2 = {
       true: (_, extras) => {
-        const { tokens: tokens2, props } = extras;
+        const { tokens: tokens3, props } = extras;
         return {
-          borderRadius: tokens2.radius[props.size] || tokens2.radius.$true
+          borderRadius: tokens3.radius[props.size] || tokens3.radius.$true
         };
       }
     };
@@ -1615,10 +1615,10 @@ var require_variants = __commonJS({
       padding: 0
     };
     var circular2 = {
-      true: (_, { props, tokens: tokens2 }) => {
+      true: (_, { props, tokens: tokens3 }) => {
         if (!("size" in props))
           return circularStyle2;
-        const size3 = tokens2.size[props.size];
+        const size3 = tokens3.size[props.size];
         return {
           ...circularStyle2,
           width: size3,
@@ -8067,13 +8067,13 @@ var require_parse = __commonJS({
     var plus = "+".charCodeAt(0);
     var isUnicodeRange = /^[a-f0-9?-]+$/i;
     module2.exports = function(input) {
-      var tokens2 = [];
+      var tokens3 = [];
       var value = input;
       var next, quote, prev, token, escape, escapePos, whitespacePos, parenthesesOpenPos;
       var pos = 0;
       var code = value.charCodeAt(pos);
       var max2 = value.length;
-      var stack = [{ nodes: tokens2 }];
+      var stack = [{ nodes: tokens3 }];
       var balanced = 0;
       var parent;
       var name = "";
@@ -8087,7 +8087,7 @@ var require_parse = __commonJS({
             code = value.charCodeAt(next);
           } while (code <= 32);
           token = value.slice(pos, next);
-          prev = tokens2[tokens2.length - 1];
+          prev = tokens3[tokens3.length - 1];
           if (code === closeParentheses && balanced) {
             after = token;
           } else if (prev && prev.type === "div") {
@@ -8096,7 +8096,7 @@ var require_parse = __commonJS({
           } else if (code === comma || code === colon || code === slash && value.charCodeAt(next + 1) !== star && (!parent || parent && parent.type === "function" && parent.value !== "calc")) {
             before = token;
           } else {
-            tokens2.push({
+            tokens3.push({
               type: "space",
               sourceIndex: pos,
               sourceEndIndex: next,
@@ -8129,7 +8129,7 @@ var require_parse = __commonJS({
           } while (escape);
           token.value = value.slice(pos + 1, next);
           token.sourceEndIndex = token.unclosed ? next : next + 1;
-          tokens2.push(token);
+          tokens3.push(token);
           pos = next + 1;
           code = value.charCodeAt(pos);
         } else if (code === slash && value.charCodeAt(pos + 1) === star) {
@@ -8145,12 +8145,12 @@ var require_parse = __commonJS({
             token.sourceEndIndex = next;
           }
           token.value = value.slice(pos + 2, next);
-          tokens2.push(token);
+          tokens3.push(token);
           pos = next + 2;
           code = value.charCodeAt(pos);
         } else if ((code === slash || code === star) && parent && parent.type === "function" && parent.value === "calc") {
           token = value[pos];
-          tokens2.push({
+          tokens3.push({
             type: "word",
             sourceIndex: pos - before.length,
             sourceEndIndex: pos + token.length,
@@ -8160,7 +8160,7 @@ var require_parse = __commonJS({
           code = value.charCodeAt(pos);
         } else if (code === slash || code === comma || code === colon) {
           token = value[pos];
-          tokens2.push({
+          tokens3.push({
             type: "div",
             sourceIndex: pos - before.length,
             sourceEndIndex: pos + token.length,
@@ -8239,14 +8239,14 @@ var require_parse = __commonJS({
             pos = next + 1;
             token.sourceEndIndex = token.unclosed ? next : pos;
             code = value.charCodeAt(pos);
-            tokens2.push(token);
+            tokens3.push(token);
           } else {
             balanced += 1;
             token.after = "";
             token.sourceEndIndex = pos + 1;
-            tokens2.push(token);
+            tokens3.push(token);
             stack.push(token);
-            tokens2 = token.nodes = [];
+            tokens3 = token.nodes = [];
             parent = token;
           }
           name = "";
@@ -8260,7 +8260,7 @@ var require_parse = __commonJS({
           stack[stack.length - 1].sourceEndIndex = pos;
           stack.pop();
           parent = stack[balanced];
-          tokens2 = parent.nodes;
+          tokens3 = parent.nodes;
         } else {
           next = pos;
           do {
@@ -8274,14 +8274,14 @@ var require_parse = __commonJS({
           if (openParentheses === code) {
             name = token;
           } else if ((uLower === token.charCodeAt(0) || uUpper === token.charCodeAt(0)) && plus === token.charCodeAt(1) && isUnicodeRange.test(token.slice(2))) {
-            tokens2.push({
+            tokens3.push({
               type: "unicode-range",
               sourceIndex: pos,
               sourceEndIndex: next,
               value: token
             });
           } else {
-            tokens2.push({
+            tokens3.push({
               type: "word",
               sourceIndex: pos,
               sourceEndIndex: next,
@@ -27891,8 +27891,8 @@ var require_Group = __commonJS({
             size: "$true"
           }
         },
-        size: (val, { tokens: tokens2 }) => ({
-          borderRadius: tokens2.radius[val] ?? val ?? tokens2.radius.$true
+        size: (val, { tokens: tokens3 }) => ({
+          borderRadius: tokens3.radius[val] ?? val ?? tokens3.radius.$true
         })
       },
       defaultVariants: {
@@ -28126,10 +28126,10 @@ var require_ListItem = __commonJS({
           }
         },
         size: {
-          "...size": (val, { tokens: tokens2 }) => ({
-            minHeight: tokens2.size[val],
-            paddingHorizontal: tokens2.space[val],
-            paddingVertical: (0, import_get_token13.getSpace)(tokens2.space[val], {
+          "...size": (val, { tokens: tokens3 }) => ({
+            minHeight: tokens3.size[val],
+            paddingHorizontal: tokens3.space[val],
+            paddingVertical: (0, import_get_token13.getSpace)(tokens3.space[val], {
               shift: -4
             })
           })
@@ -31335,13 +31335,13 @@ var import_core3 = require("@tamagui/core");
 var getElevation = /* @__PURE__ */ __name((size3, extras) => {
   if (!size3)
     return;
-  const { tokens: tokens2 } = extras, token = tokens2.size[size3], sizeNum = (0, import_core3.isVariable)(token) ? +token.val : size3;
+  const { tokens: tokens3 } = extras, token = tokens3.size[size3], sizeNum = (0, import_core3.isVariable)(token) ? +token.val : size3;
   return getSizedElevation(sizeNum, extras);
 }, "getElevation");
-var getSizedElevation = /* @__PURE__ */ __name((val, { theme, tokens: tokens2 }) => {
+var getSizedElevation = /* @__PURE__ */ __name((val, { theme, tokens: tokens3 }) => {
   let num = 0;
   if (val === true) {
-    const val2 = (0, import_core3.getVariableValue)(tokens2.size.true);
+    const val2 = (0, import_core3.getVariableValue)(tokens3.size.true);
     typeof val2 == "number" ? num = val2 : num = 10;
   } else
     num = +val;
@@ -31424,17 +31424,17 @@ var bordered = /* @__PURE__ */ __name((val, { props }) => ({
 }), "bordered");
 var padded = {
   true: (_, extras) => {
-    const { tokens: tokens2, props } = extras;
+    const { tokens: tokens3, props } = extras;
     return {
-      padding: tokens2.space[props.size] || tokens2.space.$true
+      padding: tokens3.space[props.size] || tokens3.space.$true
     };
   }
 };
 var radiused = {
   true: (_, extras) => {
-    const { tokens: tokens2, props } = extras;
+    const { tokens: tokens3, props } = extras;
     return {
-      borderRadius: tokens2.radius[props.size] || tokens2.radius.$true
+      borderRadius: tokens3.radius[props.size] || tokens3.radius.$true
     };
   }
 };
@@ -31443,10 +31443,10 @@ var circularStyle = {
   padding: 0
 };
 var circular = {
-  true: (_, { props, tokens: tokens2 }) => {
+  true: (_, { props, tokens: tokens3 }) => {
     if (!("size" in props))
       return circularStyle;
-    const size3 = tokens2.size[props.size];
+    const size3 = tokens3.size[props.size];
     return {
       ...circularStyle,
       width: size3,
@@ -33347,8 +33347,8 @@ var import_image = __toESM(require_cjs23());
 var import_web9 = require("@tamagui/core");
 
 // node_modules/@tamagui/shapes/dist/esm/getShapeSize.js
-var getShapeSize = /* @__PURE__ */ __name((size3, { tokens: tokens2 }) => {
-  const width = tokens2.size[size3] ?? size3, height = tokens2.size[size3] ?? size3;
+var getShapeSize = /* @__PURE__ */ __name((size3, { tokens: tokens3 }) => {
+  const width = tokens3.size[size3] ?? size3, height = tokens3.size[size3] ?? size3;
   return {
     width,
     height,
@@ -33675,8 +33675,8 @@ var CardFrame = (0, import_web12.styled)(ThemeableStack, {
       }
     },
     size: {
-      "...size": (val, { tokens: tokens2 }) => ({
-        borderRadius: tokens2.radius[val] ?? val
+      "...size": (val, { tokens: tokens3 }) => ({
+        borderRadius: tokens3.radius[val] ?? val
       })
     }
   },
@@ -33696,8 +33696,8 @@ var CardHeader = (0, import_web12.styled)(ThemeableStack, {
       }
     },
     size: {
-      "...size": (val, { tokens: tokens2 }) => ({
-        padding: tokens2.space[val] ?? val
+      "...size": (val, { tokens: tokens3 }) => ({
+        padding: tokens3.space[val] ?? val
       })
     }
   },
@@ -33990,7 +33990,7 @@ var CheckboxFrame = (0, import_core19.styled)(ThemeableStack, {
       }
     },
     size: {
-      "...size": (val, { tokens: tokens2 }) => ({
+      "...size": (val, { tokens: tokens3 }) => ({
         borderRadius: (0, import_core19.getVariableValue)((0, import_get_token.getSize)(val)) / 8
       })
     }
@@ -35931,9 +35931,9 @@ var PopperContentFrame = (0, import_core23.styled)(ThemeableStack, {
       }
     },
     size: {
-      "...size": (val, { tokens: tokens2 }) => ({
-        padding: tokens2.space[val],
-        borderRadius: tokens2.radius[val]
+      "...size": (val, { tokens: tokens3 }) => ({
+        padding: tokens3.space[val],
+        borderRadius: tokens3.radius[val]
       })
     }
   },
@@ -40214,8 +40214,8 @@ var SelectViewportFrame = (0, import_core34.styled)(ThemeableStack, {
       }
     },
     size: {
-      "...size": (val, { tokens: tokens2 }) => ({
-        borderRadius: tokens2.radius[val] ?? val
+      "...size": (val, { tokens: tokens3 }) => ({
+        borderRadius: tokens3.radius[val] ?? val
       })
     }
   },
@@ -40377,10 +40377,10 @@ var NativeSelectFrame = (0, import_core35.styled)(ThemeableStack, {
   variants: {
     size: {
       "...size": (val, extras) => {
-        const { tokens: tokens2 } = extras, paddingHorizontal = (0, import_core35.getVariableValue)(tokens2.space[val]);
+        const { tokens: tokens3 } = extras, paddingHorizontal = (0, import_core35.getVariableValue)(tokens3.space[val]);
         return {
-          borderRadius: tokens2.radius[val] ?? val,
-          minHeight: tokens2.size[val],
+          borderRadius: tokens3.radius[val] ?? val,
+          minHeight: tokens3.size[val],
           paddingRight: paddingHorizontal + 20,
           paddingLeft: paddingHorizontal,
           paddingVertical: (0, import_get_token5.getSpace)(val, {
@@ -41238,7 +41238,7 @@ var SliderTrackActive = React30.forwardRef(
 SliderTrackActive.displayName = RANGE_NAME;
 var THUMB_NAME = "SliderThumb";
 var getThumbSize = /* @__PURE__ */ __name((val) => {
-  const tokens2 = (0, import_core37.getTokens)(), size3 = typeof val == "number" ? val : (0, import_get_token7.getSize)(tokens2.size[val], {
+  const tokens3 = (0, import_core37.getTokens)(), size3 = typeof val == "number" ? val : (0, import_get_token7.getSize)(tokens3.size[val], {
     shift: -1
   });
   return {
@@ -43282,9 +43282,27 @@ var themesBuilder2 = createThemeBuilder().addPalettes(palettes).addTemplates(tem
   // avoidNestingWithin: ['alt1', 'alt2'],
 });
 var themes2 = themesBuilder2.build();
+var tokens2 = (0, import_core55.createTokens)({
+  ...config2.tokens
+});
 var appConfig = createTamagui({
   ...config2,
-  themes: themes2
+  tokens: tokens2,
+  themes: themes2,
+  media: {
+    xs: { maxWidth: 320 },
+    gtXs: { minWidth: 320 + 1 },
+    sm: { maxWidth: 580 },
+    gtSm: { minWidth: 580 + 1 },
+    md: { maxWidth: 767 },
+    gtMd: { minWidth: 767 + 1 },
+    lg: { maxWidth: 1024 },
+    gtLg: { minWidth: 1024 + 1 },
+    short: { maxHeight: 820 },
+    tall: { minHeight: 820 },
+    hoverNone: { hover: "none" },
+    pointerCoarse: { pointer: "coarse" }
+  }
 });
 var tamagui_config_default = appConfig;
 // Annotate the CommonJS export names for ESM import in node:
