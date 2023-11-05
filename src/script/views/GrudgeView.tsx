@@ -22,6 +22,7 @@ import {StandardCard} from "../components/scaffolding/StandardCard";
 import {MatchUpInsides} from "../components/game/MatchUpCard";
 import {ChevronsDown, ChevronsUp, Info} from "@tamagui/lucide-icons";
 import Clipboard from "@react-native-clipboard/clipboard";
+import {ToastService} from "../services/ToastService";
 
 export type GrudgeViewProps = {
     userOneId?: number,
@@ -62,6 +63,8 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
     private readonly userService!: UserService;
     @resolve(SERVICE_TYPES.GameApiService)
     private readonly gameApiService!: Aoe4WorldApiService;
+    @resolve(SERVICE_TYPES.ToastService)
+    private readonly toastService!: ToastService;
 
     private findUserOneQuery: AOE4WorldUserQuery|null = null;
     private enteredUserOneTextTimeout: NodeJS.Timeout|null = null;
@@ -353,6 +356,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         const resolvedUrl = baseUrl + searchTerms;
         if (isWeb) {
             Clipboard.setString(resolvedUrl);
+            this.toastService.show("Copied to clipboard");
         } else {
             Share.share({
                 url: resolvedUrl,
@@ -571,10 +575,13 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                 <XStack
                     paddingTop={16}
                     paddingRight={16}
-                    paddingBottom={8}
+                    paddingBottom={16}
                     paddingLeft={16}
                     alignItems={"center"}
                     justifyContent="center"
+                    $md={{
+                        paddingBottom: 8,
+                    }}
                 >
                     <H3>
                         Share:

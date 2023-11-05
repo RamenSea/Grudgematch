@@ -7,8 +7,11 @@ import {container} from "./inversify.config";
 import {RootRoute} from "./script/views/RootRoute";
 import {AppScaffolding} from "./script/components/scaffolding/AppScaffolding";
 import {LoadingCover} from "./script/components/scaffolding/LoadingCover";
+import {SafeAreaProvider} from "react-native-safe-area-context";
+import {ToastService} from "./script/services/ToastService";
 
 const startUpService = container.get<StartUpService>(SERVICE_TYPES.StartUpService);
+const toastService = container.get<ToastService>(SERVICE_TYPES.ToastService);
 startUpService.boot();
 
 type AppProps = {};
@@ -56,9 +59,13 @@ class App extends React.Component<AppProps, AppState> {
         }
 
         return (
-            <AppScaffolding>
-                {inner}
-            </AppScaffolding>
+            <SafeAreaProvider>
+                <AppScaffolding
+                    toastService={toastService}
+                >
+                    {inner}
+                </AppScaffolding>
+            </SafeAreaProvider>
         );
     }
 }
