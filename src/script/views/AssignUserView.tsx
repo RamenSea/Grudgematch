@@ -36,6 +36,9 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
         this.fetchUser();
     }
 
+    viewHasWebHeader(): boolean {
+        return false;
+    }
     protected webMaxHeight(windowHeight: number): number {
         if (windowHeight > 768) {
             return 450;

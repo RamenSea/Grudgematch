@@ -100,6 +100,9 @@ export const themes = themesBuilder.build()
 
 const tokens = createTokens({
     ...config.tokens,
+    webHeader: {
+        height: 60,
+    }
 });
 
 const appConfig = createTamagui({

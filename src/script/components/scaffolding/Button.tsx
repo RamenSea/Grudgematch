@@ -13,9 +13,9 @@ export type ButtonProps = {
     dangerous?: boolean,
     removeRoundEdgeOnMobile?: boolean,
     title?: string
-};
+} & TButtonProps;
 
-export function Button(props: ButtonProps & TButtonProps) {
+export function Button(props: ButtonProps) {
     const {
         title,
         large,
@@ -23,6 +23,7 @@ export function Button(props: ButtonProps & TButtonProps) {
         dangerous,
         removeRoundEdgeOnMobile,
         theme,
+        color,
         ...rest
     } = props
 
@@ -54,6 +55,7 @@ export function Button(props: ButtonProps & TButtonProps) {
                     opacity={loading ? 0.0 : 1.0}
                     letterSpacing={large ? 16.0 : 1.0}
                     margin={"auto"}
+                    color={ color ? color : undefined}
                 >
                     {title}
                 </Text>

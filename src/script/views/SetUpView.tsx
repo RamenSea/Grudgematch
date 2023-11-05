@@ -30,6 +30,9 @@ export class SetUpView extends BaseView<MainAppViewProps<"SetUpView">, SetUpView
         return super.webMaxHeight(windowHeight);
     }
 
+    viewHasWebHeader(): boolean {
+        return false;
+    }
     isUsernameValid(username: string|null): boolean {
         return username != null && username.length >= User.MIN_USERNAME_LENGTH;
     }

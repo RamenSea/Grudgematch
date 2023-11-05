@@ -104,6 +104,9 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             });
         }
     }
+    viewHasWebHeader(): boolean {
+        return false;
+    }
     didPressingSettingsButton() {
         this.props.navigation.push("SettingsView");
     }

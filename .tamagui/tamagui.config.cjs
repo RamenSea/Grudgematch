@@ -43453,7 +43453,10 @@ var themesBuilder2 = createThemeBuilder().addPalettes(palettes).addTemplates(tem
 });
 var themes2 = themesBuilder2.build();
 var tokens2 = (0, import_core55.createTokens)({
-  ...config2.tokens
+  ...config2.tokens,
+  webHeader: {
+    height: 60
+  }
 });
 var appConfig = createTamagui({
   ...config2,

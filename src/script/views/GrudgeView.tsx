@@ -1,5 +1,6 @@
 import {BaseView} from "./BaseView";
 import React, {ReactNode} from "react";
+import {Button as NativeButton} from "react-native";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
 import {UserService} from "../services/UserService";
@@ -113,6 +114,19 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         if (firstAppear) {
             this.setState({games: this.state.matchUp?.games.slice() ?? this.state.games});
         }
+        if (isWeb == false && (this.userService.user.isNull() || this.props.navigation.canGoBack() == false)) {
+            this.props.navigation.setOptions({
+                headerRight: props => {
+                    return (
+                        <NativeButton
+                            title={this.userService.user.isNull() ? "Set up" : "Home"}
+                            {...props}
+                            onPress={event => this.didPressRightHeaderButton()}
+                        />
+                    )
+                }
+            })
+        }
     }
     onWillDisappear() {
         super.onWillDisappear();
@@ -154,6 +168,13 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             }
         }
 
+    }
+    didPressRightHeaderButton() {
+        if (this.userService.user.isNull()) {
+            this.props.navigation.navigate("SetUpView");
+        } else {
+            this.props.navigation.navigate("UserOverviewView", {username: undefined});
+        }
     }
 
     /*
@@ -558,19 +579,28 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         } else if (this.state.loadingMatchUp) {
             grudgeSection = (
                 <LoadingCover
-                    message={"Loading in this momentous grudge!"}
+                    message={"Loading in this momentous grudge"}
                     height={200}
                 />
             );
         }
         return (
             <YStack
-                overflow={"visible"}
-                flex={1}
+                overflow={this.state.gameSectionIsExpanded ? "visible" : "hidden"}
+                height={"100%"}
+                maxHeight={"100%"}
+                minHeight={"100%"}
                 top={this.state.gameSectionIsExpanded ? -this.state.heightOfTopSection : 0}
+                $md={{
+                    overflow: isWeb ? "scroll": (this.state.gameSectionIsExpanded ? "visible" : "hidden"),
+                }}
             >
                 <WebHeader
                     title={"Grudge"}
+                    rightButtonProps={{
+                        title: this.userService.user.isNull() ? "Set up" : "Home",
+                        onPress: (e) => this.didPressRightHeaderButton(),
+                    }}
                 />
                 <XStack
                     paddingTop={16}
@@ -589,16 +619,20 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                     <Spacer flex={1}/>
                     <Button
                         title={"Against me"}
-                        marginRight={8}
+                        marginRight={2}
                         onPress={e => this.didPressShare(true)}
                     />
 
                     <Popover size="$5" placement={"bottom"}>
                         <Popover.Trigger>
-                            <Button
-                                icon={Info}
-                                backgroundColor={"rgba(0,0,0,0)"}
-                            />
+                            <YStack
+                                width={24}
+                                height={44}
+                                alignItems={"center"}
+                                paddingTop={8}
+                            >
+                                <Info width={24} height={24} color={"$color10"}/>
+                            </YStack>
                         </Popover.Trigger>
                         <Popover.Content
                             borderWidth={1}
@@ -606,7 +640,6 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             enterStyle={{ y: -10, opacity: 0 }}
                             exitStyle={{ y: -10, opacity: 0 }}
                             elevate
-
                             animation={[
                                 'quick',
                                 {
@@ -617,11 +650,15 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             ]}
                         >
                             <Popover.Arrow borderWidth={1} borderColor="$borderColor" />
-
-                            <YStack space="$3">
+                            <YStack space="$3" maxWidth={250}>
                                 <Text>
-                                    asdlkfjasdflk;asdf
+                                    Creates a url so other players can see their grudge against you.
                                 </Text>
+                                {this.userService.user.isNull() &&
+                                    <Text>
+                                        You do not have a player account assigned in Grudge Match, tap "Set up" to get started
+                                    </Text>
+                                }
                             </YStack>
                         </Popover.Content>
                     </Popover>
@@ -629,6 +666,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         title={"Current"}
                         disabled={this.state.userOneId == null || this.state.userTwoId == null}
                         onPress={e => this.didPressShare(false)}
+                        marginLeft={8}
                     />
                 </XStack>
                 {userCardSection}

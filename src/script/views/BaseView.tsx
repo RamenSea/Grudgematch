@@ -116,6 +116,9 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
         const windowWidth = Dimensions.get('window').width;
         return windowWidth <= 768 - 1;
     }
+    viewHasWebHeader(): boolean {
+        return isWeb;
+    }
     /**
      *
      */
@@ -146,6 +149,7 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
             }
             return (
                 <FillScreen
+                    addHeaderBackground={this.viewHasWebHeader()}
                 >
                     <YStack
                         style={innerViewStyle}
@@ -156,7 +160,9 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
             );
         }
         return (
-            <FillScreen>
+            <FillScreen
+                addHeaderBackground={false}
+            >
                 {this.renderView()}
             </FillScreen>
         );

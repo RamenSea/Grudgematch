@@ -40047,6 +40047,15 @@
           "val": 32,
           "variable": "var(--icon-3)"
         }
+      },
+      "webHeader": {
+        "height": {
+          "isVar": true,
+          "key": "$height",
+          "name": "webHeader-1",
+          "val": 60,
+          "variable": "var(--webHeader-1)"
+        }
       }
     },
     "mediaQueryDefaultActive": {
@@ -42251,6 +42260,13 @@
         "name": "icon-3",
         "val": 32,
         "variable": "var(--icon-3)"
+      },
+      "$webHeader.height": {
+        "isVar": true,
+        "key": "$height",
+        "name": "webHeader-1",
+        "val": 60,
+        "variable": "var(--webHeader-1)"
       }
     }
   }
