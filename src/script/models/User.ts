@@ -1,6 +1,5 @@
 import {ICacheable} from "../caches/SimpleCache";
-import {jsonArrayMember, jsonMember, jsonObject, TypedJSON} from "typedjson";
-import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
+import {jsonMapMember, jsonMember, jsonObject, MapShape, TypedJSON} from "typedjson";
 
 
 export enum GameModeType {
@@ -51,138 +50,32 @@ export enum Rank {
 }
 
 @jsonObject()
-export class GameModeSeason {
-    mode: GameModeType
+export class GameSeason {
     @jsonMember(String, {name: "rank_level"})
-    readonly rank: Rank
+    rank: Rank
     @jsonMember({name: "max_rating"})
-    readonly maxRating: number
+    private _maxRating: number|undefined = undefined
+    @jsonMember({name: "rating"})
+    readonly rating: number|undefined
     @jsonMember({name: "max_rating_1m"})
-    readonly maxRating1M: number
+    readonly maxRating1M: number|undefined
     @jsonMember({name: "max_rating_7d"})
-    readonly maxRating7D: number
+    readonly maxRating7D: number|undefined
     @jsonMember({name: "games_count"})
-    readonly gameCount: number
+    readonly gameCount: number|undefined
     @jsonMember({name: "wins_count"})
-    readonly winCount: number
+    readonly winCount: number|undefined
     @jsonMember({name: "streak"})
-    readonly winStreak: number
+    readonly winStreak: number|undefined
 
-    constructor(mode: GameModeType, rank: Rank, maxRating: number, maxRating1M: number, maxRating7D: number, gameCount: number, winCount: number, winStreak: number) {
-        this.mode = mode;
+    constructor(rank: Rank, maxRating1M: number, maxRating7D: number, gameCount: number, winCount: number, winStreak: number) {
         this.rank = rank;
-        this.maxRating = maxRating;
         this.maxRating1M = maxRating1M;
         this.maxRating7D = maxRating7D;
         this.gameCount = gameCount;
         this.winCount = winCount;
         this.winStreak = winStreak;
     }
-}
-
-function GameModeListDeserializer(
-    modeListJson: any,
-    params: CustomDeserializerParams,
-) {
-    if (!modeListJson) {
-        return;
-    }
-    const modes: GameMode[] = [];
-    for (const key in modeListJson) {
-        const mode = key as GameModeType ?? GameModeType.NONE;
-        if (mode == GameModeType.NONE) {
-            continue;
-        }
-        const modeJson = modeListJson[mode];
-
-        const current = GameModeSeasonSerializer.parse(modeJson);
-        const seasons: GameModeSeason[] = [current!]
-        if (modeJson.previous_seasons !== undefined && modeJson.previous_seasons !== null && modeJson.previous_seasons.length > 0) {
-            seasons.push(...GameModeSeasonSerializer.parseAsArray(modeJson.previous_seasons));
-        }
-        seasons.forEach(v => v.mode = mode);
-        const gm = new GameMode(
-            mode,
-            current!,
-            seasons,
-        )
-
-        modes.push(gm);
-    }
-
-    return modes;
-}
-export class GameMode {
-    constructor(
-        readonly mode: GameModeType,
-        readonly current: GameModeSeason,
-        readonly seasons: GameModeSeason[],
-    ) {
-    }
-}
-
-@jsonObject()
-export class SimplifiedGameModeSeason {
-    mode: GameModeType
-    @jsonMember(String, {name: "rank_level"})
-    readonly rank: Rank
-    @jsonMember({name: "rating"})
-    readonly maxRating: number
-    @jsonMember({name: "games_count"})
-    readonly gameCount: number
-    @jsonMember({name: "wins_count"})
-    readonly winCount: number
-    @jsonMember({name: "streak"})
-    readonly winStreak: number
-
-    constructor(mode: GameModeType, rank: Rank, maxRating: number, gameCount: number, winCount: number, winStreak: number) {
-        this.mode = mode;
-        this.rank = rank;
-        this.maxRating = maxRating;
-        this.gameCount = gameCount;
-        this.winCount = winCount;
-        this.winStreak = winStreak;
-    }
-}
-export class SimplifiedGameMode {
-    constructor(
-        readonly mode: GameModeType,
-        readonly current: SimplifiedGameModeSeason,
-        readonly seasons: SimplifiedGameModeSeason[],
-    ) {
-    }
-}
-function SimplifiedGameModeDeserializer(
-    modeListJson: any,
-    params: CustomDeserializerParams,
-) {
-    if (!modeListJson) {
-        return;
-    }
-    const modes: SimplifiedGameMode[] = [];
-    for (const key in modeListJson) {
-        const mode = key as GameModeType ?? GameModeType.NONE;
-        if (mode == GameModeType.NONE) {
-            continue;
-        }
-        const modeJson = modeListJson[mode];
-
-        const current = SimplifiedGameModeSeasonSerializer.parse(modeJson);
-        const seasons: SimplifiedGameModeSeason[] = [current!]
-        if (modeJson.previous_seasons !== undefined && modeJson.previous_seasons !== null && modeJson.previous_seasons.length > 0) {
-            seasons.push(...SimplifiedGameModeSeasonSerializer.parseAsArray(modeJson.previous_seasons));
-        }
-        seasons.forEach(v => v.mode = mode);
-        const gm = new SimplifiedGameMode(
-            mode,
-            current!,
-            seasons,
-        )
-
-        modes.push(gm);
-    }
-
-    return modes;
 }
 
 @jsonObject()
@@ -210,8 +103,6 @@ export class User implements ICacheable<number>{
         User.NULL_STEAM_ID,
         "NULL",
         null,
-        null,
-        null,
     )
 
     @jsonMember({name: "profile_id"})
@@ -222,37 +113,12 @@ export class User implements ICacheable<number>{
     readonly username: string
     @jsonMember(UserAvatar)
     readonly avatars: UserAvatar|null
-    @jsonArrayMember(GameMode, {name: "modes", deserializer: GameModeListDeserializer})
-    readonly modeList: GameMode[]| null
-    @jsonArrayMember(SimplifiedGameMode, {name: "leaderboards", deserializer: SimplifiedGameModeDeserializer})
-    readonly simplifiedModeList: SimplifiedGameMode[]| null
 
-    private _modes: Map<GameModeType, GameMode>| null = null
-    get modes(): Map<GameModeType, GameMode>| null {
-        if (this._modes || this.modeList == null) {
-            return this._modes;
-        }
+    @jsonMapMember(String, GameSeason, {shape: 1 as MapShape})
+    modes: Map<GameModeType, GameSeason>| null = null
+    @jsonMapMember(String, GameSeason, {shape: 1 as MapShape})
+    leaderboards: Map<GameModeType, GameSeason>| null = null
 
-        this._modes = new Map<GameModeType, GameMode>();
-        for (let i = 0; i < this.modeList.length; i++) {
-            const mode = this.modeList[i];
-            this._modes.set(mode.mode, mode);
-        }
-        return this._modes;
-    }
-    private _simplifiedModes: Map<GameModeType, SimplifiedGameMode>| null = null
-    get simplifiedModes(): Map<GameModeType, SimplifiedGameMode>| null {
-        if (this._simplifiedModes || this.simplifiedModeList == null) {
-            return this._simplifiedModes;
-        }
-
-        this._simplifiedModes = new Map<GameModeType, SimplifiedGameMode>();
-        for (let i = 0; i < this.simplifiedModeList.length; i++) {
-            const mode = this.simplifiedModeList[i];
-            this._simplifiedModes.set(mode.mode, mode);
-        }
-        return this._simplifiedModes;
-    }
     get cacheKey(): number {
         return this.aoe4WorldId;
     }
@@ -266,42 +132,29 @@ export class User implements ICacheable<number>{
         return this.avatars?.small ?? null;
     }
 
-    constructor(aoe4WorldId: number, steamId: string | null, username: string, avatars: UserAvatar | null, modeList: GameMode[] | null, simplifiedModeList: SimplifiedGameMode[] | null) {
+    constructor(aoe4WorldId: number, steamId: string | null, username: string, avatars: UserAvatar | null) {
         this.aoe4WorldId = aoe4WorldId;
         this.steamId = steamId;
         this.username = username;
         this.avatars = avatars;
-        this.modeList = modeList;
-        this.simplifiedModeList = simplifiedModeList;
     }
 
     isNull(): boolean {
         return this.aoe4WorldId == User.NULL_AOE4WORLD_ID;
     }
     recentRank(isSolo: boolean): Rank {
-        if (this.modes != null) {
-            let mode: GameMode| null = null;
+        let m = this.modes != null ? this.modes : this.leaderboards;
+        if (m != null) {
+            let mode: GameSeason| null = null;
             if (isSolo) {
-                mode = this.modes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
+                mode = m.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
             } else {
-                mode = this.modes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
+                mode = m.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
             }
             if (mode == null) {
                 return Rank.NONE;
             }
-            return mode.current.rank;
-        }
-        if (this.simplifiedModes != null) {
-            let mode: SimplifiedGameMode| null = null;
-            if (isSolo) {
-                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
-            } else {
-                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
-            }
-            if (mode == null) {
-                return Rank.NONE;
-            }
-            return mode.current.rank;
+            return mode.rank;
         }
         return Rank.NONE;
     }
@@ -309,17 +162,11 @@ export class User implements ICacheable<number>{
         let qmRatingsMax: number = 0
         let qmRatingsCount: number = 0
 
-        if (this.modes != null) {
-            this.modes.forEach((value, key) => {
-                if (GameModeTypeIsQM(value.mode)) {
-                    qmRatingsMax += value.current.maxRating;
-                    qmRatingsCount += 1;
-                }
-            })
-        } else if (this.simplifiedModes != null) {
-            this.simplifiedModes.forEach((value, key) => {
-                if (GameModeTypeIsQM(value.mode)) {
-                    qmRatingsMax += value.current.maxRating;
+        const m = this.modes != null ? this.modes : this.leaderboards;
+        if (m != null) {
+            m.forEach((value, key) => {
+                if (GameModeTypeIsQM(key) && value.rating) {
+                    qmRatingsMax += value.rating;
                     qmRatingsCount += 1;
                 }
             })
@@ -335,35 +182,22 @@ export class User implements ICacheable<number>{
         return avg;
     }
     recentRating(isSolo: boolean): number {
-        if (this.modes != null) {
-            let mode: GameMode| null = null;
+        const m = this.modes != null ? this.modes : this.leaderboards;
+        if (m != null) {
+            let mode: GameSeason | null = null;
             if (isSolo) {
-                mode = this.modes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
+                mode = m.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
             } else {
-                mode = this.modes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
+                mode = m.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
             }
             if (mode == null) {
                 return 0;
             }
-            return mode.current.maxRating;
-        }
-        if (this.simplifiedModes != null) {
-            let mode: SimplifiedGameMode| null = null;
-            if (isSolo) {
-                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_SOLO) ?? null;
-            } else {
-                mode = this.simplifiedModes.get(GameModeType.RANKED_MATCH_TEAM) ?? null;
-            }
-            if (mode == null) {
-                return 0;
-            }
-            return mode.current.maxRating;
+            return mode.rating ?? 0;
         }
         return 0;
     }
 }
 
 
-export const GameModeSeasonSerializer = new TypedJSON(GameModeSeason);
-export const SimplifiedGameModeSeasonSerializer = new TypedJSON(SimplifiedGameModeSeason);
 export const UserSerializer = new TypedJSON(User);

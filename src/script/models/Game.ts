@@ -71,7 +71,6 @@ function TeamDeserializer(
         })
         players.push(...teamSet);
     }
-    // console.log(json, players);
     return players;
 }
 

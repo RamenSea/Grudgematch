@@ -45,6 +45,7 @@ export class UserService {
                             return;
                         }
                         this._user = user;
+                        this.keystoreService.setObject("user", user, UserSerializer);
                         this.onUserUpdate.next(this._user);
                     });
                 }
