@@ -2,6 +2,7 @@ import {inject, injectable} from "inversify";
 import {SERVICE_TYPES} from "./ServiceTypes";
 import {UserService} from "./UserService";
 import {KeyStoreService} from "./KeyStoreService";
+import {AnalyticsService} from "./AnalyticsService";
 
 
 export const CURRENT_COMPATABILITY_VERSION: number = 1;
@@ -18,6 +19,8 @@ export class StartUpService  {
 
     public userService: UserService;
     public keystoreService: KeyStoreService;
+    public analyticsService: AnalyticsService;
+
     get booted(): boolean {
         return this._booted;
     }
@@ -30,9 +33,11 @@ export class StartUpService  {
     constructor(
         @inject(SERVICE_TYPES.UserService) userService: UserService,
         @inject(SERVICE_TYPES.KeyStoreService) keystoreService: KeyStoreService,
+        @inject(SERVICE_TYPES.AnalyticsService) analyticsService: AnalyticsService,
     ) {
         this.userService = userService;
         this.keystoreService = keystoreService;
+        this.analyticsService = analyticsService;
         this.bootPromise = new Promise<void>((resolve, reject) => {
             this.resolver = resolve;
         });
@@ -48,6 +53,7 @@ export class StartUpService  {
             this._lastCompatibilityVersion = lcv;
         }
 
+        this.analyticsService.setUp();
         const bootPromise = [
             this.userService.boot(),
         ]

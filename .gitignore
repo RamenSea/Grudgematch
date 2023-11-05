@@ -757,3 +757,9 @@ google-services.json
 
 android/app/release
 
+
+# Ignore firebase configs i guess :shrug:
+ios/GoogleService-Info.plist
+android/app/google-services.json
+src/script/services/FirebaseWebConfig.json
+.firebase

@@ -7,6 +7,7 @@ import {StartUpService} from "./script/services/StartUpService";
 import {Aoe4WorldApiService} from "./script/services/Aoe4WorldApiService";
 import {KeyStoreService} from "./script/services/KeyStoreService";
 import {ToastService} from "./script/services/ToastService";
+import {AnalyticsService} from "./script/services/AnalyticsService";
 
 
 
@@ -18,6 +19,7 @@ container.bind<ToastService>(SERVICE_TYPES.ToastService).to(ToastService).inSing
 container.bind<KeyStoreService>(SERVICE_TYPES.KeyStoreService).to(KeyStoreService).inSingletonScope();
 container.bind<Aoe4WorldApiService>(SERVICE_TYPES.GameApiService).to(Aoe4WorldApiService).inSingletonScope();
 container.bind<UserService>(SERVICE_TYPES.UserService).to(UserService).inSingletonScope();
+container.bind<AnalyticsService>(SERVICE_TYPES.AnalyticsService).to(AnalyticsService).inSingletonScope();
 container.bind<StartUpService>(SERVICE_TYPES.StartUpService).to(StartUpService).inSingletonScope();
 
 

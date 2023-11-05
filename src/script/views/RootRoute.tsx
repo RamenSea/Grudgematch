@@ -105,7 +105,7 @@ export function RootRoute({
                     name="UserOverviewView"
                     component={UserOverviewView}
                     getId={(params) => {
-                        if (params.params.username) {
+                        if (params.params && params.params.username) {
                             return "u_" + params.params.username;
                         }
                         return "ME";

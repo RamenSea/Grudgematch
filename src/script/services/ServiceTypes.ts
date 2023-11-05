@@ -5,4 +5,5 @@ export const SERVICE_TYPES = {
     StartUpService: Symbol.for("StartUpService"),
     KeyStoreService: Symbol.for("KeyStoreService"),
     ToastService: Symbol.for("ToastService"),
+    AnalyticsService: Symbol.for("AnalyticsService"),
 }

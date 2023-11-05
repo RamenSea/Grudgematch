@@ -10,6 +10,9 @@ import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {isWeb, YStack} from "tamagui";
 import {FillScreen} from "../components/scaffolding/FillScreen";
+import {AnalyticsService} from "../services/AnalyticsService";
+import {resolve} from "inversify-react";
+import {SERVICE_TYPES} from "../services/ServiceTypes";
 
 /**
  * Argument in favor having hierarchical class based views in React Native:
@@ -43,6 +46,8 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
     private subscriptions: Subscription[] = [];
     private firstAppear: boolean = true;
 
+    @resolve(SERVICE_TYPES.AnalyticsService)
+    protected analyticsService!: AnalyticsService
     /**
      * Because of TypeScript's typing system and two generic fields on this view, we easily limit subclasses' `props` and
      * `state` to the right type. Making it easier to update a subclass
@@ -100,7 +105,9 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
      * Mirror's UIViewControllers own `onWillAppear`
      * This is a good time to start subscribing to events.
      */
-    onWillAppear(firstAppear: boolean){}
+    onWillAppear(firstAppear: boolean){
+        this.analyticsService.logScreen(this.props.route.name)
+    }
     /**
      * Mirror's UIViewControllers own `onWillDisappear`
      * This is a good time to start unsubscribing to events

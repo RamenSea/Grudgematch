@@ -15,6 +15,8 @@
   "dependencies": {
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-community/cli-doctor": "^12.0.0",
+    "@react-native-firebase/analytics": "^18.6.1",
+    "@react-native-firebase/app": "^18.6.1",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@reactivex/rxjs": "^6.6.7",
@@ -26,6 +28,7 @@
     "@tamagui/toast": "^1.76.0",
     "burnt": "^0.12.1",
     "expo-modules-core": "^1.5.11",
+    "firebase": "^10.5.2",
     "inversify": "^6.0.2",
     "inversify-react": "^1.1.0",
     "react": "^18.2.0",
