@@ -15,22 +15,22 @@ function GetTimeDifferenceText(from: Date, to: Date): string {
         return `${Math.round(difference / 1000)} seconds ago`
     }
     if (difference <= 60 * 60 * 1000) {
-        return `${Math.round(difference / (1000 * 60))} minutes ago`
+        return `${Math.round(difference / (60 * 1000))} minutes ago`
     }
     if (difference <= 24 * 60 * 60 * 1000) {
-        return `${Math.round(difference / (1000 * 60 * 60))} hours ago`
+        return `${Math.round(difference / (60 * 60 * 1000))} hours ago`
     }
-    if (difference <= 24 * 60 * 60 * 1000) {
-        return `${Math.round(difference / (1000 * 60 * 60))} hours ago`
+    if (difference <= 28 * 24 * 60 * 60 * 1000) {
+        return `${Math.round(difference / (24 * 60 * 60 * 1000))} days ago`
     }
     if (to.getFullYear() != from.getFullYear()) {
-        return `${to.getFullYear() - from.getFullYear()} years ago`
+        return `${Math.abs(to.getFullYear() - from.getFullYear())} years ago`
     }
     if (to.getMonth() != from.getMonth()) {
         return `${to.getMonth() - from.getMonth()} months ago`
     }
 
-    return `${to.getDay() - from.getDay()} days ago`
+    return `1 months ago`
 }
 
 export function GameCard({

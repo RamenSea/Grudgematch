@@ -363,7 +363,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         this.setState({games: this.state.matchUp?.games.slice() ?? this.state.games});
     }
     didPressShare(againstMe: boolean) {
-        const baseUrl = "https://grudgematch.games/grudge"
+        const baseUrl = "https://www.grudgematch.games/grudge"
         let searchTerms = ""
         if (againstMe) {
             if (this.userService.user.isNull()) {
