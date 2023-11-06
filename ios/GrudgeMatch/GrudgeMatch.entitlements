@@ -6,6 +6,8 @@
 	<array>
 		<string>webcredentials:grudgematch.games</string>
 		<string>applinks:grudgematch.games</string>
+		<string>webcredentials:www.grudgematch.games</string>
+		<string>applinks:www.grudgematch.games</string>
 	</array>
 </dict>
 </plist>

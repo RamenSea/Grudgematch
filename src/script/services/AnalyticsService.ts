@@ -1,6 +1,5 @@
-import {FirebaseInit} from "./Firebase";
+import {FirebaseInit, FirebaseLogScreen} from "./Firebase";
 import {injectable} from "inversify";
-import {FirebaseLogScreen} from "./Firebase.web";
 
 @injectable()
 export class AnalyticsService {
