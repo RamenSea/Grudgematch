@@ -5,6 +5,7 @@ import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
 
 export enum Civilization {
     NONE = "none",
+    UNKNOWN = "unknown",
     ABBASID_DYNASTY = "abbasid_dynasty",
     CHINESE = "chinese",
     DELHI_SULTANATE = "delhi_sultanate",
@@ -15,6 +16,20 @@ export enum Civilization {
     MONGOLS = "mongols",
     OTTOMANS = "ottomans",
     RUS = "rus",
+    BYZANTINES = "byzantines",
+    JAPANESE = "japanese",
+    JEANNE_DARC = "jeanne_darc",
+    AYYUBIDS = "ayyubids",
+    ZHU_XIS_LEGACY = "zhu_xis_legacy",
+    ORDER_OF_THE_DRAGON = "order_of_the_dragon"
+}
+const CivilizationKeys = Object.values(Civilization);
+
+export function ParseCivilizationEnum(v: string): Civilization {
+    if (CivilizationKeys.includes(v as Civilization)) {
+        return v as Civilization;
+    }
+    return Civilization.UNKNOWN;
 }
 export const NULL_TEAM_ID = -1;
 
@@ -30,7 +45,7 @@ export class Player {
     readonly aoe4WorldId: number
     @jsonMember({name: "name"})
     readonly username: string
-    @jsonMember(String)
+    @jsonMember(String, {deserializer: ParseCivilizationEnum})
     readonly civilization: Civilization
     @jsonMember(String, {name: "result", deserializer: DidWinDeserializer})
     readonly didWin: boolean
