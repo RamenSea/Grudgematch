@@ -16,7 +16,8 @@ export function UserList({
         <FlatList
             data={users}
             style={{
-                overflow: "scroll"
+                overflow: "scroll",
+                flex: 1,
             }}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}

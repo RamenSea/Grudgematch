@@ -217,9 +217,9 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
     }
     async didSelectUser(user: User, userOne: boolean) {
         if (userOne) {
-            await this.asyncSetState({userOneFound: user, userOneId: user.aoe4WorldId, userOneDialogIsOpen: false})
+            await this.asyncSetState({userOneFound: user, userOneId: user.aoe4WorldId, userOneDialogIsOpen: false, matchUp: null, loadingMatchUp: false})
         } else {
-            await this.asyncSetState({userTwoFound: user, userTwoId: user.aoe4WorldId, userTwoDialogIsOpen: false})
+            await this.asyncSetState({userTwoFound: user, userTwoId: user.aoe4WorldId, userTwoDialogIsOpen: false, matchUp: null, loadingMatchUp: false})
         }
         this.setParams();
         if (this.state.userOneFound && this.state.userTwoFound) {
@@ -490,7 +490,43 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
 
         if (this.state.matchUp) {
             let gameList: ReactNode;
-            if (this.mobileBreakPoint() && isWeb == false) {
+            if (isWeb) {
+                gameList = (
+                    <YStack
+                        style={{
+                            flex: 1,
+                            width:"100%",
+                            maxWidth: 500,
+                            paddingBottom:8,
+                            height: this.gameSectionExpandBy(),
+                            overflow: "visible",
+                            alignItems: "center",
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                        }}
+                        $md={{
+                            height: this.gameSectionExpandBy(),
+                        }}
+                    >
+
+                        <H3
+                            marginTop={16}
+                            marginRight={"auto"}
+                            marginBottom={8}
+                            marginLeft={"auto"}
+                        >
+                            - Games -
+                        </H3>
+                        <GameList
+                            user={this.userService.user}
+                            games={this.state.games}
+                            onRequestNextPage={() => this.requestNextGamePage()}
+                            onSelect={game => this.didPressGameCard(game)}
+                            nestedScrollEnabled={true}
+                        />
+                    </YStack>
+                );
+            } else {
                 const Chevron = this.state.gameSectionIsExpanded ? ChevronsUp : ChevronsDown;
                 gameList = (
                     <YStack
@@ -529,37 +565,6 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         />
                     </YStack>
                 )
-            } else {
-                gameList = (
-                    <YStack
-                        style={{
-                            flex: 1,
-                            width:"100%",
-                            paddingBottom:8,
-                            height: this.gameSectionExpandBy(),
-                        }}
-                        $md={{
-                            height: this.gameSectionExpandBy(),
-                        }}
-                    >
-
-                        <H3
-                            marginTop={16}
-                            marginRight={"auto"}
-                            marginBottom={8}
-                            marginLeft={"auto"}
-                        >
-                            - Games -
-                        </H3>
-                        <GameList
-                            user={this.userService.user}
-                            games={this.state.games}
-                            onRequestNextPage={() => this.requestNextGamePage()}
-                            onSelect={game => this.didPressGameCard(game)}
-                            nestedScrollEnabled={true}
-                        />
-                    </YStack>
-                );
             }
             grudgeSection = (
                 <>

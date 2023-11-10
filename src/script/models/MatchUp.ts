@@ -6,7 +6,10 @@ import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
 export class MatchUp {
 
     private gameCountForWins: number = -1;
-    private _wins: number = -1;
+    private _gamesWith: number = -1;
+    private _gamesAgainst: number = -1;
+    private _winsWith: number = -1;
+    private _winsAgainst: number = -1;
     private _completedGameCount: number = -1;
     constructor(
         readonly user: User,
@@ -23,31 +26,60 @@ export class MatchUp {
         this.calculateValues();
         return this._completedGameCount;
     }
-    get wins(): number {
+    get gamesWith(): number {
         this.calculateValues();
-        return this._wins;
+        return this._gamesWith;
+    }
+    get gamesAgainst(): number {
+        this.calculateValues();
+        return this._gamesAgainst;
+    }
+    get winsWith(): number {
+        this.calculateValues();
+        return this._winsWith;
+    }
+    get winsAgainst(): number {
+        this.calculateValues();
+        return this._winsAgainst;
     }
     private calculateValues() {
         if (this.gameCountForWins != this.games.length) {
-            this._wins = -1;
+            this._winsAgainst = -1;
             this.gameCountForWins = this.games.length;
         }
-        if (this._wins >= 0) {
+        if (this._winsAgainst >= 0) {
             return;
         }
 
-        let wins = 0
-        let gameCount = 0
+        let winsWith = 0;
+        let winsAgainst = 0;
+        let gamesWith = 0;
+        let gamesAgainst = 0;
+        let gameCount = 0;
         this.games.forEach((value, index) => {
             const myPlayer = value.getPlayerById(this.user.aoe4WorldId);
-            if (value.isPlaying == false && myPlayer != null) {
+            const opponent = value.getPlayerById(this.opponent.aoe4WorldId);
+            if (value.isPlaying == false && myPlayer != null && opponent != null) {
+                const sameTeam = myPlayer.teamId == opponent.teamId
+                if (sameTeam) {
+                    gamesWith++;
+                } else {
+                    gamesAgainst++;
+                }
                 if (value.winningTeam == myPlayer.teamId) {
-                    wins++;
+                    if (sameTeam) {
+                        winsWith++;
+                    } else {
+                        winsAgainst++;
+                    }
                 }
                 gameCount++;
             }
         })
-        this._wins = wins;
+        this._winsWith = winsWith;
+        this._winsAgainst = winsAgainst;
+        this._gamesWith = gamesWith;
+        this._gamesAgainst = gamesAgainst;
         this._completedGameCount = gameCount;
     }
 }

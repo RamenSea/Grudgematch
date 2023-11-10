@@ -23,7 +23,7 @@ export function GameList({
                 overflow: "scroll",
             }}
             nestedScrollEnabled={nestedScrollEnabled}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
             showsHorizontalScrollIndicator={false}
             data={games}
             keyExtractor={item => item.id.toString()}

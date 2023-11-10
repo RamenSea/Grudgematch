@@ -6,6 +6,44 @@ import React from "react";
 import {Paragraph, Spacer, Text, YStack} from "tamagui";
 import {SelectableCard} from "../scaffolding/SelectableCard";
 
+function GetLengthGrudge(gameCount: number): string {
+    if (gameCount < 3) {
+        return "Fresh"
+    } else if (gameCount < 7) {
+        return "Growing"
+    } else if (gameCount < 15) {
+        return "Blooming"
+    } else if (gameCount < 24) {
+        return "Flourishing"
+    } else if (gameCount < 35) {
+        return "Established"
+    } else if (gameCount < 43) {
+        return "Dependant"
+    }
+    return "Lovingly"
+}
+function GetNamedGrudge(percent: number, isAgainst: boolean): string {
+    if (isAgainst == false) {
+        percent = 1.0 - percent; // flip if its an ally
+    }
+    if (percent >= 0.9) {
+        return "Auto-concede";
+    } else if (percent >= 0.8) {
+        return isAgainst ? "Stalwart" : "Questionable";
+    } else if (percent >= 0.7) {
+        return isAgainst ? "Vanguard" : "Tumultuous";
+    } else if (percent >= 0.6) {
+        return "Hard Fought";
+    }  else if (percent >= 0.5) {
+        return "Hard Fought";
+    }  else if (percent >= 0.4) {
+        return "Hard Fought";
+    }  else if (percent >= 0.3) {
+        return "Bullying";
+    } else {
+        return isAgainst ? "Arch-nemesis" : "Barbaric";
+    }
+}
 export function MatchUpInsides({
                                 matchUp,
                                    showTapToSeeMore,
@@ -26,30 +64,18 @@ export function MatchUpInsides({
             </YStack>
         )
     }
+    const hasGamesWith = matchUp.gamesWith > 0;
+    const hasGamesAgainst = matchUp.gamesAgainst > 0;
 
-    const percent = matchUp.wins / matchUp.totalCompletedGames;
+    const percentWith = matchUp.winsWith / matchUp.gamesWith;
+    const percentAgainst = matchUp.winsAgainst / matchUp.gamesAgainst;
 
-    let matchUpText = ""
-    if (matchUp.totalCompletedGames < 3) {
-        matchUpText = "A fresh grudge is brewing";
-    } else if (percent >= 0.9) {
-        matchUpText = "Auto-concede Grudge";
-    } else if (percent >= 0.8) {
-        matchUpText = "Stalwart Hatred Grudge";
-    } else if (percent >= 0.7) {
-        matchUpText = "Vanguard Grudge";
-    } else if (percent >= 0.6) {
-        matchUpText = "Hard Fought Grudge";
-    }  else if (percent >= 0.5) {
-        matchUpText = "Hard Fought Grudge";
-    }  else if (percent >= 0.4) {
-        matchUpText = "Hard Fought Grudge";
-    }  else if (percent >= 0.3) {
-        matchUpText = "Bully Grudge";
-    } else {
-        matchUpText = "Arch-nemesis Grudge";
-    }
-    const plural = matchUp.totalCompletedGames > 1 ? "s" : "";
+    const moreWith = matchUp.gamesWith >= matchUp.gamesAgainst
+    const grudgeText = `${GetLengthGrudge(moreWith ? matchUp.gamesWith : matchUp.gamesAgainst)} ${GetNamedGrudge(moreWith ? percentWith : percentAgainst, moreWith == false)} ${moreWith ? "Friendship" : "Grudge"}`
+
+    const totalPlural = matchUp.totalCompletedGames > 1 ? "s" : "";
+    const withPlural = matchUp.gamesWith > 1 ? "s" : "";
+    const againstPlural = matchUp.gamesAgainst > 1 ? "s" : "";
     return (
         <YStack
         >
@@ -57,34 +83,78 @@ export function MatchUpInsides({
                 fontSize={18}
                 marginBottom={8}
             >
-                <Text
-                    fontWeight={"bold"}
-                >
-                    {" "}{matchUp.wins}
-                </Text>
-                <Text
-                    fontSize={16}
-                >
-                    {" "}({(percent * 100).toFixed(0)}%)
-                </Text>
-                <Text
-                >
-                    {" "}win{plural} out of {matchUp.query.isFinished ? "" : "the last "}{matchUp.totalCompletedGames} game{plural}
-                </Text>
+                Out of {matchUp.query.isFinished ? "" : "the last "}{matchUp.totalCompletedGames} game{totalPlural}
             </Paragraph>
+            { hasGamesWith && (
+                <>
+                    <Paragraph
+                        fontSize={18}
+                        marginBottom={8}
+                    >
+                        <Text
+                            fontWeight={"bold"}
+                        >
+                            {" "}{matchUp.winsWith}
+                        </Text>
+                        <Text
+                            fontSize={16}
+                        >
+                            {" "}({(percentWith * 100).toFixed(0)}%) win{withPlural}
+                        </Text>
+                        <Text
+                            fontWeight={"bold"}
+                        >
+                            {" "}together
+                        </Text>
+                        <Text
+                        >
+                            {" "}out of {matchUp.gamesWith} game{withPlural}
+                        </Text>
+                    </Paragraph>
+                </>
+            )}
+            { hasGamesAgainst && (
+                <>
+                    <Paragraph
+                        fontSize={18}
+                        marginBottom={8}
+                    >
+                        <Text
+                            fontWeight={"bold"}
+                        >
+                            {" "}{matchUp.winsAgainst}
+                        </Text>
+                        <Text
+                            fontSize={16}
+                        >
+                            {" "}({(percentAgainst * 100).toFixed(0)}%) win{againstPlural}
+                        </Text>
+                        <Text
+                            fontWeight={"bold"}
+                        >
+                            {" "}against
+                        </Text>
+                        <Text
+                        >
+                            {" "}out of {matchUp.gamesAgainst} game{againstPlural}
+                        </Text>
+                    </Paragraph>
+                </>
+            )}
             <Text
-                fontSize={18}
+                marginTop={8}
+                fontSize={20}
                 fontWeight={"600"}
                 textAlign={"center"}
             >
-                {matchUpText}
+                {grudgeText}
             </Text>
             { showTapToSeeMore &&
                 <Text
                     fontWeight={"bold"}
                     fontSize={14}
                 >
-                    Tap to see the game{plural}
+                    Tap to see the game{totalPlural}
                 </Text>
             }
         </YStack>

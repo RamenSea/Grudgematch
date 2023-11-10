@@ -1,6 +1,4 @@
 import {H4, Input, Sheet} from "tamagui";
-import {ChevronDown} from "@tamagui/lucide-icons";
-import {Button} from "../scaffolding/Button";
 import {UserList} from "../user/UserList";
 import {User} from "../../models/User";
 import {ThemedSpinner} from "../scaffolding/ThemedSpinner";
@@ -61,16 +59,16 @@ export function SelectUserDialog({
                     onChangeText={onUsernameUpdated}
                     marginBottom={16}
                 />
-                <UserList
-                    users={users}
-                    onRequestNextPage={onRequestNextPage}
-                    onSelect={onSelectUser}
-                />
                 {isLoading && users.length == 0 &&
                     <ThemedSpinner
                         margin={"auto"}
                     />
                 }
+                <UserList
+                    users={users}
+                    onRequestNextPage={onRequestNextPage}
+                    onSelect={onSelectUser}
+                />
             </Sheet.Frame>
         </Sheet>
     )
