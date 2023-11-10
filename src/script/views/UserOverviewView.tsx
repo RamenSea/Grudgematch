@@ -104,9 +104,6 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             });
         }
     }
-    viewHasWebHeader(): boolean {
-        return false;
-    }
     didPressingSettingsButton() {
         this.props.navigation.push("SettingsView");
     }
@@ -227,7 +224,12 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             <YStack
             >
                 <WebHeader
-                    title={""}
+                    title={"Overview"}
+                    rightButtonProps={{
+                        icon: (<Settings size={24}/>),
+                        backgroundColor: "rgba(0,0,0,0)",
+                        onPress: event => this.didPressingSettingsButton(),
+                    }}
                 />
                 <ScrollView
                     paddingLeft={8}
