@@ -496,16 +496,17 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         style={{
                             flex: 1,
                             width:"100%",
-                            maxWidth: 500,
-                            paddingBottom:8,
-                            height: this.gameSectionExpandBy(),
+                            paddingBottom: 8,
                             overflow: "visible",
+                            height: this.gameSectionExpandBy(),
+                        }}
+                        $md={{
+                        }}
+                        $gtMd={{
+                            maxWidth: 500,
                             alignItems: "center",
                             marginLeft: "auto",
                             marginRight: "auto",
-                        }}
-                        $md={{
-                            height: this.gameSectionExpandBy(),
                         }}
                     >
 

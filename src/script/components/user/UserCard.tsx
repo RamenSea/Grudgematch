@@ -180,7 +180,7 @@ export function UserCard(
         onLayout?: (layout: LayoutChangeEvent) => void,
     }) {
 
-    const minWidth = 300
+    const minWidth = 308
     const minHeight = 92
 
     if (onClick || onClickEmpty) {
@@ -189,6 +189,8 @@ export function UserCard(
                 onLayout={onLayout}
                 bordered
                 minWidth={minWidth}
+                maxWidth={minWidth}
+                width={minWidth}
                 minHeight={minHeight}
                 onPress={(e) => {
                     if (user && onClick) {
