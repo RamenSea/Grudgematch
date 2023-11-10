@@ -1,7 +1,6 @@
 import {Game, Player, Team} from "../../models/Game";
-import {FlatList, Pressable, View} from "react-native";
 import {CivilizationFlag} from "./CivilizationFlag";
-import {Card, Paragraph, Spacer, Text, XStack, YStack} from "tamagui";
+import { Spacer, Text, XStack} from "tamagui";
 import {StandardCard} from "../scaffolding/StandardCard";
 import {SelectableCard} from "../scaffolding/SelectableCard";
 import {User} from "../../models/User";
@@ -82,7 +81,6 @@ export function GameCard({
         playerList.push((
             <GameCardPlayerRow
                 key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
-                isfirst={i == 0}
                 gameInProgress={game.isPlaying}
                 playerOne={playerOne}
                 playerTwo={playerTwo}
@@ -121,15 +119,17 @@ export function GameCard({
 
 function GameCardPlayerItem({
                                 player,
-                                           isfirst,
                                 isLeft,
+                                gameInProgress,
 
                                    }: {
 
     player: Player,
     isLeft: boolean,
-    isfirst: boolean,
+    gameInProgress: boolean,
 }) {
+    const didLose = player.didWin == false && gameInProgress == false;
+
     return (
         <>
             <CivilizationFlag width={24} height={24} civilization={player.civilization}/>
@@ -137,8 +137,8 @@ function GameCardPlayerItem({
                 flex={1}
                 marginLeft={8}
                 marginRight={8}
-                theme={player.didWin ? undefined : "red"}
-                color={player.didWin ? "$color" : "$color9"}
+                theme={didLose ? "red" : undefined}
+                color={didLose ? "$color9" : "$color"}
                 $md={{
                     fontSize: 16
                 }}
@@ -169,14 +169,12 @@ export function GameCardPlayerRow({
                                             playerOne,
                                             playerTwo,
                                            gameInProgress,
-                                           isfirst,
 
                                    }: {
 
     playerOne?: Player,
     playerTwo?: Player,
     gameInProgress: boolean,
-    isfirst: boolean,
 }) {
 
     return (
@@ -192,7 +190,7 @@ export function GameCardPlayerRow({
                 { playerOne &&
                     <GameCardPlayerItem
                         player={playerOne}
-                        isfirst={isfirst}
+                        gameInProgress={gameInProgress}
                         isLeft={true}
                     />
                 }
@@ -219,7 +217,7 @@ export function GameCardPlayerRow({
                     <>
                         <GameCardPlayerItem
                             player={playerTwo}
-                            isfirst={isfirst}
+                            gameInProgress={gameInProgress}
                             isLeft={false}
                         />
                     </>
