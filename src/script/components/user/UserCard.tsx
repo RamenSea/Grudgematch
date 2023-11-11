@@ -189,8 +189,6 @@ export function UserCard(
                 onLayout={onLayout}
                 bordered
                 minWidth={minWidth}
-                maxWidth={minWidth}
-                width={minWidth}
                 minHeight={minHeight}
                 onPress={(e) => {
                     if (user && onClick) {

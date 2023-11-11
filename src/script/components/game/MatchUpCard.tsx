@@ -143,6 +143,7 @@ export function MatchUpInsides({
             )}
             <Text
                 marginTop={8}
+                marginBottom={16}
                 fontSize={20}
                 fontWeight={"600"}
                 textAlign={"center"}
