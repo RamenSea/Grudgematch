@@ -186,12 +186,13 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
             if ((againstUsername ?? this.state.userOneSearchingUsername) == this.currentUserOneTimeOutUsername && !shouldForce) {
                 return;
             }
+
             if (this.enteredUserOneTextTimeout != null) {
                 clearTimeout(this.enteredUserOneTextTimeout)
                 this.enteredUserOneTextTimeout = null;
             }
 
-            this.currentUserOneTimeOutUsername = this.state.userOneSearchingUsername;
+            this.currentUserOneTimeOutUsername = againstUsername ?? "";
             this.enteredUserOneTextTimeout = setTimeout(() => this.shouldQueryForUsers(userOne), 500);
         } else {
             const shouldForce = this.enteredUserTwoTextTimeout == null && this.findUserTwoQuery?.username != this.currentUserTwoTimeOutUsername && this.currentUserOneTimeOutUsername.length > 3;
@@ -203,7 +204,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                 this.enteredUserTwoTextTimeout = null;
             }
 
-            this.currentUserTwoTimeOutUsername = this.state.userTwoSearchingUsername;
+            this.currentUserTwoTimeOutUsername = againstUsername ?? "";
             this.enteredUserTwoTextTimeout = setTimeout(() => this.shouldQueryForUsers(userOne), 500);
         }
     }
@@ -225,6 +226,13 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
         if (this.state.userOneFound && this.state.userTwoFound) {
             this.fetchMatchUpData(true);
         }
+    }
+    didSelectMe(userOne: boolean) {
+        if (this.userService.user.isNull()) {
+            this.props.navigation.navigate("SetUpView");
+            return;
+        }
+        this.didSelectUser(this.userService.user, userOne);
     }
     private setParams() {
         const setUserIdOne = this.state.userOneId != null && this.state.userOneId != this.userService.user.aoe4WorldId;
@@ -423,6 +431,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         onRequestNextPage={() => this.requestNextUserPage(true)}
                         onSelectUser={user => this.didSelectUser(user, true)}
                         isLoading={this.state.userOneDialogIsLoading}
+                        onSelectMe={() => this.didSelectMe(true)}
                     />
                     <SelectUserDialog
                         isOpen={this.state.userTwoDialogIsOpen}
@@ -433,6 +442,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                         onRequestNextPage={() => this.requestNextUserPage(false)}
                         onSelectUser={user => this.didSelectUser(user, false)}
                         isLoading={this.state.userTwoDialogIsLoading}
+                        onSelectMe={() => this.didSelectMe(false)}
                     />
                 </>
             )
@@ -472,6 +482,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             onRequestNextPage={() => this.requestNextUserPage(true)}
                             onSelectUser={user => this.didSelectUser(user, true)}
                             isLoading={this.state.userOneDialogIsLoading}
+                            onSelectMe={() => this.didSelectMe(true)}
                         />
                         <SelectUserDialog
                             isOpen={this.state.userTwoDialogIsOpen}
@@ -482,6 +493,7 @@ export class GrudgeView extends BaseView<MainAppViewProps<"GrudgeView">, GrudgeV
                             onRequestNextPage={() => this.requestNextUserPage(false)}
                             onSelectUser={user => this.didSelectUser(user, false)}
                             isLoading={this.state.userTwoDialogIsLoading}
+                            onSelectMe={() => this.didSelectMe(false)}
                         />
                     </XStack>
                 </>

@@ -21,7 +21,7 @@ export class AOE4WorldUserQuery {
         startingUsers: User[]|undefined = undefined,
         isFuzzy: boolean = false,
     ) {
-
+        this.username = this.username.trim();
         this.users = [];
         this.isFuzzy = isFuzzy;
         this.onNextBatch = new Subject<Array<User>>();

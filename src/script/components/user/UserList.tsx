@@ -5,13 +5,17 @@ import {Spacer, YStack} from "tamagui";
 import {useCallback, useState} from "react";
 
 export function UserList({
-                             users,
-                             onRequestNextPage,
-                             onSelect}: {
+                         users,
+                         onRequestNextPage,
+                         onSelect,
+                         extraHorizontalPadding}: {
     users: User[],
     onRequestNextPage: (() => void)|null,
-    onSelect?: ((user: User) => void)
+    onSelect?: ((user: User) => void),
+    extraHorizontalPadding?: number,
 }) {
+    const usingExtraHorizontalPadding = extraHorizontalPadding ?? 0;
+
     return (
         <FlatList
             data={users}
@@ -19,7 +23,7 @@ export function UserList({
                 overflow: "scroll",
                 flex: 1,
             }}
-            showsVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={true}
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.aoe4WorldId.toString()}
             onEndReached={info => onRequestNextPage ? onRequestNextPage() : null}
@@ -27,7 +31,8 @@ export function UserList({
             renderItem={({item, index, separators}) => {
                 return (
                     <YStack
-                        padding={8}
+                        paddingVertical={8}
+                        paddingHorizontal={8 + usingExtraHorizontalPadding}
                     >
                         <UserCard
                             user={item}

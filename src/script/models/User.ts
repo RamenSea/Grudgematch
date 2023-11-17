@@ -4,23 +4,63 @@ import {jsonMapMember, jsonMember, jsonObject, MapShape, TypedJSON} from "typedj
 
 export enum GameModeType {
     NONE = "none",
+    CUSTOM = "custom",
     QUICK_MATCH_1_V_1 = "qm_1v1",
     QUICK_MATCH_2_V_2 = "qm_2v2",
     QUICK_MATCH_3_V_3 = "qm_3v3",
     QUICK_MATCH_4_V_4 = "qm_4v4",
 
+    QUICK_MATCH_1_V_1_EMPIRE_WAR = "qm_1v1_ew",
+    QUICK_MATCH_2_V_2_EMPIRE_WAR = "qm_2v2_ew",
+    QUICK_MATCH_3_V_3_EMPIRE_WAR = "qm_3v3_ew",
+    QUICK_MATCH_4_V_4_EMPIRE_WAR = "qm_4v4_ew",
+
     RANKED_MATCH_SOLO = "rm_solo",
     RANKED_MATCH_TEAM = "rm_team",
+    RANKED_MATCH_TEAM_1_V_1_ELO = "rm_1v1_elo",
     RANKED_MATCH_TEAM_2_V_2_ELO = "rm_2v2_elo",
     RANKED_MATCH_TEAM_3_V_3_ELO = "rm_3v3_elo",
     RANKED_MATCH_TEAM_4_V_4_ELO = "rm_4v4_elo",
+
+    QUICK_MATCH_1_V_1_CONSOLE = "qm_1v1_console",
+    QUICK_MATCH_2_V_2_CONSOLE = "qm_2v2_console",
+    QUICK_MATCH_3_V_3_CONSOLE = "qm_3v3_console",
+    QUICK_MATCH_4_V_4_CONSOLE = "qm_4v4_console",
+
+    QUICK_MATCH_1_V_1_EMPIRE_WAR_CONSOLE = "qm_1v1_ew_console",
+    QUICK_MATCH_2_V_2_EMPIRE_WAR_CONSOLE = "qm_2v2_ew_console",
+    QUICK_MATCH_3_V_3_EMPIRE_WAR_CONSOLE = "qm_3v3_ew_console",
+    QUICK_MATCH_4_V_4_EMPIRE_WAR_CONSOLE = "qm_4v4_ew_console",
+
+    RANKED_MATCH_SOLO_CONSOLE = "rm_solo_console",
+    RANKED_MATCH_TEAM_CONSOLE = "rm_team_console",
+    RANKED_MATCH_TEAM_1_V_1_CONSOLE = "rm_1v1_console",
+    RANKED_MATCH_TEAM_2_V_2_CONSOLE = "rm_2v2_console",
+    RANKED_MATCH_TEAM_3_V_3_CONSOLE = "rm_3v3_console",
+    RANKED_MATCH_TEAM_4_V_4_CONSOLE = "rm_4v4_console",
 }
+
 export function GameModeTypeIsQM(mode: GameModeType): boolean {
     switch (mode) {
         case GameModeType.QUICK_MATCH_1_V_1:
         case GameModeType.QUICK_MATCH_2_V_2:
         case GameModeType.QUICK_MATCH_3_V_3:
         case GameModeType.QUICK_MATCH_4_V_4:
+
+        case GameModeType.QUICK_MATCH_1_V_1_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_2_V_2_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_3_V_3_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_4_V_4_EMPIRE_WAR:
+
+        case GameModeType.QUICK_MATCH_1_V_1_CONSOLE:
+        case GameModeType.QUICK_MATCH_2_V_2_CONSOLE:
+        case GameModeType.QUICK_MATCH_3_V_3_CONSOLE:
+        case GameModeType.QUICK_MATCH_4_V_4_CONSOLE:
+
+        case GameModeType.QUICK_MATCH_1_V_1_EMPIRE_WAR_CONSOLE:
+        case GameModeType.QUICK_MATCH_2_V_2_EMPIRE_WAR_CONSOLE:
+        case GameModeType.QUICK_MATCH_3_V_3_EMPIRE_WAR_CONSOLE:
+        case GameModeType.QUICK_MATCH_4_V_4_EMPIRE_WAR_CONSOLE:
             return true;
     }
     return false;
