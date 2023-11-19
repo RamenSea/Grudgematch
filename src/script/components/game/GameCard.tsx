@@ -1,4 +1,4 @@
-import {Game, Player, Team} from "../../models/Game";
+import {Game, NULL_TEAM_ID, Player, Team} from "../../models/Game";
 import {CivilizationFlag} from "./CivilizationFlag";
 import { Spacer, Text, XStack} from "tamagui";
 import {StandardCard} from "../scaffolding/StandardCard";
@@ -81,7 +81,7 @@ export function GameCard({
         playerList.push((
             <GameCardPlayerRow
                 key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
-                gameInProgress={game.isPlaying}
+                foundWinner={game.winningTeam > NULL_TEAM_ID}
                 playerOne={playerOne}
                 playerTwo={playerTwo}
             />
@@ -120,15 +120,15 @@ export function GameCard({
 function GameCardPlayerItem({
                                 player,
                                 isLeft,
-                                gameInProgress,
+                                foundWinner,
 
                                    }: {
 
     player: Player,
     isLeft: boolean,
-    gameInProgress: boolean,
+    foundWinner: boolean,
 }) {
-    const didLose = player.didWin == false && gameInProgress == false;
+    const didLose = player.didWin == false && foundWinner;
 
     return (
         <>
@@ -166,15 +166,15 @@ function GameCardPlayerItem({
     )
 }
 export function GameCardPlayerRow({
-                                            playerOne,
-                                            playerTwo,
-                                           gameInProgress,
+                                      playerOne,
+                                      playerTwo,
+                                      foundWinner,
 
                                    }: {
 
     playerOne?: Player,
     playerTwo?: Player,
-    gameInProgress: boolean,
+    foundWinner: boolean,
 }) {
 
     return (
@@ -190,7 +190,7 @@ export function GameCardPlayerRow({
                 { playerOne &&
                     <GameCardPlayerItem
                         player={playerOne}
-                        gameInProgress={gameInProgress}
+                        foundWinner={foundWinner}
                         isLeft={true}
                     />
                 }
@@ -217,7 +217,7 @@ export function GameCardPlayerRow({
                     <>
                         <GameCardPlayerItem
                             player={playerTwo}
-                            gameInProgress={gameInProgress}
+                            foundWinner={foundWinner}
                             isLeft={false}
                         />
                     </>

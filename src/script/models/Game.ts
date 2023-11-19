@@ -105,7 +105,7 @@ export class Game {
 
 
     private cachedTeamValue: Team[]|null = null;
-    private cachedWinningTeam: number = -10;
+    private cachedWinningTeam: number = NULL_TEAM_ID - 1;
     private cachedEndDate: Date| null = null;
 
     constructor(id: number, isPlaying: boolean, duration: number, startedAt: Date, players: Array<Player>) {

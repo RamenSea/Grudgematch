@@ -4,7 +4,7 @@ import {MatchUp} from "../../models/MatchUp";
 import {FlatList, View} from "react-native";
 import {GameCard} from "../game/GameCard";
 import {MatchUpCard} from "../game/MatchUpCard";
-import React from "react";
+import React, {useState} from "react";
 import {User} from "../../models/User";
 
 
@@ -26,6 +26,7 @@ export function UserOverviewBottomSection({
     onMatchUpCardClicked: (matchUp: MatchUp) => void,
 }) {
 
+    const [tab, setTab] = useState("opponents");
     return (
         <YStack
             marginTop={24}
@@ -54,7 +55,8 @@ export function UserOverviewBottomSection({
             </H4>
 
             <Tabs
-                defaultValue="allies"
+                defaultValue={tab}
+                onValueChange={setTab}
                 flex={1}
                 width={"100%"}
                 flexDirection="column"
@@ -69,7 +71,9 @@ export function UserOverviewBottomSection({
                         theme={"softButton"}
                         value="allies"
                         marginLeft={"auto"}
+                        backgroundColor={tab == "allies" ? "$color6" : undefined}
                         flex={1}
+                        flexBasis={1}
                     >
                         <H4>
                             Allies
@@ -79,7 +83,9 @@ export function UserOverviewBottomSection({
                         theme={"softButton"}
                         value="opponents"
                         marginRight={"auto"}
+                        backgroundColor={tab == "opponents" ? "$color6" : undefined}
                         flex={1}
+                        flexBasis={1}
                     >
                         <H4>
                             Opponents

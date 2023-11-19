@@ -234,6 +234,11 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                 <ScrollView
                     paddingLeft={8}
                     paddingRight={8}
+
+                    $gtLg={{
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                    }}
                 >
                     <XStack
                         paddingTop={16}
