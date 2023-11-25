@@ -116,6 +116,15 @@ export class Game {
         this.players = players;
     }
 
+    get finishedProcessing(): boolean {
+        if (this.isPlaying) {
+            return false;
+        }
+        if (this.winningTeam <= NULL_TEAM_ID) {
+            return false;
+        }
+        return true;
+    }
     get winningTeam(): number {
         if (this.cachedWinningTeam >= NULL_TEAM_ID) {
             return this.cachedWinningTeam;

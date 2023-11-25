@@ -59,7 +59,7 @@ export class MatchUp {
         this.games.forEach((value, index) => {
             const myPlayer = value.getPlayerById(this.user.aoe4WorldId);
             const opponent = value.getPlayerById(this.opponent.aoe4WorldId);
-            if (value.isPlaying == false && myPlayer != null && opponent != null) {
+            if (value.finishedProcessing && myPlayer != null && opponent != null) {
                 const sameTeam = myPlayer.teamId == opponent.teamId
                 if (sameTeam) {
                     gamesWith++;
