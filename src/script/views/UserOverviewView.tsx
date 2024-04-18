@@ -283,6 +283,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                                 <Button
                                     title={"Recent"}
                                     flex={1}
+                                    flexBasis={1}
                                     onPress={event => this.didPressRecent()}
                                     marginRight={8}
                                 />
@@ -291,7 +292,9 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                                     title={"Check last"}
                                     loading={this.isLoadingInAGame()}
                                     flex={1}
+                                    flexBasis={1}
                                     onPress={event => this.didPressCheckCurrentGame()}
+                                    marginLeft={8}
                                     marginRight={8}
                                 />
                                 <Button
@@ -299,6 +302,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                                     title={"Listen"}
                                     loading={this.isLoadingInAGame()}
                                     flex={1}
+                                    flexBasis={1}
                                     onPress={event => this.didPressListenForPlayingGame()}
                                     marginLeft={8}
                                 />
