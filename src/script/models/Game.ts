@@ -1,6 +1,7 @@
 import {jsonArrayMember, jsonMember, jsonObject, TypedJSON} from "typedjson";
 import {id} from "inversify";
 import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
+import {GameModeType, GameModeTypeIsFAA} from "./User";
 
 
 export enum Civilization {
@@ -99,6 +100,10 @@ export class Game {
     readonly duration: number
     @jsonMember(Date,{name: "started_at"})
     readonly startedAt: Date
+    @jsonMember(String,{name: "kind"})
+    readonly kind: GameModeType
+    @jsonMember(String,{name: "leaderboard"})
+    readonly leaderboard: GameModeType
 
     @jsonArrayMember(Player, {name: "teams", deserializer: TeamDeserializer})
     readonly players: Array<Player>
@@ -108,11 +113,13 @@ export class Game {
     private cachedWinningTeam: number = NULL_TEAM_ID - 1;
     private cachedEndDate: Date| null = null;
 
-    constructor(id: number, isPlaying: boolean, duration: number, startedAt: Date, players: Array<Player>) {
+    constructor(id: number, isPlaying: boolean, duration: number, startedAt: Date, kind: GameModeType, leaderboard: GameModeType,players: Array<Player>) {
         this.id = id;
         this.isPlaying = isPlaying;
         this.duration = duration;
         this.startedAt = startedAt;
+        this.kind = kind;
+        this.leaderboard = leaderboard;
         this.players = players;
     }
 
@@ -161,6 +168,9 @@ export class Game {
 
         this.cachedEndDate = new Date(this.startedAt.getTime() + this.duration);
         return this.cachedEndDate;
+    }
+    get isFFA(): Boolean {
+        return GameModeTypeIsFAA(this.leaderboard);
     }
     getPlayerById(aoe4Id: number): Player|null {
         for (let i = 0; i < this.players.length; i++) {

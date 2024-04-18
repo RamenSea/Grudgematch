@@ -3,7 +3,7 @@ import {CivilizationFlag} from "./CivilizationFlag";
 import { Spacer, Text, XStack} from "tamagui";
 import {StandardCard} from "../scaffolding/StandardCard";
 import {SelectableCard} from "../scaffolding/SelectableCard";
-import {User} from "../../models/User";
+import {GameModeTypeTitle, User} from "../../models/User";
 import React, {ReactNode} from "react";
 
 
@@ -42,53 +42,87 @@ export function GameCard({
                             onClick?: (game: Game) => void,
                         }) {
 
-    const teams = game.teams;
-    if (teams.length == 1) {
-        return (
-            <Text>
-                Contact developers please, game id: {game.id}
-            </Text>
-        )
-    }
-    let player: Player|null = null;
-    if (user) {
-        player = game.getPlayerById(user.aoe4WorldId);
-    }
-
-    let teamOne: Team = teams[0];
-    if (player != null) {
-        teamOne = teams.find(value => value.teamNumber == player!.teamId) ?? teamOne;
-    }
-    let teamTwo = teams.find(value => value.teamNumber != teamOne.teamNumber) ?? teamOne;
-
     const playerList: ReactNode[] = []
-    const maxTeam = Math.max(teamOne.players.length, teamTwo.players.length);
 
+    const gameTypeText = GameModeTypeTitle(game.kind)
     let timeText = "Still fighting..."
     if (game.isPlaying == false) {
         timeText = GetTimeDifferenceText(game.endDate, new Date());
     }
-    for (let i = 0; i < maxTeam; i++) {
-        let playerOne: Player|undefined = undefined;
-        let playerTwo: Player|undefined = undefined;
 
-        if (i < teamOne.players.length) {
-            playerOne = teamOne.players[i];
+    if (game.isFFA) {
+        const teams = game.teams;
+        const flatten = teams.flatMap(value => value.players);
+
+        for (let i = 0; i < flatten.length; i+= 2) {
+            let playerOne: Player = flatten[i];
+            let playerTwo: Player|undefined = undefined;
+            if (i + 1 < flatten.length) {
+                playerTwo = flatten[i + 1];
+            }
+
+            playerList.push((
+                <GameCardPlayerRow
+                    key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
+                    foundWinner={game.winningTeam > NULL_TEAM_ID}
+                    playerOne={playerOne}
+                    playerTwo={playerTwo}
+                />
+            ))
         }
-        if (i < teamTwo.players.length) {
-            playerTwo = teamTwo.players[i];
+    } else {
+        const teams = game.teams;
+        if (teams.length == 1) {
+            return (
+                <Text>
+                    Contact developers please, game id: {game.id}
+                </Text>
+            )
         }
-        playerList.push((
-            <GameCardPlayerRow
-                key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
-                foundWinner={game.winningTeam > NULL_TEAM_ID}
-                playerOne={playerOne}
-                playerTwo={playerTwo}
-            />
-        ))
+        let player: Player|null = null;
+        if (user) {
+            player = game.getPlayerById(user.aoe4WorldId);
+        }
+
+        let teamOne: Team = teams[0];
+        if (player != null) {
+            teamOne = teams.find(value => value.teamNumber == player!.teamId) ?? teamOne;
+        }
+        let teamTwo = teams.find(value => value.teamNumber != teamOne.teamNumber) ?? teamOne;
+
+        const maxTeam = Math.max(teamOne.players.length, teamTwo.players.length);
+
+        for (let i = 0; i < maxTeam; i++) {
+            let playerOne: Player|undefined = undefined;
+            let playerTwo: Player|undefined = undefined;
+
+            if (i < teamOne.players.length) {
+                playerOne = teamOne.players[i];
+            }
+            if (i < teamTwo.players.length) {
+                playerTwo = teamTwo.players[i];
+            }
+            playerList.push((
+                <GameCardPlayerRow
+                    key={`${game.id}p_r${playerOne?.aoe4WorldId}${playerTwo?.aoe4WorldId}`}
+                    foundWinner={game.winningTeam > NULL_TEAM_ID}
+                    playerOne={playerOne}
+                    playerTwo={playerTwo}
+                />
+            ))
+        }
     }
     const body = (
         <>
+            <Text
+                marginBottom={4}
+                fontSize={16}
+                color={"$color"}
+                fontWeight={"bold"}
+                textAlign={"center"}
+            >
+                {gameTypeText}
+            </Text>
             <Text
                 marginBottom={4}
                 fontSize={14}
@@ -128,6 +162,7 @@ function GameCardPlayerItem({
     isLeft: boolean,
     foundWinner: boolean,
 }) {
+    const didWin = player.didWin && foundWinner;
     const didLose = player.didWin == false && foundWinner;
 
     return (
@@ -147,6 +182,7 @@ function GameCardPlayerItem({
                 overflow={"hidden"}
                 whiteSpace={"nowrap"}
                 textAlign={isLeft ? "left" : "right"}
+                fontWeight={didWin ? "500" : "400"}
             >
                 {player.username}
             </Text>
@@ -159,6 +195,7 @@ function GameCardPlayerItem({
                     marginLeft: isLeft ? 16 : "auto",
                     marginRight: isLeft ? "auto" : 16,
                 }}
+                fontWeight={didWin ? "500" : "400"}
             >
                 {player.rating}
             </Text>

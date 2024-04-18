@@ -5,6 +5,9 @@ import {jsonMapMember, jsonMember, jsonObject, MapShape, TypedJSON} from "typedj
 export enum GameModeType {
     NONE = "none",
     CUSTOM = "custom",
+    QUICK_MATCH_FFA = "qm_ffa",
+    QUICK_MATCH_FFA_NOMAD = "qm_ffa_nomad",
+
     QUICK_MATCH_1_V_1 = "qm_1v1",
     QUICK_MATCH_2_V_2 = "qm_2v2",
     QUICK_MATCH_3_V_3 = "qm_3v3",
@@ -39,7 +42,14 @@ export enum GameModeType {
     RANKED_MATCH_TEAM_3_V_3_CONSOLE = "rm_3v3_console",
     RANKED_MATCH_TEAM_4_V_4_CONSOLE = "rm_4v4_console",
 }
-
+export function GameModeTypeIsFAA(mode: GameModeType): boolean {
+    switch (mode) {
+        case GameModeType.QUICK_MATCH_FFA:
+        case GameModeType.QUICK_MATCH_FFA_NOMAD:
+            return true;
+    }
+    return false;
+}
 export function GameModeTypeIsQM(mode: GameModeType): boolean {
     switch (mode) {
         case GameModeType.QUICK_MATCH_1_V_1:
@@ -65,6 +75,60 @@ export function GameModeTypeIsQM(mode: GameModeType): boolean {
     }
     return false;
 }
+export function GameModeTypeTitle(mode: GameModeType): string {
+    switch (mode) {
+        case GameModeType.QUICK_MATCH_FFA:
+            return "FFA"
+        case GameModeType.QUICK_MATCH_FFA_NOMAD:
+            return "Nomad FFA"
+        case GameModeType.QUICK_MATCH_1_V_1:
+        case GameModeType.QUICK_MATCH_1_V_1_CONSOLE:
+            return "QM 1v1";
+        case GameModeType.QUICK_MATCH_2_V_2:
+        case GameModeType.QUICK_MATCH_2_V_2_CONSOLE:
+            return "QM 2v2";
+        case GameModeType.QUICK_MATCH_3_V_3:
+        case GameModeType.QUICK_MATCH_3_V_3_CONSOLE:
+            return "QM 3v3";
+        case GameModeType.QUICK_MATCH_4_V_4:
+        case GameModeType.QUICK_MATCH_4_V_4_CONSOLE:
+            return "QM 4v4";
+
+        case GameModeType.QUICK_MATCH_1_V_1_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_1_V_1_EMPIRE_WAR_CONSOLE:
+            return "QM EW 1v1";
+        case GameModeType.QUICK_MATCH_2_V_2_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_2_V_2_EMPIRE_WAR_CONSOLE:
+            return "QM EW 2v2";
+        case GameModeType.QUICK_MATCH_3_V_3_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_3_V_3_EMPIRE_WAR_CONSOLE:
+            return "QM EW 3v3";
+        case GameModeType.QUICK_MATCH_4_V_4_EMPIRE_WAR:
+        case GameModeType.QUICK_MATCH_4_V_4_EMPIRE_WAR_CONSOLE:
+            return "QM EW 4v4";
+
+        case GameModeType.RANKED_MATCH_SOLO:
+        case GameModeType.RANKED_MATCH_TEAM_1_V_1_ELO:
+        case GameModeType.RANKED_MATCH_SOLO_CONSOLE:
+        case GameModeType.RANKED_MATCH_TEAM_1_V_1_CONSOLE:
+            return "RM 1v1";
+        case GameModeType.RANKED_MATCH_TEAM:
+        case GameModeType.RANKED_MATCH_TEAM_CONSOLE:
+            return "Team RM"
+        case GameModeType.RANKED_MATCH_TEAM_2_V_2_ELO:
+        case GameModeType.RANKED_MATCH_TEAM_2_V_2_CONSOLE:
+            return "RM 2v2";
+        case GameModeType.RANKED_MATCH_TEAM_3_V_3_ELO:
+        case GameModeType.RANKED_MATCH_TEAM_3_V_3_CONSOLE:
+            return "RM 3v3";
+        case GameModeType.RANKED_MATCH_TEAM_4_V_4_ELO:
+        case GameModeType.RANKED_MATCH_TEAM_4_V_4_CONSOLE:
+            return "RM 4v4";
+
+    }
+    return "";
+}
+
 export enum Rank {
     NONE = "none",
     UNRANKED = "unranked",
@@ -206,6 +270,29 @@ export class User implements ICacheable<number>{
         if (m != null) {
             m.forEach((value, key) => {
                 if (GameModeTypeIsQM(key) && value.rating) {
+                    qmRatingsMax += value.rating;
+                    qmRatingsCount += 1;
+                }
+            })
+        }
+
+        if (qmRatingsCount == 0) {
+            return 0;
+        }
+        const avg = qmRatingsMax / qmRatingsCount;
+        if (autoRound) {
+            return Math.round(avg);
+        }
+        return avg;
+    }
+    averageRecentFFARating(autoRound: boolean = false): number {
+        let qmRatingsMax: number = 0
+        let qmRatingsCount: number = 0
+
+        const m = this.modes != null ? this.modes : this.leaderboards;
+        if (m != null) {
+            m.forEach((value, key) => {
+                if (GameModeTypeIsFAA(key) && value.rating) {
                     qmRatingsMax += value.rating;
                     qmRatingsCount += 1;
                 }
