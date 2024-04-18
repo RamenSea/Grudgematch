@@ -51,7 +51,7 @@ export class AOE4GameQuery {
         try {
             switch (this.parsedQueryType) {
                 case AOE4GameQueryTypes.RECENT:
-                    nextBatch = await this.aoe4WorldApiService.getGames(this.parsedQuery.pId, this.pageSize, this.currentPage);
+                    nextBatch = await this.aoe4WorldApiService.getGames(this.parsedQuery.pId, -1, this.pageSize, this.currentPage);
                     break;
                 case AOE4GameQueryTypes.MATCH_UP:
                     nextBatch = await this.aoe4WorldApiService.getGames(this.parsedQuery.pId, this.parsedQuery.oId, this.pageSize, this.currentPage);

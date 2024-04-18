@@ -33,6 +33,9 @@ export function UserList({
                     <YStack
                         paddingVertical={8}
                         paddingHorizontal={8 + usingExtraHorizontalPadding}
+                        $gtMd={{
+                            paddingHorizontal: 24 + usingExtraHorizontalPadding
+                        }}
                     >
                         <UserCard
                             user={item}

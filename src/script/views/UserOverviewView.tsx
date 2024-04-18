@@ -132,8 +132,14 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
             }
         });
     }
-    private openMoreGamesSection(matchup: MatchUp) {
-        this.props.navigation.push("GameListView", {q: matchup.query.queryString, games: matchup.games, playerId: this.state.user?.aoe4WorldId});
+    private openMoreGamesSection(matchUp: MatchUp) {
+        this.props.navigation.push("GameListView", {q: matchUp.query.queryString, games: matchUp.games, playerId: this.state.user?.aoe4WorldId});
+    }
+    private didPressRecent() {
+        if (this.state.user == null) {
+            return;
+        }
+        this.props.navigation.push("GameListView", {q: AOE4GameQuery.CreateRecentQuery(this.state.user.aoe4WorldId), playerId: this.state.user?.aoe4WorldId});
     }
     private async didPressCheckCurrentGame() {
         if (this.isLoadingInAGame() ||
@@ -148,7 +154,6 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
         }
         const game = games[0];
         this.getMatchForGame(game, false);
-
     }
     private cancelListeningForPlayingGames() {
         if (this.listenForGame != null) {
@@ -275,6 +280,12 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                         }
                         {!this.state.isFindingPlayingGame &&
                             <>
+                                <Button
+                                    title={"Recent"}
+                                    flex={1}
+                                    onPress={event => this.didPressRecent()}
+                                    marginRight={8}
+                                />
                                 <Button
                                     disabled={this.isLoadingInAGame()}
                                     title={"Check last"}

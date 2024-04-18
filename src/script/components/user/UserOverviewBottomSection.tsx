@@ -71,7 +71,7 @@ export function UserOverviewBottomSection({
                         theme={"softButton"}
                         value="allies"
                         marginLeft={"auto"}
-                        backgroundColor={tab == "allies" ? "$color6" : undefined}
+                        // backgroundColor={tab == "allies" ? "$color6" : undefined}
                         flex={1}
                         flexBasis={1}
                     >
@@ -83,7 +83,7 @@ export function UserOverviewBottomSection({
                         theme={"softButton"}
                         value="opponents"
                         marginRight={"auto"}
-                        backgroundColor={tab == "opponents" ? "$color6" : undefined}
+                        // backgroundColor={tab == "opponents" ? "$color6" : undefined}
                         flex={1}
                         flexBasis={1}
                     >
