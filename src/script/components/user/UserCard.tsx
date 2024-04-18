@@ -69,11 +69,21 @@ export function UserCardInsides(
     let quickMatchView: React.JSX.Element|undefined = undefined;
     if (qmRating > 0) {
         quickMatchView = (
-            <Text
-                fontSize={fontSize}
-            >
-                QM: {qmRating}
-            </Text>
+            <>
+                <Text
+                    fontSize={fontSize}
+                    fontWeight={"600"}
+                >
+                    QM:
+                </Text>
+                <Text
+                    fontSize={fontSize}
+                    paddingLeft={2}
+                    fontWeight={"400"}
+                >
+                    {qmRating}
+                </Text>
+            </>
         );
     }
     let soloRankView: React.JSX.Element|undefined = undefined;
@@ -90,6 +100,7 @@ export function UserCardInsides(
                 />
                 <Text
                     fontSize={fontSize}
+                    fontWeight={"400"}
                 >
                     {soloRating}
                 </Text>
@@ -111,8 +122,32 @@ export function UserCardInsides(
                 />
                 <Text
                     fontSize={fontSize}
+                    fontWeight={"400"}
                 >
                     {teamRating}
+                </Text>
+            </>
+        );
+    }
+    let ffaView: React.JSX.Element|undefined = undefined;
+    const ffaScore = user.averageRecentFFARating(true);
+    if (ffaScore > 0) {
+        const soloRating = user.recentRating(true);
+        ffaView = (
+            <>
+                <Text
+                    fontSize={fontSize}
+                    paddingLeft={4}
+                    fontWeight={"600"}
+                >
+                    FFA:
+                </Text>
+                <Text
+                    fontSize={fontSize}
+                    paddingLeft={2}
+                    fontWeight={"400"}
+                >
+                    {ffaScore}
                 </Text>
             </>
         );
@@ -160,6 +195,7 @@ export function UserCardInsides(
                     {quickMatchView}
                     {soloRankView}
                     {teamRankView}
+                    {ffaView}
                 </XStack>
             </YStack>
         </XStack>
