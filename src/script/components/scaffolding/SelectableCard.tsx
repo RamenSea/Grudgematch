@@ -22,6 +22,7 @@ export function SelectableCard(props: SelectableCardProps) {
                 elevation={5}
                 hoverStyle={{ scale: 1.03, elevation: 25, backgroundColor: "$color6" }}
                 pressStyle={{ scale: 0.97, elevation: 15 }}
+                hoverTheme={true}
                 borderWidth={isSelected ? 2 : undefined}
                 borderColor={isSelected ? "$color10" : undefined}
                 backgroundColor={isSelected ? "$color4" : undefined}

@@ -9,6 +9,7 @@ import {SimpleToast} from "./SimpleToast";
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {HookDependencyProvider} from "./HookDependencyProvider";
 import {ToastService} from "../../services/ToastService";
+import '@tamagui/core/reset.css'
 
 
 export function AppScaffolding({toastService, children}: { toastService: ToastService, children: ReactNode }) {
