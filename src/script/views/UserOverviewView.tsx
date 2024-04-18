@@ -289,7 +289,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                                 />
                                 <Button
                                     disabled={this.isLoadingInAGame()}
-                                    title={"Check last"}
+                                    title={"Current"}
                                     loading={this.isLoadingInAGame()}
                                     flex={1}
                                     flexBasis={1}

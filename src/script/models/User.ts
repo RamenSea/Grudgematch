@@ -20,9 +20,13 @@ export enum GameModeType {
 
     RANKED_MATCH_SOLO = "rm_solo",
     RANKED_MATCH_TEAM = "rm_team",
+    RANKED_MATCH_TEAM_1_V_1_KIND = "rm_1v1",
     RANKED_MATCH_TEAM_1_V_1_ELO = "rm_1v1_elo",
+    RANKED_MATCH_TEAM_2_V_2_KIND = "rm_2v2",
     RANKED_MATCH_TEAM_2_V_2_ELO = "rm_2v2_elo",
+    RANKED_MATCH_TEAM_3_V_3_KIND = "rm_3v3",
     RANKED_MATCH_TEAM_3_V_3_ELO = "rm_3v3_elo",
+    RANKED_MATCH_TEAM_4_V_4_KIND = "rm_4v4",
     RANKED_MATCH_TEAM_4_V_4_ELO = "rm_4v4_elo",
 
     QUICK_MATCH_1_V_1_CONSOLE = "qm_1v1_console",
@@ -111,22 +115,26 @@ export function GameModeTypeTitle(mode: GameModeType): string {
         case GameModeType.RANKED_MATCH_TEAM_1_V_1_ELO:
         case GameModeType.RANKED_MATCH_SOLO_CONSOLE:
         case GameModeType.RANKED_MATCH_TEAM_1_V_1_CONSOLE:
+        case GameModeType.RANKED_MATCH_TEAM_1_V_1_KIND:
             return "RM 1v1";
         case GameModeType.RANKED_MATCH_TEAM:
         case GameModeType.RANKED_MATCH_TEAM_CONSOLE:
             return "Team RM"
         case GameModeType.RANKED_MATCH_TEAM_2_V_2_ELO:
         case GameModeType.RANKED_MATCH_TEAM_2_V_2_CONSOLE:
+        case GameModeType.RANKED_MATCH_TEAM_2_V_2_KIND:
             return "RM 2v2";
         case GameModeType.RANKED_MATCH_TEAM_3_V_3_ELO:
         case GameModeType.RANKED_MATCH_TEAM_3_V_3_CONSOLE:
+        case GameModeType.RANKED_MATCH_TEAM_3_V_3_KIND:
             return "RM 3v3";
         case GameModeType.RANKED_MATCH_TEAM_4_V_4_ELO:
         case GameModeType.RANKED_MATCH_TEAM_4_V_4_CONSOLE:
+        case GameModeType.RANKED_MATCH_TEAM_4_V_4_KIND:
             return "RM 4v4";
 
     }
-    return "";
+    return mode;
 }
 
 export enum Rank {
