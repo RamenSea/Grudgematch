@@ -1,7 +1,7 @@
 import {FlatList} from "react-native";
 import {Game} from "../../models/Game";
 import {GameCard} from "./GameCard";
-import {YStack} from "tamagui";
+import {useMedia, YStack} from "tamagui";
 import {UserCard} from "../user/UserCard";
 import {User} from "../../models/User";
 
@@ -17,10 +17,13 @@ export function GameList({
     onSelect?: ((game: Game) => void)
     nestedScrollEnabled?: boolean,
 }) {
+    const media = useMedia()
+
     return (
         <FlatList
             style={{
                 overflow: "scroll",
+                paddingHorizontal: media.gtMd ? 24 : 0,
             }}
             nestedScrollEnabled={nestedScrollEnabled}
             showsVerticalScrollIndicator={true}
