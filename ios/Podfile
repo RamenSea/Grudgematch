@@ -5,7 +5,7 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
-platform :ios, '13.0'
+platform :ios, '14.0'
 prepare_react_native_project!
 $RNFirebaseAnalyticsWithoutAdIdSupport = true
 
@@ -28,10 +28,13 @@ end
 
 target 'GrudgeMatch' do
   config = use_native_modules!
-  use_modular_headers!
   $RNFirebaseAnalyticsWithoutAdIdSupport = true
 
 
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -61,6 +64,5 @@ target 'GrudgeMatch' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
-    __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end

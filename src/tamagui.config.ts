@@ -2,6 +2,7 @@
 // for reanimated: @tamagui/config/v2-reanimated
 // for react-native only: @tamagui/config/v2-native
 import { config } from '@tamagui/config/v2'
+import { createAnimations } from '@tamagui/animations-css'
 import {createTamagui, createTokens} from 'tamagui'
 
 import { createThemeBuilder } from '@tamagui/theme-builder'
@@ -13,7 +14,6 @@ import { shadows } from '@tamagui/themes'
 import { maskOptions, templates } from '@tamagui/themes'
 import { darkColors, lightColors } from '@tamagui/themes'
 import {createSoftenMask} from "@tamagui/create-theme";
-
 const colorThemeDefinition = (colorName: string) => [
     {
         parent: 'light',

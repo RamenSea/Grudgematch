@@ -105,10 +105,8 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
                     user={this.state.user}
                 />
                 <Spacer
-                    style={{
-                        flex: 1,
-                        minHeight: 50,
-                    }}
+                    flex={1}
+                    minHeight={50}
                 />
                 <Button
                     title={"Wrong account"}
@@ -116,9 +114,7 @@ export class AssignUserView extends BaseView<MainAppViewProps<"AssignUserView">,
                     removeRoundEdgeOnMobile={true}
                 />
                 <Spacer
-                    style={{
-                        height: 8,
-                    }}
+                    height={8}
                 />
                 <Button
                     theme={"active"}

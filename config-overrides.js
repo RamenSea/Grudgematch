@@ -48,10 +48,18 @@ module.exports = override(
             },
         ],
     }),
-
+    addWebpackModuleRule({
+        test: /\.m?js/,
+        resolve: {
+            fullySpecified: false,
+        }
+    }),
     addWebpackPlugin(new TamaguiPlugin({
         config: './src/tamagui.config.ts',
         components: ['tamagui'], // matching the yarn add you chose above
+        importsWhitelist: ['constants.js', 'colors.js'],
+        logTimings: true,
+        disableExtraction: process.env.NODE_ENV === 'development',
     })),
     // addWebpackPlugin(new CompressionPlugin({
     //     test: /\.js(\?.*)?$/i,

@@ -9,7 +9,7 @@ import React from "react";
 import {Subject, Subscription} from "@reactivex/rxjs/dist/package";
 import {NativeStackScreenProps} from "@react-navigation/native-stack";
 import {isWeb, YStack} from "tamagui";
-import {FillScreen} from "../components/scaffolding/FillScreen";
+import {AppScreen} from "../components/scaffolding/AppScreen";
 import {AnalyticsService} from "../services/AnalyticsService";
 import {resolve} from "inversify-react";
 import {SERVICE_TYPES} from "../services/ServiceTypes";
@@ -154,24 +154,15 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
             if (webMaxHeight > 0) {
                 innerViewStyle.maxHeight = webMaxHeight;
             }
-            return (
-                <FillScreen
-                    addHeaderBackground={this.viewHasWebHeader()}
-                >
-                    <YStack
-                        style={innerViewStyle}
-                    >
-                        {this.renderView()}
-                    </YStack>
-                </FillScreen>
-            );
         }
         return (
-            <FillScreen
-                addHeaderBackground={false}
+            <AppScreen
+                addHeaderBackground={isWeb && this.viewHasWebHeader()}
+                webWidth={width => this.webWidth(width)}
+                webMaxHeight={height => this.webMaxHeight(height)}
             >
                 {this.renderView()}
-            </FillScreen>
+            </AppScreen>
         );
     }
 }
