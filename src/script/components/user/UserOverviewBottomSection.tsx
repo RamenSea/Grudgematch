@@ -9,7 +9,6 @@ import {User} from "../../models/User";
 
 
 export type UserOverviewBottomSectionProps = {
-    user: User,
     game: Game,
     matchUpsFromGameAllies: MatchUp[],
     matchUpsFromGameEnemies: MatchUp[],

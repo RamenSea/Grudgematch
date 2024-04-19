@@ -71,6 +71,18 @@ export class Aoe4WorldApiService implements IFetchCachedObject<User, number> {
             startingGames
         );
     }
+    async getGame(playerId: number, gameId: number): Promise<Game|null> {
+        try {
+            let apiUrl = `${this.getApiUrl()}players/${playerId}/games/123633726/summary`;
+            const results = await fetch(apiUrl);
+            const responseJson = await results.json();
+            return GameSerializer.parse(responseJson) ?? null;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
+
+    }
     async getGames(playerId: number, opponentId: number = -1, limit: number = -1, page: number = -1): Promise<Array<Game>> {
         try {
             let apiUrl = `${this.getApiUrl()}players/${playerId}/games`;

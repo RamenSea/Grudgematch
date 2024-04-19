@@ -14,6 +14,7 @@ import {WebHeader} from "../components/scaffolding/WebHeader";
 
 export type GameListViewProps = {
     q: string;
+    m: boolean
     playerId?: number;
     games?: Game[];
     wasFinishedWithArray?: boolean;
@@ -59,6 +60,10 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
         }
 
         if (!playerIdToUse) {
+            return;
+        }
+        if (this.props.route.params.m) {
+            this.props.navigation.navigate("GameDetailsView", {gameId: game.id, playerId: playerIdToUse, game: game});
             return;
         }
         const link = `https://aoe4world.com/players/${playerIdToUse}/games/${game.id}`;
