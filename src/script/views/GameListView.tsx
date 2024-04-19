@@ -62,10 +62,10 @@ export class GameListView extends BaseView<MainAppViewProps<"GameListView">, Gam
         if (!playerIdToUse) {
             return;
         }
-        if (this.props.route.params.m) {
-            this.props.navigation.navigate("GameDetailsView", {gameId: game.id, playerId: playerIdToUse, game: game});
-            return;
-        }
+        // if (this.props.route.params.m) { // Disable this for now, until I can get access to a get game by id API
+        //     this.props.navigation.navigate("GameDetailsView", {gameId: game.id, playerId: playerIdToUse, game: game});
+        //     return;
+        // }
         const link = `https://aoe4world.com/players/${playerIdToUse}/games/${game.id}`;
         Linking.canOpenURL(link).then(supported => {
             if (supported) {

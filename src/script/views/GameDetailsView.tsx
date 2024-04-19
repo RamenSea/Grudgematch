@@ -9,7 +9,7 @@ import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {Game, NULL_TEAM_ID} from "../models/Game";
 import {GameList} from "../components/game/GameList";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
-import {H4, YStack} from "tamagui";
+import {H4, ScrollView, YStack} from "tamagui";
 import {WebHeader} from "../components/scaffolding/WebHeader";
 import {User} from "../models/User";
 import {UserOverviewBottomSection, UserOverviewBottomSectionProps} from "../components/user/UserOverviewBottomSection";
@@ -48,6 +48,7 @@ export class GameDetailsView extends BaseView<MainAppViewProps<"GameDetailsView"
 
     async handleLoad() {
         let game = this.props.route.params.game ?? null;
+
         if (game == null) {
             game = await this.gameApiService.getGame(this.state.playerId, this.state.gameId);
         }
@@ -105,14 +106,20 @@ export class GameDetailsView extends BaseView<MainAppViewProps<"GameDetailsView"
     renderView(): React.JSX.Element {
         return (
             <YStack
-                overflow={"hidden"}
-                height={"100%"}
-                maxHeight={"100%"}
-                minHeight={"100%"}
             >
                 <WebHeader
                     title={"Details"}
                 />
+
+                <ScrollView
+                    paddingLeft={8}
+                    paddingRight={8}
+
+                    $gtLg={{
+                        paddingLeft: 24,
+                        paddingRight: 24,
+                    }}
+                >
                 { this.state.bottomSectionProps != null && (
                     <UserOverviewBottomSection
                         key={"game_details_matchup"}
@@ -129,6 +136,7 @@ export class GameDetailsView extends BaseView<MainAppViewProps<"GameDetailsView"
                         height={200}
                     />
                 )}
+                </ScrollView>
             </YStack>
         );
     }
