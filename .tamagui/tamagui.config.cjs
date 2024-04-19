@@ -44348,6 +44348,8 @@ var colorThemeDefinition2 = /* @__PURE__ */ __name((colorName) => [
 ], "colorThemeDefinition");
 templates2.base.background = 1;
 templates2.colorLight.background = 1;
+palettes2.light = palettes2.light_green;
+palettes2.dark = palettes2.dark_green;
 var themesBuilder = createThemeBuilder().addPalettes(palettes2).addTemplates(templates2).addMasks(masks2).addMasks({
   soften4: createSoftenMask({ strength: 4 }),
   soften5: createSoftenMask({ strength: 5 })

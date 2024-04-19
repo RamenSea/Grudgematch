@@ -28,6 +28,10 @@ const colorThemeDefinition = (colorName: string) => [
 ]
 templates.base.background = 1;
 templates.colorLight.background = 1;
+
+palettes.light = palettes.light_green
+palettes.dark = palettes.dark_green
+
 const themesBuilder = createThemeBuilder()
     .addPalettes(palettes)
     .addTemplates(templates)
