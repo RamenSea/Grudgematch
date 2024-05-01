@@ -5330,9 +5330,9 @@ var require_isWebColor = __commonJS({
   }
 });
 
-// node_modules/@react-native/normalize-color/index.js
-var require_normalize_color = __commonJS({
-  "node_modules/@react-native/normalize-color/index.js"(exports2, module2) {
+// node_modules/@react-native/normalize-colors/index.js
+var require_normalize_colors = __commonJS({
+  "node_modules/@react-native/normalize-colors/index.js"(exports2, module2) {
     "use strict";
     function normalizeColor(color) {
       if (typeof color === "number") {
@@ -5874,12 +5874,12 @@ var require_processColor = __commonJS({
     var _interopRequireDefault = require_interopRequireDefault().default;
     exports2.__esModule = true;
     exports2.default = void 0;
-    var _normalizeColor = _interopRequireDefault(require_normalize_color());
+    var _normalizeColors = _interopRequireDefault(require_normalize_colors());
     var processColor = /* @__PURE__ */ __name((color) => {
       if (color === void 0 || color === null) {
         return color;
       }
-      var int32Color = (0, _normalizeColor.default)(color);
+      var int32Color = (0, _normalizeColors.default)(color);
       if (int32Color === void 0 || int32Color === null) {
         return void 0;
       }
@@ -9591,6 +9591,26 @@ var require_render = __commonJS({
   }
 });
 
+// node_modules/react-native-web/dist/cjs/modules/getBoundingClientRect/index.js
+var require_getBoundingClientRect = __commonJS({
+  "node_modules/react-native-web/dist/cjs/modules/getBoundingClientRect/index.js"(exports2, module2) {
+    "use strict";
+    exports2.__esModule = true;
+    exports2.default = void 0;
+    var getBoundingClientRect2 = /* @__PURE__ */ __name((node) => {
+      if (node != null) {
+        var isElement2 = node.nodeType === 1;
+        if (isElement2 && typeof node.getBoundingClientRect === "function") {
+          return node.getBoundingClientRect();
+        }
+      }
+    }, "getBoundingClientRect");
+    var _default = getBoundingClientRect2;
+    exports2.default = _default;
+    module2.exports = exports2.default;
+  }
+});
+
 // node_modules/react-native-web/dist/cjs/modules/unitlessNumbers/index.js
 var require_unitlessNumbers2 = __commonJS({
   "node_modules/react-native-web/dist/cjs/modules/unitlessNumbers/index.js"(exports2, module2) {
@@ -9727,6 +9747,7 @@ var require_UIManager = __commonJS({
     var _interopRequireDefault = require_interopRequireDefault().default;
     exports2.__esModule = true;
     exports2.default = void 0;
+    var _getBoundingClientRect = _interopRequireDefault(require_getBoundingClientRect());
     var _setValueForStyles = _interopRequireDefault(require_setValueForStyles());
     var getRect = /* @__PURE__ */ __name((node) => {
       var height = node.offsetHeight;
@@ -9792,7 +9813,7 @@ var require_UIManager = __commonJS({
       measureInWindow(node, callback) {
         if (node) {
           setTimeout(() => {
-            var _getRect2 = getRect(node), height = _getRect2.height, left = _getRect2.left, top = _getRect2.top, width = _getRect2.width;
+            var _getBoundingClientRec = (0, _getBoundingClientRect.default)(node), height = _getBoundingClientRec.height, left = _getBoundingClientRec.left, top = _getBoundingClientRec.top, width = _getBoundingClientRec.width;
             callback(left, top, width, height);
           }, 0);
         }
@@ -10413,26 +10434,6 @@ var require_usePlatformMethods = __commonJS({
       return ref;
     }
     __name(usePlatformMethods, "usePlatformMethods");
-    module2.exports = exports2.default;
-  }
-});
-
-// node_modules/react-native-web/dist/cjs/modules/getBoundingClientRect/index.js
-var require_getBoundingClientRect = __commonJS({
-  "node_modules/react-native-web/dist/cjs/modules/getBoundingClientRect/index.js"(exports2, module2) {
-    "use strict";
-    exports2.__esModule = true;
-    exports2.default = void 0;
-    var getBoundingClientRect2 = /* @__PURE__ */ __name((node) => {
-      if (node != null) {
-        var isElement2 = node.nodeType === 1;
-        if (isElement2 && typeof node.getBoundingClientRect === "function") {
-          return node.getBoundingClientRect();
-        }
-      }
-    }, "getBoundingClientRect");
-    var _default = getBoundingClientRect2;
-    exports2.default = _default;
     module2.exports = exports2.default;
   }
 });
@@ -14625,7 +14626,9 @@ var require_VirtualizedList = __commonJS({
       // REACT-NATIVE-WEB patch to preserve during future RN merges: Support inverted wheel scroller.
       setupWebWheelHandler() {
         if (this._scrollRef && this._scrollRef.getScrollableNode) {
-          this._scrollRef.getScrollableNode().addEventListener("wheel", this.invertedWheelEventHandler);
+          this._scrollRef.getScrollableNode().addEventListener("wheel", this.invertedWheelEventHandler, {
+            passive: true
+          });
         } else {
           setTimeout(() => this.setupWebWheelHandler(), 50);
           return;
@@ -16244,7 +16247,7 @@ var require_AnimatedInterpolation = __commonJS({
     var _AnimatedWithChildren = _interopRequireDefault(require_AnimatedWithChildren());
     var _NativeAnimatedHelper = _interopRequireDefault(require_NativeAnimatedHelper());
     var _invariant = _interopRequireDefault(require_invariant());
-    var _normalizeColor = _interopRequireDefault(require_normalize_color());
+    var _normalizeColors = _interopRequireDefault(require_normalize_colors());
     var __DEV__ = process.env.NODE_ENV !== "production";
     var linear = /* @__PURE__ */ __name((t) => t, "linear");
     function createInterpolation(config) {
@@ -16325,7 +16328,7 @@ var require_AnimatedInterpolation = __commonJS({
     }
     __name(interpolate, "interpolate");
     function colorToRgba(input) {
-      var normalizedColor = (0, _normalizeColor.default)(input);
+      var normalizedColor = (0, _normalizeColors.default)(input);
       if (normalizedColor === null || typeof normalizedColor !== "number") {
         return input;
       }
@@ -19433,7 +19436,7 @@ var require_AnimatedColor = __commonJS({
     exports2.default = void 0;
     var _AnimatedValue = _interopRequireDefault(require_AnimatedValue());
     var _AnimatedWithChildren = _interopRequireDefault(require_AnimatedWithChildren());
-    var _normalizeColor = _interopRequireDefault(require_normalize_color());
+    var _normalizeColors = _interopRequireDefault(require_normalize_colors());
     var _NativeAnimatedHelper = _interopRequireDefault(require_NativeAnimatedHelper());
     var NativeAnimatedAPI = _NativeAnimatedHelper.default.API;
     var defaultColor = {
@@ -19453,7 +19456,7 @@ var require_AnimatedColor = __commonJS({
       if (isRgbaValue(color)) {
         return color;
       }
-      var normalizedColor = (0, _normalizeColor.default)(
+      var normalizedColor = (0, _normalizeColors.default)(
         // $FlowIgnore[incompatible-cast] - Type is verified above
         color
       );
@@ -21441,6 +21444,9 @@ var require_Keyboard = __commonJS({
     exports2.default = void 0;
     var _dismissKeyboard = _interopRequireDefault(require_dismissKeyboard());
     var Keyboard4 = {
+      isVisible() {
+        return false;
+      },
       addListener() {
         return {
           remove: () => {
@@ -22384,6 +22390,7 @@ var require_PressResponder = __commonJS({
         this._pressDelayTimeout = null;
         this._pressOutDelayTimeout = null;
         this._touchState = NOT_RESPONDER;
+        this._responderElement = null;
         this.configure(config);
       }
       configure(config) {
@@ -22440,9 +22447,11 @@ var require_PressResponder = __commonJS({
             var role = target.getAttribute("role");
             var elementType = getElementType(target);
             var isNativeInteractiveElement = role === "link" || elementType === "a" || elementType === "button" || elementType === "input" || elementType === "select" || elementType === "textarea";
-            if (onPress != null && !isNativeInteractiveElement) {
+            var isActiveElement = this._responderElement === target;
+            if (onPress != null && !isNativeInteractiveElement && isActiveElement) {
               onPress(event);
             }
+            this._responderElement = null;
           }
         }, "keyupHandler");
         return {
@@ -22462,6 +22471,7 @@ var require_PressResponder = __commonJS({
             if (!disabled && isValidKeyPress(event)) {
               if (this._touchState === NOT_RESPONDER) {
                 start(event, false);
+                this._responderElement = target;
                 document.addEventListener("keyup", keyupHandler);
               }
               var isSpacebarKey = key === " " || key === "Spacebar";
@@ -24908,7 +24918,7 @@ var require_Touchable = __commonJS({
     var _objectSpread2 = _interopRequireDefault(require_objectSpread2());
     var _AccessibilityUtil = _interopRequireDefault(require_AccessibilityUtil());
     var _BoundingDimensions = _interopRequireDefault(require_BoundingDimensions());
-    var _normalizeColor = _interopRequireDefault(require_normalize_color());
+    var _normalizeColors = _interopRequireDefault(require_normalize_colors());
     var _Position = _interopRequireDefault(require_Position());
     var _react = _interopRequireDefault(require("react"));
     var _UIManager = _interopRequireDefault(require_UIManager());
@@ -25494,7 +25504,7 @@ var require_Touchable = __commonJS({
         for (var key in hitSlop) {
           debugHitSlopStyle[key] = -hitSlop[key];
         }
-        var normalizedColor = (0, _normalizeColor.default)(color);
+        var normalizedColor = (0, _normalizeColors.default)(color);
         if (typeof normalizedColor !== "number") {
           return null;
         }
@@ -29725,12 +29735,16 @@ var SheetImplementationCustom = (0, import_core9.themeable)((0, import_react22.f
     let toValue = isHidden2 || position2 === -1 ? screenSize : positions[position2];
     if (at.current !== toValue) {
       if (at.current = toValue, stopSpring(), hasntMeasured || isHidden2) {
-        if (animatedNumber.setValue(screenSize, {
+        animatedNumber.setValue(screenSize, {
           type: "timing",
           duration: 0
-        }), isHidden2)
-          return;
-        toValue = positions[position2], at.current = toValue;
+        }, () => {
+          isHidden2 || (toValue = positions[position2], at.current = toValue, animatedNumber.setValue(toValue, {
+            type: "spring",
+            ...animationConfig
+          }));
+        });
+        return;
       }
       animatedNumber.setValue(toValue, {
         type: "spring",
@@ -30061,7 +30075,6 @@ function createSheet({
       // @ts-ignore
       /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(Overlay2, {
         ...props,
-        debug: "verbose",
         onPress: composeEventHandlers(props.onPress, context.dismissOnOverlayPress ? () => {
           context.setOpen(false);
         } : void 0)
@@ -34378,7 +34391,9 @@ var {
   useStyledContext: usePopperContext,
   Provider: PopperProvider
 } = PopperContext;
+var checkFloating = void 0;
 function Popper(props) {
+  var _a;
   const {
     children,
     size: size3,
@@ -34395,7 +34410,7 @@ function Popper(props) {
     // this only takes effect on native
     middleware: [stayInFrame ? shift2(typeof stayInFrame == "boolean" ? {} : stayInFrame) : null, allowFlip ? flip2(typeof allowFlip == "boolean" ? {} : allowFlip) : null, arrowEl ? arrow3({
       element: arrowEl
-    }) : null, typeof offsetOptions < "u" ? offset(offsetOptions) : null].filter(Boolean)
+    }) : null, typeof offsetOptions < "u" ? offset(offsetOptions) : null, checkFloating].filter(Boolean)
   }), {
     refs,
     middlewareData,
@@ -34430,6 +34445,7 @@ function Popper(props) {
     onArrowSize: setArrowSize,
     isMounted,
     scope: __scopePopper,
+    hasFloating: (_a = middlewareData.checkFloating) == null ? void 0 : _a.hasFloating,
     ...floating
   };
   return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PopperProvider, {
@@ -34498,19 +34514,30 @@ var PopperContent = React20.forwardRef(function(props, forwardedRef) {
     size: size3,
     isMounted,
     update,
-    floatingStyles
-  } = usePopperContext(__scopePopper), contentRefs = useComposedRefs(refs.setFloating, forwardedRef), contents = React20.useMemo(() => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PopperContentFrame, {
+    floatingStyles,
+    hasFloating
+  } = usePopperContext(__scopePopper), contentRefs = useComposedRefs(refs.setFloating, forwardedRef);
+  let finalHasFloatingValue = false;
+  if (isAndroid) {
+    const initialRender = React20.useRef(true), finalHasFloating = React20.useRef(false);
+    hasFloating === false && (initialRender.current = false), initialRender.current || (finalHasFloating.current = hasFloating), finalHasFloatingValue = finalHasFloating.current;
+  }
+  const contents = React20.useMemo(() => /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(PopperContentFrame, {
     "data-placement": placement,
     "data-strategy": strategy,
     contain: "layout",
     size: size3,
     ...rest
   }, "popper-content-frame"), [placement, strategy, props]), [needsMeasure, setNeedsMeasure] = React20.useState(true);
-  if (React20.useEffect(() => {
+  React20.useEffect(() => {
     (x || y) && setNeedsMeasure(false);
   }, [x, y]), useIsomorphicLayoutEffect(() => {
     isMounted && update();
-  }, [isMounted]), !isMounted)
+  }, [isMounted]);
+  let show = true, setShow;
+  if (isAndroid && ([show, setShow] = React20.useState(false), React20.useEffect(() => {
+    finalHasFloatingValue && setShow(true);
+  }, [finalHasFloatingValue, x, y])), !isMounted)
     return null;
   const frameProps = {
     ref: contentRefs,
@@ -34519,6 +34546,7 @@ var PopperContent = React20.forwardRef(function(props, forwardedRef) {
     top: 0,
     left: 0,
     position: strategy,
+    opacity: show ? 1 : 0,
     ...enableAnimationForPositionChange && {
       // apply animation but disable it on initial render to avoid animating from 0 to the first position
       animation: rest.animation,
