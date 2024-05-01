@@ -138,23 +138,6 @@ export abstract class BaseView<T extends NativeStackScreenProps<any>, S> extends
      * In reality however this could be condensed, but I wanted to present a more accurate view of how the class might look
      */
     render() {
-        if (Platform.OS == "web") {
-            const windowHeight = Dimensions.get('window').height;
-            const windowWidth = Dimensions.get('window').width;
-            const webMaxHeight = this.webMaxHeight(windowHeight);
-            const webWidth= this.webWidth(windowWidth);
-
-            const innerViewStyle: StyleProp<ViewStyle> = {
-                flex: 1,
-                marginLeft: "auto",
-                marginRight: "auto",
-                height: windowHeight,
-                width: webWidth,
-            }
-            if (webMaxHeight > 0) {
-                innerViewStyle.maxHeight = webMaxHeight;
-            }
-        }
         return (
             <AppScreen
                 addHeaderBackground={isWeb && this.viewHasWebHeader()}

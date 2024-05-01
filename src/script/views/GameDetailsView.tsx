@@ -9,7 +9,7 @@ import {Aoe4WorldApiService} from "../services/Aoe4WorldApiService";
 import {Game, NULL_TEAM_ID} from "../models/Game";
 import {GameList} from "../components/game/GameList";
 import {AOE4GameQuery} from "../queries/aoe4games/AOE4GameQuery";
-import {H4, ScrollView, YStack} from "tamagui";
+import {H4, ScrollView, Spacer, YStack} from "tamagui";
 import {WebHeader} from "../components/scaffolding/WebHeader";
 import {User} from "../models/User";
 import {UserOverviewBottomSection, UserOverviewBottomSectionProps} from "../components/user/UserOverviewBottomSection";
@@ -136,6 +136,7 @@ export class GameDetailsView extends BaseView<MainAppViewProps<"GameDetailsView"
                         height={200}
                     />
                 )}
+                    <Spacer paddingBottom={24} />
                 </ScrollView>
             </YStack>
         );
