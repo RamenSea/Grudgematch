@@ -333,7 +333,7 @@ export class UserOverviewView extends BaseView<MainAppViewProps<"UserOverviewVie
                             onMatchUpCardClicked={matchUp => this.openMoreGamesSection(matchUp)}
                         />
                     }
-                    <Spacer height={8}/>
+                    <Spacer paddingBottom={8} />
                 </ScrollView>
             </YStack>
         );
