@@ -1,5 +1,4 @@
 import {jsonArrayMember, jsonMember, jsonObject, TypedJSON} from "typedjson";
-import {id} from "inversify";
 import {CustomDeserializerParams} from "typedjson/lib/types/metadata";
 import {GameModeType, GameModeTypeIsFAA} from "./User";
 
@@ -22,7 +21,9 @@ export enum Civilization {
     JEANNE_DARC = "jeanne_darc",
     AYYUBIDS = "ayyubids",
     ZHU_XIS_LEGACY = "zhu_xis_legacy",
-    ORDER_OF_THE_DRAGON = "order_of_the_dragon"
+    ORDER_OF_THE_DRAGON = "order_of_the_dragon",
+    HOUSE_OF_LANCASTER = "house_of_lancaster",
+    KNIGHTS_TEMPLAR = "knights_templar",
 }
 const CivilizationKeys = Object.values(Civilization);
 

@@ -69,6 +69,12 @@ export function CivilizationFlag({
         case Civilization.ZHU_XIS_LEGACY:
             imageRequire = require("../../../assets/images/flags/ZhuXisLegacy.png");
             break;
+        case Civilization.HOUSE_OF_LANCASTER:
+            imageRequire = require("../../../assets/images/flags/HouseOfLancaster.png");
+            break;
+        case Civilization.KNIGHTS_TEMPLAR:
+            imageRequire = require("../../../assets/images/flags/KnightsTemplar.png");
+            break;
         default:
             return(<View/>);
     }
