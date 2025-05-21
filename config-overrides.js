@@ -18,7 +18,7 @@ module.exports = override(
     disableEsLint(),
 
     addBabelPreset(["@babel/preset-typescript"]),
-    addBabelPreset(["@babel/preset-react", {"runtime": "automatic"}]),
+    addBabelPreset(["module:@react-native/babel-preset", {"runtime": "automatic"}]),
 
     addBabelPlugin("@babel/plugin-transform-flow-strip-types"),
     addBabelPlugin("babel-plugin-transform-typescript-metadata"),
