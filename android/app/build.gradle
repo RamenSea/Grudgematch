@@ -80,8 +80,8 @@ android {
         applicationId "games.grudgematch.app.android.playstore"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.11"
+        versionCode 15
+        versionName "1.13"
     }
     signingConfigs {
         debug {
