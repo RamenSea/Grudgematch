@@ -15,10 +15,6 @@ export function CivilizationFlag({
     width = width ?? 24;
     height = height ?? 24;
 
-    if (civilization == Civilization.NONE || civilization == Civilization.UNKNOWN) {
-        return (<Spacer width={width} height={height}/>); //todo
-    }
-
     let imageRequire!: ImageRequireSource;
     switch (civilization) {
         case Civilization.ABBASID_DYNASTY:
@@ -75,8 +71,21 @@ export function CivilizationFlag({
         case Civilization.KNIGHTS_TEMPLAR:
             imageRequire = require("../../../assets/images/flags/KnightsTemplar.png");
             break;
+        case Civilization.GOLDEN_HORDE:
+            imageRequire = require("../../../assets/images/flags/GoldenHorde.png");
+            break;
+        case Civilization.MACEDONIAN_DYNASTY:
+            imageRequire = require("../../../assets/images/flags/MacedonianDynasty.png");
+            break;
+        case Civilization.SENGOKU_DAIMYO:
+            imageRequire = require("../../../assets/images/flags/SengokuDaimyo.png");
+            break;
+        case Civilization.TUGHLAQ_DYNASTY:
+            imageRequire = require("../../../assets/images/flags/TughlaqDynasty.png");
+            break;
         default:
-            return(<View/>);
+            imageRequire = require("../../../assets/images/flags/Unknown.png");
+            break;
     }
 
     return (

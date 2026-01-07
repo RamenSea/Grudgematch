@@ -12,18 +12,30 @@ export enum Civilization {
     ENGLISH = "english",
     FRENCH = "french",
     HOLY_ROMAN_EMPIRE = "holy_roman_empire",
-    MALIANS = "malians",
     MONGOLS = "mongols",
-    OTTOMANS = "ottomans",
     RUS = "rus",
+
+    // Anniversary Edition
+    MALIANS = "malians",
+    OTTOMANS = "ottomans",
+
+    // The Sultans Ascend
     BYZANTINES = "byzantines",
     JAPANESE = "japanese",
     JEANNE_DARC = "jeanne_darc",
     AYYUBIDS = "ayyubids",
     ZHU_XIS_LEGACY = "zhu_xis_legacy",
     ORDER_OF_THE_DRAGON = "order_of_the_dragon",
+
+    // Knights of Cross and Rose
     HOUSE_OF_LANCASTER = "house_of_lancaster",
     KNIGHTS_TEMPLAR = "knights_templar",
+
+    // Dynasties of the East DLC
+    GOLDEN_HORDE = "golden_horde",
+    MACEDONIAN_DYNASTY = "macedonian_dynasty",
+    SENGOKU_DAIMYO = "sengoku_daimyo",
+    TUGHLAQ_DYNASTY = "tughlaq_dynasty",
 }
 const CivilizationKeys = Object.values(Civilization);
 
